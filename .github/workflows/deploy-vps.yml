@@ -1,0 +1,127 @@
+name: Deploy VPS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-vps-production
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VPS_PORT: ${{ secrets.VPS_PORT != '' && secrets.VPS_PORT || '22' }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL != '' && secrets.DATABASE_URL || 'postgresql://ci:ci@localhost:5432/codereviewai' }}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET != '' && secrets.BETTER_AUTH_SECRET || 'ci-build-secret-change-me-32-chars-min' }}
+      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL != '' && secrets.BETTER_AUTH_URL || 'https://example.com' }}
+      NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL != '' && secrets.NEXT_PUBLIC_APP_URL || 'https://example.com' }}
+      GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID != '' && secrets.GITHUB_CLIENT_ID || 'ci-github-client-id' }}
+      GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET != '' && secrets.GITHUB_CLIENT_SECRET || 'ci-github-client-secret' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY != '' && secrets.OPENAI_API_KEY || 'sk-ci-placeholder' }}
+      GITHUB_WEBHOOK_SECRET: ${{ secrets.GITHUB_WEBHOOK_SECRET != '' && secrets.GITHUB_WEBHOOK_SECRET || 'ci-webhook-secret' }}
+      INNGEST_EVENT_KEY: ${{ secrets.INNGEST_EVENT_KEY != '' && secrets.INNGEST_EVENT_KEY || 'ci-inngest-event-key' }}
+      INNGEST_SIGNING_KEY: ${{ secrets.INNGEST_SIGNING_KEY != '' && secrets.INNGEST_SIGNING_KEY || 'ci-inngest-signing-key' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
+
+      - name: Configure SSH
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "$VPS_PORT" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Ensure app directory exists
+        run: |
+          set -euo pipefail
+          ssh -p "$VPS_PORT" -i ~/.ssh/id_ed25519 "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "mkdir -p '${{ secrets.VPS_APP_DIR }}'"
+
+      - name: Sync files to VPS
+        run: |
+          set -euo pipefail
+          rsync -az --delete \
+            --exclude ".git" \
+            --exclude "node_modules" \
+            --exclude ".next" \
+            --exclude ".env" \
+            --exclude ".env.local" \
+            --exclude ".env.production" \
+            -e "ssh -p $VPS_PORT -i ~/.ssh/id_ed25519" \
+            ./ "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:${{ secrets.VPS_APP_DIR }}/"
+
+      - name: Deploy on VPS
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          ssh -p "$VPS_PORT" -i ~/.ssh/id_ed25519 "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            bash -s -- "$DEPLOY_SHA" "${{ secrets.VPS_APP_DIR }}" << 'EOF'
+            set -euo pipefail
+            DEPLOY_SHA="$1"
+            APP_DIR="$2"
+
+            cd "$APP_DIR"
+
+            echo "--- Writing deploy metadata ---"
+            echo "$DEPLOY_SHA" > .deploy_sha
+            date -u +"%Y-%m-%dT%H:%M:%SZ" > .deploy_time_utc
+
+            echo "--- Building app image ---"
+            docker compose build --pull app
+
+            echo "--- Pulling caddy image ---"
+            docker compose pull caddy || true
+
+            echo "--- Running DB migrations ---"
+            docker compose run --rm app pnpm db:push
+
+            echo "--- Swapping app container ---"
+            docker compose stop app || true
+            docker compose rm -f app || true
+            docker compose up -d --no-deps app
+
+            echo "--- Ensuring caddy is up ---"
+            docker compose up -d caddy
+
+            echo "--- Pruning old images ---"
+            docker image prune -f
+
+            echo "Deployed commit: $DEPLOY_SHA"
+            echo "Deployed at (UTC):"
+            cat .deploy_time_utc
+            docker compose ps
+          EOF
