@@ -75,6 +75,17 @@ Severity guide:
 - medium: Should be fixed but won't break things
 - low: Style issues, minor improvements
 
+Rules:
+- Return ONLY valid JSON.
+- Do not use markdown code fences.
+- Do not include any text before or after the JSON.
+- Keep the summary concise.
+- Keep each comment concise.
+- Return at most 5 comments.
+- Keep each message concise, preferably under 50 words.
+- Keep each suggestion concise, preferably under 50 words.
+- Reference exact line numbers from the diff.
+
 Be concise but specific. Reference exact line numbers from the diff.`;
 
 export async function reviewCode(
@@ -104,32 +115,109 @@ export async function reviewCode(
 ${diffContent}`;
 
   const openai = getOpenAIClient();
+  
 
-console.log("Checking available Gemini models...");
 
-const models = await openai.models.list();
-
-for await (const model of models) {
-  console.log("AVAILABLE MODEL:", model.id);
-}
   const response = await openai.chat.completions.create({
-    model: "gemini-3.7-flash",
+    model: "gemini-3.1-flash-lite",
     messages: [
+      
       { role: "system", content: SYSTEM_PROMPT },
       { role: "user", content: userPrompt },
     ],
     response_format: { type: "json_object" },
     temperature: 0.3,
-    max_tokens: 2000,
+    max_tokens: 3000,
   });
+//   try {
+//   const response = await openai.chat.completions.create({
+//     model: "gemini-3.1-flash-lite",
+//     // messages: [
+//     //   {
+//     //     role: "system",
+//     //     content: SYSTEM_PROMPT,
+//     //   },
+//     //   {
+//     //     role: "user",
+//     //     content: userPrompt,
+//     //   },
+//     // ],
+//     messages: [
+//   {
+//     role: "system",
+//     content: "You are an expert code reviewer.",
+//   },
+//   {
+//     role: "user",
+//     content: "Review this code: const x = 10;",
+//   },
+// ],
 
+//     // response_format: { type: "json_object" },
+//     // temperature: 0.3,
+//     // max_tokens: 2000,
+//   });
+
+//   console.log(response);
+// } catch (error: any) {
+//   console.log("STATUS:", error.status);
+//   console.log("MESSAGE:", error.message);
+//   console.log("ERROR:", error.error);
+//   console.log("BODY:", error.body);
+//   console.log("HEADERS:", error.headers);
+
+//   throw error;
+// }
+// const response = await openai.chat.completions.create({
+//   model: "gemini-3.7-flash",
+//   messages: [
+//     {
+//       role: "user",
+//       content: "Say hello",
+//     },
+//   ],
+// });
+
+// console.log("Gemini response:", response.choices[0]?.message?.content);
+
+// return {
+//   summary: "Test successful",
+//   riskScore: 0,
+//   comments: [],
+// };
+
+  
   const content = response.choices[0]?.message?.content;
+  console.log("RAW GEMINI RESPONSE:");
+  console.log(content);
   if (!content) {
     throw new Error("No response from AI");
   }
+  console.log("Finish reason:", response.choices[0]?.finish_reason);
 
   const parsed = JSON.parse(content);
   const validated = ReviewResultSchema.parse(parsed);
 
   return validated;
+//   const content = response.choices[0]?.message?.content;
+
+// if (!content) {
+//   throw new Error("No response from AI");
+// }
+
+// console.log("Raw Gemini response:", content);
+
+// let parsed: unknown;
+
+// try {
+//   parsed = JSON.parse(content);
+// } catch (error) {
+//   console.error("Gemini returned invalid JSON:", content);
+//   throw new Error("Gemini returned invalid JSON");
+// }
+
+// const validated = ReviewResultSchema.parse(parsed);
+
+// return validated;
+// 
 }
