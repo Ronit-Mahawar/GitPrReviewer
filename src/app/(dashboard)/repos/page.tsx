@@ -105,6 +105,19 @@ export default function ReposPage() {
       repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       repo.description?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  const enableAutoReviewMutation =
+  trpc.repository.enableAutoReview.useMutation({
+    onSuccess: () => {
+      connectedRepos.refetch();
+    },
+  });
+
+  const disableAutoReviewMutation =
+  trpc.repository.disableAutoReview.useMutation({
+    onSuccess: () => {
+      connectedRepos.refetch();
+    },
+  });
 
   const toggleRepo = (githubId: number) => {
     const next = new Set(selectedRepos);
@@ -364,11 +377,26 @@ export default function ReposPage() {
           <div className="grid gap-3 sm:grid-cols-2">
             {connectedRepos.data?.map((repo) => (
               <ConnectedRepoCard
-                key={repo.id}
-                repo={repo}
-                onDisconnect={() => disconnectMutation.mutate({ id: repo.id })}
-                isDisconnecting={disconnectMutation.isPending}
-              />
+  key={repo.id}
+  repo={repo}
+  onDisconnect={() => disconnectMutation.mutate({ id: repo.id })}
+  isDisconnecting={disconnectMutation.isPending}
+  onToggleAutoReview={() => {
+    if (repo.autoReviewEnabled) {
+      disableAutoReviewMutation.mutate({
+        repositoryId: repo.id,
+      });
+    } else {
+      enableAutoReviewMutation.mutate({
+        repositoryId: repo.id,
+      });
+    }
+  }}
+  isTogglingAutoReview={
+    enableAutoReviewMutation.isPending ||
+    disableAutoReviewMutation.isPending
+  }
+/>
             ))}
           </div>
         )}
@@ -381,15 +409,20 @@ function ConnectedRepoCard({
   repo,
   onDisconnect,
   isDisconnecting,
+  onToggleAutoReview,
+  isTogglingAutoReview,
 }: {
   repo: {
     id: string;
     fullName: string;
     private: boolean;
     createdAt: Date;
+    autoReviewEnabled: boolean;
   };
   onDisconnect: () => void;
   isDisconnecting: boolean;
+  onToggleAutoReview: () => void;
+  isTogglingAutoReview: boolean;
 }) {
   return (
     <Card className="group hover:border-primary/30 transition-all hover:shadow-sm">
@@ -462,21 +495,51 @@ function ConnectedRepoCard({
           </AlertDialog>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-border/60 flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">
-            Connected {formatDate(repo.createdAt)}
-          </span>
-          <Link href={`/repos/${repo.id}`}>
-            <Button
-              variant={"ghost"}
-              size={"sm"}
-              className="h-7 text-xs gap-1.5 -mr-2"
-            >
-              View PRs
-              <ArrowRight className="size-3" />
-            </Button>
-          </Link>
-        </div>
+        <div className="mt-4 pt-4 border-t border-border/60 space-y-3">
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="text-sm font-medium">
+        Automatic PR Review
+      </p>
+
+      <p className="text-xs text-muted-foreground mt-0.5">
+        {repo.autoReviewEnabled
+          ? "New and updated PRs are reviewed automatically."
+          : "Review PRs manually when you choose."}
+      </p>
+    </div>
+
+    <Button
+      variant={repo.autoReviewEnabled ? "default" : "outline"}
+      size="sm"
+      onClick={onToggleAutoReview}
+      disabled={isTogglingAutoReview}
+    >
+      {isTogglingAutoReview
+        ? "Updating..."
+        : repo.autoReviewEnabled
+          ? "Automatic"
+          : "Manual"}
+    </Button>
+  </div>
+
+  <div className="flex items-center justify-between">
+    <span className="text-xs text-muted-foreground">
+      Connected {formatDate(repo.createdAt)}
+    </span>
+
+    <Link href={`/repos/${repo.id}`}>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-7 text-xs gap-1.5 -mr-2"
+      >
+        View PRs
+        <ArrowRight className="size-3" />
+      </Button>
+    </Link>
+  </div>
+</div>
       </CardContent>
     </Card>
   );

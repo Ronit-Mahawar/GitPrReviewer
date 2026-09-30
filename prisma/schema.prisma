@@ -87,11 +87,27 @@ model Repository {
   fullName  String
   private   Boolean  @default(false)
   htmlUrl   String
+  autoReviewEnabled Boolean  @default(false)
+  webhookId        Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   reviews Review[]
+  webhookDeliveries WebhookDelivery[]
+}
+
+model WebhookDelivery {
+  id           String   @id @default(cuid())
+  deliveryId   String   @unique
+  repositoryId String
+  event        String
+  action       String?
+  createdAt    DateTime @default(now())
+
+  repository Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  @@index([repositoryId])
 }
 
 model Review {

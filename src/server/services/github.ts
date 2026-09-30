@@ -193,3 +193,85 @@ export async function fetchPullRequestFiles(
 
   return files;
 }
+export async function createRepositoryWebhook(
+  accessToken: string,
+  owner: string,
+  repo: string,
+): Promise<number> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const webhookSecret = process.env.GITHUB_WEBHOOK_SECRET;
+
+  if (!appUrl) {
+    throw new Error("NEXT_PUBLIC_APP_URL is not configured");
+  }
+
+  if (!webhookSecret) {
+    throw new Error("GITHUB_WEBHOOK_SECRET is not configured");
+  }
+
+  const webhookUrl = `${appUrl.replace(/\/$/, "")}/api/webhooks/github`;
+
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/hooks`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      body: JSON.stringify({
+        name: "web",
+        active: true,
+        events: ["pull_request"],
+        config: {
+          url: webhookUrl,
+          content_type: "json",
+          secret: webhookSecret,
+          insecure_ssl: "0",
+        },
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+
+    throw new Error(
+      `Failed to create GitHub webhook: ${response.status} ${errorText}`,
+    );
+  }
+
+  const data = (await response.json()) as {
+    id: number;
+  };
+
+  return data.id;
+}
+export async function deleteRepositoryWebhook(
+  accessToken: string,
+  owner: string,
+  repo: string,
+  webhookId: number,
+): Promise<void> {
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/hooks/${webhookId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    },
+  );
+
+  if (!response.ok && response.status !== 404) {
+    const errorText = await response.text();
+
+    throw new Error(
+      `Failed to delete GitHub webhook: ${response.status} ${errorText}`,
+    );
+  }
+}

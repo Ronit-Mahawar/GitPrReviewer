@@ -4,6 +4,8 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import {
   fetchGitHubRepos,
   getGitHubAccessToken,
+  createRepositoryWebhook,
+  deleteRepositoryWebhook,
 } from "@/server/services/github";
 
 export const repositoryRouter = createTRPCRouter({
@@ -78,13 +80,188 @@ export const repositoryRouter = createTRPCRouter({
       );
       return { connected: result.length };
     }),
+  
+  enableAutoReview: protectedProcedure
+  .input(
+    z.object({
+      repositoryId: z.string(),
+    }),
+  )
+  .mutation(async ({ ctx, input }) => {
+    const repository = await ctx.db.repository.findFirst({
+      where: {
+        id: input.repositoryId,
+        userId: ctx.user.id,
+      },
+    });
+
+    if (!repository) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Repository not found",
+      });
+    }
+
+    if (repository.autoReviewEnabled) {
+      return {
+        success: true,
+        alreadyEnabled: true,
+      };
+    }
+
+    const accessToken = await getGitHubAccessToken(ctx.user.id);
+
+    if (!accessToken) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "GitHub account is not connected",
+      });
+    }
+
+    const [owner, repo] = repository.fullName.split("/");
+
+    if (!owner || !repo) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Invalid GitHub repository name",
+      });
+    }
+
+    const webhookId = await createRepositoryWebhook(
+      accessToken,
+      owner,
+      repo,
+    );
+
+    await ctx.db.repository.update({
+      where: {
+        id: repository.id,
+      },
+      data: {
+        autoReviewEnabled: true,
+        webhookId,
+      },
+    });
+
+    return {
+      success: true,
+      autoReviewEnabled: true,
+      webhookId,
+    };
+  }),
+  disableAutoReview: protectedProcedure
+  .input(
+    z.object({
+      repositoryId: z.string(),
+    }),
+  )
+  .mutation(async ({ ctx, input }) => {
+    const repository = await ctx.db.repository.findFirst({
+      where: {
+        id: input.repositoryId,
+        userId: ctx.user.id,
+      },
+    });
+
+    if (!repository) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Repository not found",
+      });
+    }
+
+    if (!repository.autoReviewEnabled) {
+      return {
+        success: true,
+        alreadyDisabled: true,
+      };
+    }
+
+    const accessToken = await getGitHubAccessToken(ctx.user.id);
+
+    if (!accessToken) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "GitHub account is not connected",
+      });
+    }
+
+    if (repository.webhookId) {
+      const [owner, repo] = repository.fullName.split("/");
+
+      if (!owner || !repo) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid GitHub repository name",
+        });
+      }
+
+      await deleteRepositoryWebhook(
+        accessToken,
+        owner,
+        repo,
+        repository.webhookId,
+      );
+    }
+
+    await ctx.db.repository.update({
+      where: {
+        id: repository.id,
+      },
+      data: {
+        autoReviewEnabled: false,
+        webhookId: null,
+      },
+    });
+
+    return {
+      success: true,
+      autoReviewEnabled: false,
+    };
+  }),
 
   disconnect: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.repository.delete({
-        where: { id: input.id, userId: ctx.user.id },
+  .input(z.object({ id: z.string() }))
+  .mutation(async ({ ctx, input }) => {
+    const repository = await ctx.db.repository.findFirst({
+      where: {
+        id: input.id,
+        userId: ctx.user.id,
+      },
+    });
+
+    if (!repository) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Repository not found",
       });
-      return { success: true };
-    }),
+    }
+
+    if (repository.webhookId) {
+      const accessToken = await getGitHubAccessToken(ctx.user.id);
+
+      if (accessToken) {
+        const [owner, repo] = repository.fullName.split("/");
+
+        if (owner && repo) {
+          await deleteRepositoryWebhook(
+            accessToken,
+            owner,
+            repo,
+            repository.webhookId,
+          );
+        }
+      }
+    }
+
+    await ctx.db.repository.delete({
+      where: {
+        id: repository.id,
+      },
+    });
+
+    return {
+      success: true,
+    };
+  }),
 });
