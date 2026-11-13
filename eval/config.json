@@ -1,0 +1,9 @@
+{
+  "model": "gemini-3.1-flash-lite",
+  "temperature": 0.3,
+  "seed": 42,
+  "runs": 3,
+  "line_tolerance": 3,
+  "prompt_variant": "default",
+  "context": "diff"
+}

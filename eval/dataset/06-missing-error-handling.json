@@ -1,0 +1,8 @@
+{
+  "id": "06-missing-error-handling",
+  "title": "Load report data",
+  "description": "Adds an async report loader.",
+  "is_clean": false,
+  "diff": "diff --git a/src/report.ts b/src/report.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/report.ts\n@@ -0,0 +1,4 @@\n+export async function loadReport(id: string) {\n+  const response = await fetch(`/reports/${id}`);\n+  return response.json();\n+}\n",
+  "ground_truth": [{ "file": "src/report.ts", "line_start": 3, "line_end": 3, "bug_type": "missing_error_handling", "severity": "medium", "description": "The response status is never checked, so failed HTTP responses are treated as report data." }]
+}

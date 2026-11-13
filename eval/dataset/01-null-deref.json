@@ -1,0 +1,8 @@
+{
+  "id": "01-null-deref",
+  "title": "Handle missing user profile",
+  "description": "Adds a profile greeting endpoint.",
+  "is_clean": false,
+  "diff": "diff --git a/src/profile.ts b/src/profile.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/profile.ts\n@@ -0,0 +1,3 @@\n+export function greeting(user: { profile?: { name: string } } | null) {\n+  return `Hello ${user.profile.name}`;\n+}\n",
+  "ground_truth": [{ "file": "src/profile.ts", "line_start": 2, "line_end": 2, "bug_type": "null_deref", "severity": "high", "description": "user and user.profile may be null or undefined before dereferencing name." }]
+}

@@ -60,6 +60,8 @@ function verifySignature(
 }
 
 export async function POST(request: NextRequest) {
+  const webhookStartedAt = Date.now();
+  const receivedAt = new Date(webhookStartedAt);
   // IMPORTANT:
   // Read the raw body because GitHub signs the raw payload.
   const payload = await request.text();
@@ -244,6 +246,7 @@ export async function POST(request: NextRequest) {
       prTitle: data.pull_request.title,
       prUrl: data.pull_request.html_url,
       status: "PENDING",
+      receivedAt,
     },
   });
 
@@ -258,7 +261,15 @@ export async function POST(request: NextRequest) {
       repositoryId: repository.id,
       prNumber: data.pull_request.number,
       userId: repository.userId,
+      forceRetryTest:
+        process.env.BENCH_FORCE_RETRY_PR_NUMBER ===
+        String(data.pull_request.number),
     },
+  });
+
+  await db.review.update({
+    where: { id: review.id },
+    data: { webhookMs: Date.now() - webhookStartedAt },
   });
 
   return NextResponse.json(

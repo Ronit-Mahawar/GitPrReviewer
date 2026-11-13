@@ -1,0 +1,8 @@
+{
+  "id": "02-off-by-one",
+  "title": "Paginate through records",
+  "description": "Adds a page helper for a zero-indexed array.",
+  "is_clean": false,
+  "diff": "diff --git a/src/page.ts b/src/page.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/page.ts\n@@ -0,0 +1,4 @@\n+export function page<T>(items: T[], page: number, size: number) {\n+  const start = page * size + 1;\n+  return items.slice(start, start + size);\n+}\n",
+  "ground_truth": [{ "file": "src/page.ts", "line_start": 2, "line_end": 2, "bug_type": "off_by_one", "severity": "medium", "description": "For zero-indexed pages, the first offset should be page * size; adding one skips an item." }]
+}
