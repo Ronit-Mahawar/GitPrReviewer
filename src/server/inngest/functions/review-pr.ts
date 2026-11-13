@@ -1,6 +1,6 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
-import { reviewCode } from "@/server/services/ai";
+import { reviewCode, ReviewOutputValidationError } from "@/server/services/ai";
 import {
   fetchPullRequest,
   fetchPullRequestFiles,
@@ -14,6 +14,7 @@ export type ReviewPREvent = {
     repositoryId: string;
     prNumber: number;
     userId: string;
+    forceRetryTest?: boolean;
   };
 };
 
@@ -27,6 +28,18 @@ export const reviewPR = inngest.createFunction(
     console.log("4. Inngest reviewPR started");
     console.log("Review ID:", event.data.reviewId);
     const { reviewId, repositoryId, prNumber, userId } = event.data;
+
+    if (event.data.forceRetryTest && process.env.BENCH_ENABLE_RETRY_TEST === "true") {
+      const claim = await db.review.updateMany({
+        where: { id: reviewId, error: null },
+        data: { error: "BENCH_RETRY_TEST_FIRST_ATTEMPT" },
+      });
+      if (claim.count === 1) throw new Error("Forced benchmark retry test failure");
+      await db.review.updateMany({
+        where: { id: reviewId, error: "BENCH_RETRY_TEST_FIRST_ATTEMPT" },
+        data: { error: null },
+      });
+    }
 
     await step.run("update-status-processing", async () => {
       await db.review.update({
@@ -93,16 +106,30 @@ export const reviewPR = inngest.createFunction(
     console.log("6. Calling AI review");
 
     const reviewResult = await step.run("generate-review", async () => {
-      return reviewCode(
-        pr.title,
-        files.map((f) => ({
-          filename: f.filename,
-          status: f.status,
-          additions: f.additions,
-          deletions: f.deletions,
-          patch: f.patch,
-        })),
-      );
+      try {
+        return await reviewCode(
+          pr.title,
+          files.map((f) => ({
+            filename: f.filename,
+            status: f.status,
+            additions: f.additions,
+            deletions: f.deletions,
+            patch: f.patch,
+          })),
+        );
+      } catch (error) {
+        if (error instanceof ReviewOutputValidationError) {
+          await db.review.update({
+            where: { id: reviewId },
+            data: {
+              promptTokens: error.usage.prompt_tokens,
+              completionTokens: error.usage.completion_tokens,
+              zodValid: false,
+            },
+          });
+        }
+        throw error;
+      }
     });
     console.log("7. AI review completed");
 
@@ -111,9 +138,13 @@ export const reviewPR = inngest.createFunction(
         where: { id: reviewId },
         data: {
           status: "COMPLETED",
-          summary: reviewResult.summary,
-          riskScore: reviewResult.riskScore,
-          comments: reviewResult.comments,
+          summary: reviewResult.result.summary,
+          riskScore: reviewResult.result.riskScore,
+          comments: reviewResult.result.comments,
+          promptTokens: reviewResult.usage.prompt_tokens,
+          completionTokens: reviewResult.usage.completion_tokens,
+          zodValid: reviewResult.zodValid,
+          completedAt: new Date(),
         },
       });
     });

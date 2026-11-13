@@ -37,7 +37,7 @@ export const ReviewResultSchema = z.object({
 export type ReviewComment = z.infer<typeof ReviewCommentSchema>;
 export type ReviewResult = z.infer<typeof ReviewResultSchema>;
 
-interface FileChange {
+export interface FileChange {
   filename: string;
   status: string;
   additions: number;
@@ -88,10 +88,73 @@ Rules:
 
 Be concise but specific. Reference exact line numbers from the diff.`;
 
+export interface ReviewOptions {
+  model?: string;
+  promptVariant?: "default" | "zero_shot";
+  context?: "diff" | "diff+file";
+  fileContents?: Record<string, string>;
+  seed?: number;
+}
+
+export interface ReviewUsage { prompt_tokens: number | null; completion_tokens: number | null; }
+export async function reviewDiffWithUsage(
+  prTitle: string,
+  diff: string,
+  options: ReviewOptions = {},
+): Promise<{ result: ReviewResult; usage: ReviewUsage; raw_output: string | null; finish_reason?: string | null }> {
+  if (!diff.trim()) {
+    return { result: { summary: "No code changes to review (binary files or empty diff).", riskScore: 0, comments: [] }, usage: { prompt_tokens: 0, completion_tokens: 0 }, raw_output: null };
+  }
+
+  const contextText = options.context === "diff+file" && options.fileContents
+    ? `\n\nFile contents:\n${Object.entries(options.fileContents).map(([file, content]) => `### ${file}\n\`\`\`\n${content}\n\`\`\``).join("\n\n")}`
+    : "";
+  const userPrompt = `Review this pull request:\n\n**Title:** ${prTitle}\n\n**Changes:**\n${diff}${contextText}`;
+  const systemPrompt = options.promptVariant === "zero_shot"
+    ? "You are a code reviewer. Identify actionable bugs in this diff. Return JSON with summary, riskScore, and comments."
+    : SYSTEM_PROMPT;
+  const response = await getOpenAIClient().chat.completions.create({
+    model: options.model ?? "gemini-3.1-flash-lite",
+    messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userPrompt }],
+    response_format: { type: "json_object" },
+    temperature: 0.3,
+    max_tokens: 3000,
+    ...(options.seed === undefined ? {} : { seed: options.seed }),
+  });
+  const content = response.choices[0]?.message?.content;
+  if (!content) throw new Error("No response from AI");
+  let parsed: unknown;
+  const usage = { prompt_tokens: response.usage?.prompt_tokens ?? null, completion_tokens: response.usage?.completion_tokens ?? null };
+  try {
+    parsed = JSON.parse(content);
+  } catch (error) {
+    console.error("AI review returned invalid JSON; raw output follows:", content, error);
+    throw new ReviewOutputValidationError(content, usage, error);
+  }
+  const validation = ReviewResultSchema.safeParse(parsed);
+  if (!validation.success) {
+    console.error("AI review failed Zod validation; raw output follows:", content, validation.error.flatten());
+    throw new ReviewOutputValidationError(content, usage, validation.error);
+  }
+  return { result: validation.data, usage, raw_output: content, finish_reason: response.choices[0]?.finish_reason };
+}
+
+export class ReviewOutputValidationError extends Error {
+  constructor(public readonly rawOutput: string, public readonly usage: ReviewUsage, cause: unknown) {
+    super("AI review output failed Zod validation", { cause });
+    this.name = "ReviewOutputValidationError";
+  }
+}
+
+/** Runs the actual review model on text only; it has no GitHub, auth, or database dependencies. */
+export async function reviewDiff(prTitle: string, diff: string, options: ReviewOptions = {}): Promise<ReviewResult> {
+  return (await reviewDiffWithUsage(prTitle, diff, options)).result;
+}
+
 export async function reviewCode(
   prTitle: string,
   files: FileChange[],
-): Promise<ReviewResult> {
+): Promise<{ result: ReviewResult; usage: ReviewUsage; zodValid: boolean }> {
   const diffContent = files
     .filter((f) => f.patch)
     .map(
@@ -100,124 +163,16 @@ export async function reviewCode(
     .join("\n\n");
 
   if (!diffContent.trim()) {
-    return {
+    return { result: {
       summary: "No code changes to review (binary files or empty diff).",
       riskScore: 0,
       comments: [],
-    };
+    }, usage: { prompt_tokens: 0, completion_tokens: 0 }, zodValid: true };
   }
 
-  const userPrompt = `Review this pull request:
-
-**Title:** ${prTitle}
-
-**Changes:**
-${diffContent}`;
-
-  const openai = getOpenAIClient();
-  
-
-
-  const response = await openai.chat.completions.create({
-    model: "gemini-3.1-flash-lite",
-    messages: [
-      
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: userPrompt },
-    ],
-    response_format: { type: "json_object" },
-    temperature: 0.3,
-    max_tokens: 3000,
-  });
-//   try {
-//   const response = await openai.chat.completions.create({
-//     model: "gemini-3.1-flash-lite",
-//     // messages: [
-//     //   {
-//     //     role: "system",
-//     //     content: SYSTEM_PROMPT,
-//     //   },
-//     //   {
-//     //     role: "user",
-//     //     content: userPrompt,
-//     //   },
-//     // ],
-//     messages: [
-//   {
-//     role: "system",
-//     content: "You are an expert code reviewer.",
-//   },
-//   {
-//     role: "user",
-//     content: "Review this code: const x = 10;",
-//   },
-// ],
-
-//     // response_format: { type: "json_object" },
-//     // temperature: 0.3,
-//     // max_tokens: 2000,
-//   });
-
-//   console.log(response);
-// } catch (error: any) {
-//   console.log("STATUS:", error.status);
-//   console.log("MESSAGE:", error.message);
-//   console.log("ERROR:", error.error);
-//   console.log("BODY:", error.body);
-//   console.log("HEADERS:", error.headers);
-
-//   throw error;
-// }
-// const response = await openai.chat.completions.create({
-//   model: "gemini-3.7-flash",
-//   messages: [
-//     {
-//       role: "user",
-//       content: "Say hello",
-//     },
-//   ],
-// });
-
-// console.log("Gemini response:", response.choices[0]?.message?.content);
-
-// return {
-//   summary: "Test successful",
-//   riskScore: 0,
-//   comments: [],
-// };
-
-  
-  const content = response.choices[0]?.message?.content;
+  const review = await reviewDiffWithUsage(prTitle, diffContent);
   console.log("RAW GEMINI RESPONSE:");
-  console.log(content);
-  if (!content) {
-    throw new Error("No response from AI");
-  }
-  console.log("Finish reason:", response.choices[0]?.finish_reason);
-
-  const parsed = JSON.parse(content);
-  const validated = ReviewResultSchema.parse(parsed);
-
-  return validated;
-//   const content = response.choices[0]?.message?.content;
-
-// if (!content) {
-//   throw new Error("No response from AI");
-// }
-
-// console.log("Raw Gemini response:", content);
-
-// let parsed: unknown;
-
-// try {
-//   parsed = JSON.parse(content);
-// } catch (error) {
-//   console.error("Gemini returned invalid JSON:", content);
-//   throw new Error("Gemini returned invalid JSON");
-// }
-
-// const validated = ReviewResultSchema.parse(parsed);
-
-// return validated;
-// 
+  console.log(review.raw_output);
+  console.log("Finish reason:", review.finish_reason);
+  return { result: review.result, usage: review.usage, zodValid: true };
 }

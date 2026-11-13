@@ -1,0 +1,8 @@
+{
+  "id": "08-clean-constant",
+  "title": "Add supported locale list",
+  "description": "Exports the locales supported by the application.",
+  "is_clean": true,
+  "diff": "diff --git a/src/locales.ts b/src/locales.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/locales.ts\n@@ -0,0 +1,1 @@\n+export const supportedLocales = ['en', 'fr', 'de'] as const;\n",
+  "ground_truth": []
+}

@@ -122,6 +122,12 @@ model Review {
   riskScore    Int?
   comments     Json?
   error        String?      @db.Text
+  receivedAt   DateTime     @default(now())
+  completedAt  DateTime?
+  promptTokens Int?
+  completionTokens Int?
+  zodValid     Boolean?
+  webhookMs    Int?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 

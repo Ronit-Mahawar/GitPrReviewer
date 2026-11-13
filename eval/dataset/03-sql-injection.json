@@ -1,0 +1,8 @@
+{
+  "id": "03-sql-injection",
+  "title": "Search accounts",
+  "description": "Adds account lookup by email.",
+  "is_clean": false,
+  "diff": "diff --git a/src/accounts.ts b/src/accounts.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/accounts.ts\n@@ -0,0 +1,2 @@\n+export const findAccount = (db: any, email: string) =>\n+  db.query(`SELECT * FROM accounts WHERE email = '${email}'`);\n",
+  "ground_truth": [{ "file": "src/accounts.ts", "line_start": 2, "line_end": 2, "bug_type": "sql_injection", "severity": "critical", "description": "Interpolating email into SQL enables injection; use a parameterized query." }]
+}
