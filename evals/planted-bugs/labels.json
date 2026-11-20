@@ -1,0 +1,82 @@
+{
+  "null-02-shipping-label#3#0": {
+    "label": "useless",
+    "note": "unneeded async; harmless"
+  },
+  "secret-01-payments-key#1#1": {
+    "label": "useless",
+    "note": "rated high/medium bug for a deliberate single retry; overstated"
+  },
+  "secret-01-payments-key#2#2": {
+    "label": "useless",
+    "note": "rated high/medium bug for a deliberate single retry; overstated"
+  },
+  "secret-01-payments-key#1#2": {
+    "label": "valid",
+    "note": "res.ok not checked before json()"
+  },
+  "secret-01-payments-key#2#3": {
+    "label": "valid",
+    "note": "res.ok not checked before json()"
+  },
+  "secret-01-payments-key#3#2": {
+    "label": "valid",
+    "note": "res.ok not checked before json()"
+  },
+  "secret-01-payments-key#2#1": {
+    "label": "valid",
+    "note": "unconsumed body on the failed response holds the connection until GC"
+  },
+  "secret-01-payments-key#3#1": {
+    "label": "valid",
+    "note": "retrying a non-idempotent POST can double-charge"
+  },
+  "secret-03-aws-backup#3#2": {
+    "label": "valid",
+    "note": "pipe hides pg_dump failure; an empty/partial dump gets uploaded"
+  },
+  "secret-04-request-logging#1#1": {
+    "label": "useless",
+    "note": "stringify cost nitpick; the real problem is the body holds passwords"
+  },
+  "secret-04-request-logging#3#1": {
+    "label": "useless",
+    "note": "stringify cost nitpick; the real problem is the body holds passwords"
+  },
+  "secret-04-request-logging#2#2": {
+    "label": "valid",
+    "note": "duration logged before the async handler finishes"
+  },
+  "secret-04-request-logging#3#2": {
+    "label": "valid",
+    "note": "duration logged before the async handler finishes"
+  },
+  "sqli-01-user-search#3#1": {
+    "label": "useless",
+    "note": "limit is a server-side default, not request input"
+  },
+  "race-02-rate-limit#3#1": {
+    "label": "valid",
+    "note": "SET EX on every request resets the window (sliding lockout)"
+  },
+  "race-03-webhook-idempotency#1#1": {
+    "label": "valid",
+    "note": "updates and the processed marker aren't in one transaction"
+  },
+  "secret-03-aws-backup#1#1": {
+    "label": "false",
+    "note": "DATABASE_URL is the operator's env var, not attacker input; rated high/critical"
+  },
+  "secret-03-aws-backup#2#1": {
+    "label": "false",
+    "note": "DATABASE_URL is the operator's env var, not attacker input; rated high/critical"
+  },
+  "secret-03-aws-backup#3#1": {
+    "label": "false",
+    "note": "DATABASE_URL is the operator's env var, not attacker input; rated high/critical"
+  },
+  "secret-04-request-logging#2#1": {
+    "label": "useless",
+    "note": "stringify cost nitpick"
+  }
+}

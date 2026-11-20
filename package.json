@@ -19,7 +19,10 @@
     "bench:report": "tsx scripts/bench/report.ts",
     "eval:test": "tsx --test eval/tests/*.test.ts",
     "test": "vitest run",
-    "test:e2e": "vitest run eval/e2e"
+    "test:e2e": "vitest run eval/e2e",
+    "evals:bugs:setup": "tsx evals/planted-bugs/setup-testbed.ts",
+    "evals:bugs:run": "tsx --env-file=.env evals/planted-bugs/run.ts",
+    "evals:bugs:score": "tsx evals/planted-bugs/score.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",

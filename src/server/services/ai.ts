@@ -48,7 +48,7 @@ export interface FileChange {
 const SYSTEM_PROMPT = `You are an expert code reviewer. Analyze the provided pull request diff and provide a structured review.
 
 Your review should:
-1. Identify bugs, security issues, performance problems, and code style issues
+1. Identify bugs, security issues, and significant performance problems
 2. Provide a brief summary of the changes
 3. Assign a risk score (0-100) based on the complexity and potential issues
 4. Give specific, actionable feedback with line numbers
@@ -75,18 +75,32 @@ Severity guide:
 - medium: Should be fixed but won't break things
 - low: Style issues, minor improvements
 
-Rules:
-- Return ONLY valid JSON.
-- Do not use markdown code fences.
-- Do not include any text before or after the JSON.
-- Keep the summary concise.
-- Keep each comment concise.
-- Return at most 5 comments.
-- Keep each message concise, preferably under 50 words.
-- Keep each suggestion concise, preferably under 50 words.
-- Reference exact line numbers from the diff.
+What to comment on:
+- Only issues that will cause incorrect behavior, a security exposure, data loss, or a meaningful performance cost at realistic scale for this code.
+- Every comment must be a concrete defect you can point to in the shown code, with the input or situation that triggers it.
+- Fewer comments is better. If the change is sound, return an empty "comments" array; do not invent issues to fill the list.
 
-Be concise but specific. Reference exact line numbers from the diff.`;
+Do NOT comment on:
+- Style, naming, formatting, readability, unused async, or dead code.
+- Generic advice such as "add try/catch", "add validation", "add a timeout" or "consider a library" unless you can name the concrete failure it prevents.
+- Theoretical performance on small inputs (cart lines, a few locales, retry counts), or sequential awaits that look intentional.
+- Code that comments, JSDoc, or the PR description say is intentional (e.g. documented sort order).
+- Anything that is correct ("this is fine, but..."). Never praise.
+- The same issue twice. One comment per distinct problem.
+
+Before reporting, check each claim against the code:
+- Injection: is the value actually attacker-controlled (request input), not an operator-set env var or constant?
+- Null/undefined: can the value really be missing, given the types and checks above it?
+- Race conditions: is there a read-then-write across an await or separate queries without a lock/transaction/atomic statement?
+
+Line numbers:
+- Each diff line is prefixed with its line number in the new file, e.g. "L42  +  code". Removed lines have no number.
+- Set "line" to the number of the exact line containing the problem. Never cite a removed line or a hunk header.
+
+Output rules:
+- Return ONLY valid JSON. No markdown code fences, no text before or after the JSON.
+- Return at most 5 comments, most severe first.
+- Keep the summary, each message and each suggestion under 50 words.`;
 
 export interface ReviewOptions {
   model?: string;
@@ -126,7 +140,7 @@ export async function reviewDiffWithUsage(
   let parsed: unknown;
   const usage = { prompt_tokens: response.usage?.prompt_tokens ?? null, completion_tokens: response.usage?.completion_tokens ?? null };
   try {
-    parsed = JSON.parse(content);
+    parsed = parseJsonObject(content);
   } catch (error) {
     console.error("AI review returned invalid JSON; raw output follows:", content, error);
     throw new ReviewOutputValidationError(content, usage, error);
@@ -137,6 +151,57 @@ export async function reviewDiffWithUsage(
     throw new ReviewOutputValidationError(content, usage, validation.error);
   }
   return { result: validation.data, usage, raw_output: content, finish_reason: response.choices[0]?.finish_reason };
+}
+
+/**
+ * Parses the model's JSON reply. Models sometimes wrap the object in a code fence or
+ * append stray characters (e.g. a trailing "``"), so on failure fall back to the first
+ * balanced top-level {...} in the text.
+ */
+export function parseJsonObject(content: string): unknown {
+  try {
+    return JSON.parse(content);
+  } catch (firstError) {
+    const start = content.indexOf("{");
+    if (start === -1) throw firstError;
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+    for (let i = start; i < content.length; i++) {
+      const ch = content[i];
+      if (inString) {
+        if (escaped) escaped = false;
+        else if (ch === "\\") escaped = true;
+        else if (ch === '"') inString = false;
+      } else if (ch === '"') inString = true;
+      else if (ch === "{") depth++;
+      else if (ch === "}" && --depth === 0) return JSON.parse(content.slice(start, i + 1));
+    }
+    throw firstError;
+  }
+}
+
+/**
+ * Prefixes each line of a unified-diff patch with its line number in the new file
+ * ("L42 +", "L43  ") so the model can cite exact lines; removed lines get "     -".
+ */
+export function numberPatch(patch: string): string {
+  let newLine = 0;
+  return patch
+    .split("\n")
+    .map((line) => {
+      const hunk = /^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@/.exec(line);
+      if (hunk) {
+        newLine = Number(hunk[1]);
+        return line;
+      }
+      if (line.startsWith("-")) return `      ${line}`;
+      if (line.startsWith("\\")) return line; // "\ No newline at end of file"
+      const label = `L${newLine}`.padEnd(5);
+      newLine++;
+      return `${label} ${line}`;
+    })
+    .join("\n");
 }
 
 export class ReviewOutputValidationError extends Error {
@@ -158,7 +223,7 @@ export async function reviewCode(
   const diffContent = files
     .filter((f) => f.patch)
     .map(
-      (f) => `### ${f.filename} (${f.status})\n\`\`\`diff\n${f.patch}\n\`\`\``,
+      (f) => `### ${f.filename} (${f.status})\n\`\`\`diff\n${numberPatch(f.patch!)}\n\`\`\``,
     )
     .join("\n\n");
 

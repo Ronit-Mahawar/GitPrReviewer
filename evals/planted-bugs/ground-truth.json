@@ -1,0 +1,359 @@
+{
+  "repo": "Ronit-Mahawar/shop-api-review-evals",
+  "createdAt": "2026-11-20T21:26:12.512Z",
+  "cases": [
+    {
+      "id": "ob-01-pagination",
+      "kind": "off-by-one",
+      "title": "Add pagination helper for order history",
+      "branch": "eval/ob-01-pagination",
+      "prNumber": 1,
+      "expected": "page is 1-indexed, so start must be (page - 1) * pageSize; page 1 currently skips the first pageSize orders.",
+      "bugs": [
+        {
+          "file": "src/orders.ts",
+          "lines": [
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ob-02-chunk",
+      "kind": "off-by-one",
+      "title": "Batch notification sends in groups of 100",
+      "branch": "eval/ob-02-chunk",
+      "prNumber": 2,
+      "expected": "Loop condition `i <= items.length` produces an extra empty chunk when length is a multiple of size (and for empty input), so an empty batch is sent to the provider.",
+      "bugs": [
+        {
+          "file": "src/utils.ts",
+          "lines": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ob-03-recent-orders",
+      "kind": "off-by-one",
+      "title": "Show the N most recent orders on the dashboard",
+      "branch": "eval/ob-03-recent-orders",
+      "prNumber": 3,
+      "expected": "`slice(sorted.length - n - 1)` returns n + 1 orders; should be `slice(-n)` / `slice(sorted.length - n)`.",
+      "bugs": [
+        {
+          "file": "src/orders.ts",
+          "lines": [
+            41
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ob-04-retry",
+      "kind": "off-by-one",
+      "title": "Add retry-with-backoff helper for flaky upstream calls",
+      "branch": "eval/ob-04-retry",
+      "prNumber": 4,
+      "expected": "Loop runs attempts - 1 times (`attempt < attempts` starting at 1); with attempts=1 fn is never called and `undefined` is thrown.",
+      "bugs": [
+        {
+          "file": "src/utils.ts",
+          "lines": [
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sqli-01-user-search",
+      "kind": "sql-injection",
+      "title": "Admin: search users by email",
+      "branch": "eval/sqli-01-user-search",
+      "prNumber": 5,
+      "expected": "`term` (from req.query.q) is interpolated into the SQL string; use `ILIKE $1` with `%${term}%` as a parameter.",
+      "bugs": [
+        {
+          "file": "src/users.ts",
+          "lines": [
+            27
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sqli-02-order-sort",
+      "kind": "sql-injection",
+      "title": "Allow sorting order history",
+      "branch": "eval/sqli-02-order-sort",
+      "prNumber": 6,
+      "expected": "`sortBy`/`dir` come from the query string and are interpolated into ORDER BY; must be validated against an allow-list.",
+      "bugs": [
+        {
+          "file": "src/orders.ts",
+          "lines": [
+            26
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sqli-03-cancel-reason",
+      "kind": "sql-injection",
+      "title": "Record a reason when an order is cancelled",
+      "branch": "eval/sqli-03-cancel-reason",
+      "prNumber": 7,
+      "expected": "orderId is parameterized but `reason` (free text from the customer) is interpolated into the UPDATE; pass it as $2.",
+      "bugs": [
+        {
+          "file": "src/orders.ts",
+          "lines": [
+            39
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sqli-04-sales-report",
+      "kind": "sql-injection",
+      "title": "Sales report by SKU for a date range",
+      "branch": "eval/sqli-04-sales-report",
+      "prNumber": 8,
+      "expected": "`from`/`to` are concatenated into the SQL string; use BETWEEN $1 AND $2.",
+      "bugs": [
+        {
+          "file": "src/reports.ts",
+          "lines": [
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "null-01-display-name",
+      "kind": "null-check",
+      "title": "Add getDisplayName for comment author labels",
+      "branch": "eval/null-01-display-name",
+      "prNumber": 9,
+      "expected": "`user.profile` is null until onboarding completes; `user.profile!.name` throws for those users. Fall back to email.",
+      "bugs": [
+        {
+          "file": "src/users.ts",
+          "lines": [
+            30
+          ]
+        }
+      ]
+    },
+    {
+      "id": "null-02-shipping-label",
+      "kind": "null-check",
+      "title": "Generate shipping labels for paid orders",
+      "branch": "eval/null-02-shipping-label",
+      "prNumber": 10,
+      "expected": "`shippingAddress` is undefined for digital-only orders; the cast hides it and `addr.line1` throws. Skip/guard those orders.",
+      "bugs": [
+        {
+          "file": "src/orders.ts",
+          "lines": [
+            38,
+            39
+          ]
+        }
+      ]
+    },
+    {
+      "id": "null-03-price-lookup",
+      "kind": "null-check",
+      "title": "Compute cart totals from the catalog",
+      "branch": "eval/null-03-price-lookup",
+      "prNumber": 11,
+      "expected": "`catalog.find(...)!` is undefined for an unknown/discontinued SKU sent by the client, causing a TypeError (500). Validate and return 400.",
+      "bugs": [
+        {
+          "file": "src/cart.ts",
+          "lines": [
+            13
+          ]
+        }
+      ]
+    },
+    {
+      "id": "null-04-auth-header",
+      "kind": "null-check",
+      "title": "Add requireAuth middleware",
+      "branch": "eval/null-04-auth-header",
+      "prNumber": 12,
+      "expected": "`req.headers.authorization!` is undefined for unauthenticated requests, so `.replace` throws (500) instead of returning 401.",
+      "bugs": [
+        {
+          "file": "src/middleware/auth.ts",
+          "lines": [
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "race-01-reserve-stock",
+      "kind": "race-condition",
+      "title": "Reserve inventory at checkout",
+      "branch": "eval/race-01-reserve-stock",
+      "prNumber": 13,
+      "expected": "Read-then-write across an await (TOCTOU): two concurrent checkouts both read the same quantity and both succeed, overselling. Use `UPDATE ... SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1` or SELECT FOR UPDATE in a transaction.",
+      "bugs": [
+        {
+          "file": "src/inventory.ts",
+          "lines": [
+            10,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "race-02-rate-limit",
+      "kind": "race-condition",
+      "title": "Per-user rate limiting on the login endpoint",
+      "branch": "eval/race-02-rate-limit",
+      "prNumber": 14,
+      "expected": "GET then SET is not atomic: concurrent requests read the same count and all pass, so the limit can be bypassed by parallel requests. Use INCR + EXPIRE (or a Lua script).",
+      "bugs": [
+        {
+          "file": "src/rate-limit.ts",
+          "lines": [
+            6,
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "race-03-webhook-idempotency",
+      "kind": "race-condition",
+      "title": "Make payment webhooks idempotent",
+      "branch": "eval/race-03-webhook-idempotency",
+      "prNumber": 15,
+      "expected": "Check-then-insert is not atomic: two concurrent deliveries of the same event both see no row and both credit the account. Use INSERT ... ON CONFLICT DO NOTHING (unique key) inside the same transaction as the credit.",
+      "bugs": [
+        {
+          "file": "src/webhooks.ts",
+          "lines": [
+            12,
+            23
+          ]
+        }
+      ]
+    },
+    {
+      "id": "race-04-wallet-debit",
+      "kind": "race-condition",
+      "title": "Pay for orders with wallet balance",
+      "branch": "eval/race-04-wallet-debit",
+      "prNumber": 16,
+      "expected": "Balance is read, checked, and written back as an absolute value: concurrent debits cause lost updates / overdraft. Use a single conditional UPDATE (balance = balance - $1 WHERE balance >= $1) or SELECT ... FOR UPDATE in withTransaction.",
+      "bugs": [
+        {
+          "file": "src/wallet.ts",
+          "lines": [
+            6,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "secret-01-payments-key",
+      "kind": "leaked-secret",
+      "title": "Integrate payment provider client",
+      "branch": "eval/secret-01-payments-key",
+      "prNumber": 17,
+      "expected": "Production API key is hard-coded in source; move it to an env var (config) and rotate the key.",
+      "bugs": [
+        {
+          "file": "src/payments.ts",
+          "lines": [
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "secret-02-jwt-fallback",
+      "kind": "leaked-secret",
+      "title": "Make local dev work without a .env file",
+      "branch": "eval/secret-02-jwt-fallback",
+      "prNumber": 18,
+      "expected": "A real-looking JWT signing secret is committed as a fallback; if JWT_SECRET is unset in prod, sessions are signed with a public key anyone can forge. Fail fast in production.",
+      "bugs": [
+        {
+          "file": "src/config.ts",
+          "lines": [
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "secret-03-aws-backup",
+      "kind": "leaked-secret",
+      "title": "Nightly database backup script",
+      "branch": "eval/secret-03-aws-backup",
+      "prNumber": 19,
+      "expected": "AWS access key ID and secret access key are hard-coded in the script; use the default credential chain / env vars and rotate the keys.",
+      "bugs": [
+        {
+          "file": "scripts/backup.ts",
+          "lines": [
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "id": "secret-04-request-logging",
+      "kind": "leaked-secret",
+      "title": "Add request logging middleware",
+      "branch": "eval/secret-04-request-logging",
+      "prNumber": 20,
+      "expected": "Logs the raw Authorization header (bearer session tokens) and full request body (login passwords) to the log pipeline; redact them.",
+      "bugs": [
+        {
+          "file": "src/middleware/logging.ts",
+          "lines": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clean-01-find-users-by-ids",
+      "kind": "clean",
+      "title": "Batch-load users by id",
+      "branch": "eval/clean-01-find-users-by-ids",
+      "prNumber": 21,
+      "expected": "No bug. Correctly parameterized `= ANY($1)`, handles empty input.",
+      "bugs": []
+    },
+    {
+      "id": "clean-02-format-cents",
+      "kind": "clean",
+      "title": "Add money formatting helper",
+      "branch": "eval/clean-02-format-cents",
+      "prNumber": 22,
+      "expected": "No bug. Integer cents, Intl formatting, negative handled.",
+      "bugs": []
+    },
+    {
+      "id": "clean-03-atomic-reserve",
+      "kind": "clean",
+      "title": "Reserve inventory atomically at checkout",
+      "branch": "eval/clean-03-atomic-reserve",
+      "prNumber": 23,
+      "expected": "No bug. Single atomic conditional UPDATE with parameters; rowCount check.",
+      "bugs": []
+    }
+  ]
+}

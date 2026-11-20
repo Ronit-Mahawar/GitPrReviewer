@@ -1,0 +1,398 @@
+{
+  "ob-01-pagination#2#1": {
+    "label": "valid",
+    "note": "page < 1 gives a negative start; real edge case"
+  },
+  "ob-01-pagination#3#1": {
+    "label": "useless",
+    "note": "pageSize<=0 can't cause an infinite loop here"
+  },
+  "ob-02-chunk#1#1": {
+    "label": "useless",
+    "note": "sequential sends are intentional for a rate-limited provider"
+  },
+  "ob-02-chunk#2#1": {
+    "label": "useless",
+    "note": "sequential sends are intentional for a rate-limited provider"
+  },
+  "ob-02-chunk#3#1": {
+    "label": "useless",
+    "note": "sequential sends are intentional for a rate-limited provider"
+  },
+  "ob-02-chunk#1#2": {
+    "label": "useless",
+    "note": "non-ok already throws; network errors propagate to the caller, which is fine"
+  },
+  "ob-02-chunk#2#2": {
+    "label": "useless",
+    "note": "non-ok already throws; network errors propagate to the caller, which is fine"
+  },
+  "ob-02-chunk#3#2": {
+    "label": "useless",
+    "note": "non-ok already throws; network errors propagate to the caller, which is fine"
+  },
+  "ob-03-recent-orders#1#1": {
+    "label": "false",
+    "note": "JSDoc says 'oldest first'; ascending sort is correct"
+  },
+  "ob-03-recent-orders#2#1": {
+    "label": "false",
+    "note": "JSDoc says 'oldest first'; ascending sort is correct"
+  },
+  "ob-03-recent-orders#3#1": {
+    "label": "false",
+    "note": "JSDoc says 'oldest first'; ascending sort is correct"
+  },
+  "ob-04-retry#1#1": {
+    "label": "useless",
+    "note": "with default 3 attempts the delay is at most 800ms"
+  },
+  "ob-04-retry#3#1": {
+    "label": "useless",
+    "note": "with default 3 attempts the delay is at most 800ms"
+  },
+  "ob-04-retry#2#1": {
+    "label": "useless",
+    "note": "jitter nitpick for a 3-attempt helper"
+  },
+  "sqli-01-user-search#1#1": {
+    "label": "valid",
+    "note": "admin route has no role check"
+  },
+  "sqli-01-user-search#2#1": {
+    "label": "useless",
+    "note": "leading-wildcard perf on an internal admin search"
+  },
+  "sqli-01-user-search#3#2": {
+    "label": "useless",
+    "note": "max length nitpick"
+  },
+  "sqli-02-order-sort#1#1": {
+    "label": "hit",
+    "note": "flags the injection at the call site: validate sort/dir against allowed values"
+  },
+  "sqli-02-order-sort#2#1": {
+    "label": "hit",
+    "note": "flags the injection at the call site: validate sort/dir against allowed values"
+  },
+  "sqli-02-order-sort#3#1": {
+    "label": "hit",
+    "note": "flags the injection at the call site: validate sort/dir against allowed values"
+  },
+  "sqli-03-cancel-reason#1#1": {
+    "label": "useless",
+    "note": "empty-reason validation is a product choice"
+  },
+  "sqli-03-cancel-reason#2#2": {
+    "label": "useless",
+    "note": "empty-reason validation is a product choice"
+  },
+  "sqli-03-cancel-reason#3#2": {
+    "label": "useless",
+    "note": "empty-reason validation is a product choice"
+  },
+  "sqli-03-cancel-reason#1#2": {
+    "label": "valid",
+    "note": "IDOR: no ownership check on the order"
+  },
+  "sqli-03-cancel-reason#2#1": {
+    "label": "valid",
+    "note": "IDOR: no ownership check on the order"
+  },
+  "sqli-03-cancel-reason#3#1": {
+    "label": "valid",
+    "note": "no 404 when the order doesn't exist or isn't pending"
+  },
+  "sqli-04-sales-report#1#1": {
+    "label": "valid",
+    "note": "date validation is a real gap (and would partly mitigate the injection) but never names the injection"
+  },
+  "sqli-04-sales-report#2#1": {
+    "label": "valid",
+    "note": "date validation is a real gap (and would partly mitigate the injection) but never names the injection"
+  },
+  "sqli-04-sales-report#3#1": {
+    "label": "valid",
+    "note": "date validation is a real gap (and would partly mitigate the injection) but never names the injection"
+  },
+  "sqli-04-sales-report#1#2": {
+    "label": "useless",
+    "note": "suggests template literals for the injectable query; makes the real problem worse"
+  },
+  "sqli-04-sales-report#2#2": {
+    "label": "useless",
+    "note": "req.query is already typed"
+  },
+  "null-02-shipping-label#1#1": {
+    "label": "useless",
+    "note": "unneeded async; harmless, mislabeled as performance/medium"
+  },
+  "null-02-shipping-label#2#1": {
+    "label": "useless",
+    "note": "unneeded async; harmless, mislabeled as performance/medium"
+  },
+  "null-02-shipping-label#3#1": {
+    "label": "useless",
+    "note": "unneeded async; harmless, mislabeled as performance/medium"
+  },
+  "null-03-price-lookup#1#1": {
+    "label": "useless",
+    "note": "O(N*M) on cart-sized inputs; premature optimization"
+  },
+  "null-03-price-lookup#2#1": {
+    "label": "useless",
+    "note": "O(N*M) on cart-sized inputs; premature optimization"
+  },
+  "null-03-price-lookup#3#1": {
+    "label": "useless",
+    "note": "O(N*M) on cart-sized inputs; premature optimization"
+  },
+  "null-04-auth-header#1#2": {
+    "label": "false",
+    "note": "verifySession checks the HMAC before parsing; an attacker can't make it throw"
+  },
+  "null-04-auth-header#2#2": {
+    "label": "useless",
+    "note": "speculative; verifySession is synchronous"
+  },
+  "null-04-auth-header#3#1": {
+    "label": "useless",
+    "note": "non-Bearer header just fails verification -> 401"
+  },
+  "race-02-rate-limit#1#2": {
+    "label": "useless",
+    "note": "email used as a Redis key is not an injection risk"
+  },
+  "race-02-rate-limit#2#1": {
+    "label": "valid",
+    "note": "SET EX on every request resets the window (sliding lockout)"
+  },
+  "race-02-rate-limit#3#1": {
+    "label": "valid",
+    "note": "SET EX on every request resets the window (sliding lockout)"
+  },
+  "race-02-rate-limit#2#2": {
+    "label": "valid",
+    "note": "add an IP-based limit; reasonable hardening"
+  },
+  "race-02-rate-limit#3#2": {
+    "label": "valid",
+    "note": "add an IP-based limit; reasonable hardening"
+  },
+  "race-03-webhook-idempotency#1#2": {
+    "label": "valid",
+    "note": "no guard on already-paid order / amount mismatch"
+  },
+  "race-03-webhook-idempotency#3#2": {
+    "label": "useless",
+    "note": "table growth is not a review concern for this PR"
+  },
+  "race-04-wallet-debit#1#2": {
+    "label": "useless",
+    "note": "missing wallet -> balance 0 -> InsufficientFunds, which is correct"
+  },
+  "race-04-wallet-debit#3#1": {
+    "label": "useless",
+    "note": "missing wallet -> balance 0 -> InsufficientFunds, which is correct"
+  },
+  "secret-01-payments-key#1#1": {
+    "label": "useless",
+    "note": "rated high/bug for a deliberate single retry; overstated"
+  },
+  "secret-01-payments-key#2#1": {
+    "label": "useless",
+    "note": "rated high/bug for a deliberate single retry; overstated"
+  },
+  "secret-01-payments-key#3#1": {
+    "label": "useless",
+    "note": "rated high/bug for a deliberate single retry; overstated"
+  },
+  "secret-01-payments-key#1#2": {
+    "label": "valid",
+    "note": "res.ok not checked before json()"
+  },
+  "secret-01-payments-key#2#2": {
+    "label": "valid",
+    "note": "res.ok not checked before json()"
+  },
+  "secret-01-payments-key#3#2": {
+    "label": "valid",
+    "note": "res.ok not checked before json()"
+  },
+  "secret-01-payments-key#1#3": {
+    "label": "valid",
+    "note": "retrying a non-idempotent POST can double-charge"
+  },
+  "secret-01-payments-key#2#3": {
+    "label": "valid",
+    "note": "retrying a non-idempotent POST can double-charge"
+  },
+  "secret-01-payments-key#3#3": {
+    "label": "valid",
+    "note": "retrying a non-idempotent POST can double-charge"
+  },
+  "secret-02-jwt-fallback#2#1": {
+    "label": "useless",
+    "note": "dead-export nitpick"
+  },
+  "secret-02-jwt-fallback#3#1": {
+    "label": "valid",
+    "note": "silent localhost DB default in production"
+  },
+  "secret-03-aws-backup#1#1": {
+    "label": "false",
+    "note": "DATABASE_URL is the operator's env var, not attacker input; rated high/security"
+  },
+  "secret-03-aws-backup#2#1": {
+    "label": "false",
+    "note": "DATABASE_URL is the operator's env var, not attacker input; rated high/security"
+  },
+  "secret-03-aws-backup#3#1": {
+    "label": "false",
+    "note": "DATABASE_URL is the operator's env var, not attacker input; rated high/security"
+  },
+  "secret-03-aws-backup#1#2": {
+    "label": "valid",
+    "note": "readFileSync of a full DB dump; should stream"
+  },
+  "secret-03-aws-backup#2#2": {
+    "label": "valid",
+    "note": "readFileSync of a full DB dump; should stream"
+  },
+  "secret-03-aws-backup#3#2": {
+    "label": "valid",
+    "note": "readFileSync of a full DB dump; should stream"
+  },
+  "secret-03-aws-backup#1#3": {
+    "label": "valid",
+    "note": "temp dump file is never deleted"
+  },
+  "secret-03-aws-backup#2#3": {
+    "label": "valid",
+    "note": "temp dump file is never deleted"
+  },
+  "secret-03-aws-backup#3#3": {
+    "label": "valid",
+    "note": "temp dump file is never deleted"
+  },
+  "secret-04-request-logging#1#1": {
+    "label": "valid",
+    "note": "duration logged before the async handler finishes"
+  },
+  "secret-04-request-logging#2#2": {
+    "label": "valid",
+    "note": "duration logged before the async handler finishes"
+  },
+  "secret-04-request-logging#3#2": {
+    "label": "valid",
+    "note": "duration logged before the async handler finishes"
+  },
+  "secret-04-request-logging#1#2": {
+    "label": "useless",
+    "note": "stringify cost nitpick; misses that the body holds passwords"
+  },
+  "secret-04-request-logging#2#1": {
+    "label": "useless",
+    "note": "stringify cost nitpick; misses that the body holds passwords"
+  },
+  "clean-01-find-users-by-ids#1#0": {
+    "label": "useless",
+    "note": "SELECT * / duplicate ids / Map ordering nitpicks on a correct function"
+  },
+  "clean-01-find-users-by-ids#2#0": {
+    "label": "useless",
+    "note": "SELECT * / duplicate ids / Map ordering nitpicks on a correct function"
+  },
+  "clean-01-find-users-by-ids#3#0": {
+    "label": "useless",
+    "note": "SELECT * / duplicate ids / Map ordering nitpicks on a correct function"
+  },
+  "clean-02-format-cents#1#0": {
+    "label": "useless",
+    "note": "cache is bounded by locale x currency; calling it a memory leak is a stretch"
+  },
+  "clean-02-format-cents#2#0": {
+    "label": "useless",
+    "note": "cache is bounded by locale x currency; calling it a memory leak is a stretch"
+  },
+  "clean-02-format-cents#1#1": {
+    "label": "useless",
+    "note": "says 'implementation is correct'; no action"
+  },
+  "clean-02-format-cents#2#1": {
+    "label": "useless",
+    "note": "says 'implementation is correct'; no action"
+  },
+  "clean-03-atomic-reserve#1#0": {
+    "label": "useless",
+    "note": "generic 'add try/catch'"
+  },
+  "clean-03-atomic-reserve#2#0": {
+    "label": "useless",
+    "note": "RETURNING overhead nitpick"
+  },
+  "clean-03-atomic-reserve#3#0": {
+    "label": "useless",
+    "note": "unknown SKU -> false is acceptable"
+  },
+  "clean-03-atomic-reserve#1#1": {
+    "label": "useless",
+    "note": "speculative transaction/limit advice"
+  },
+  "clean-03-atomic-reserve#2#1": {
+    "label": "useless",
+    "note": "speculative transaction/limit advice"
+  },
+  "clean-03-atomic-reserve#3#1": {
+    "label": "useless",
+    "note": "speculative transaction/limit advice"
+  },
+  "ob-01-pagination#1#1": {
+    "label": "valid",
+    "note": "page < 1 gives a negative start; real edge case"
+  },
+  "sqli-01-user-search#3#1": {
+    "label": "useless",
+    "note": "limit is a server-side default, not request input"
+  },
+  "null-04-auth-header#3#2": {
+    "label": "false",
+    "note": "verifySession checks the HMAC before parsing; an attacker can't make it throw"
+  },
+  "race-02-rate-limit#1#1": {
+    "label": "valid",
+    "note": "SET EX on every request resets the window (sliding lockout)"
+  },
+  "race-03-webhook-idempotency#2#1": {
+    "label": "valid",
+    "note": "updates and the processed marker aren't in one transaction"
+  },
+  "race-03-webhook-idempotency#3#1": {
+    "label": "valid",
+    "note": "updates and the processed marker aren't in one transaction"
+  },
+  "race-03-webhook-idempotency#2#2": {
+    "label": "useless",
+    "note": "table growth is not a review concern for this PR"
+  },
+  "race-04-wallet-debit#1#1": {
+    "label": "valid",
+    "note": "balance update and ledger insert aren't in one transaction"
+  },
+  "race-04-wallet-debit#2#1": {
+    "label": "valid",
+    "note": "balance update and ledger insert aren't in one transaction"
+  },
+  "race-04-wallet-debit#2#2": {
+    "label": "useless",
+    "note": "generic 'errors may be unhandled'"
+  },
+  "race-04-wallet-debit#3#2": {
+    "label": "useless",
+    "note": "latency of three queries is not an issue"
+  },
+  "secret-02-jwt-fallback#1#1": {
+    "label": "useless",
+    "note": "says the export 'is fine'; no action"
+  }
+}

@@ -26,6 +26,18 @@ describe("reviewDiffWithUsage", () => {
     await expect(reviewDiffWithUsage("title", "diff")).rejects.toThrow();
   });
 
+  it("accepts valid JSON followed by stray characters", async () => {
+    mock.create.mockResolvedValue(response(`${JSON.stringify(validReview)}\n\`\``));
+    const result = await reviewDiffWithUsage("title", "diff");
+    expect(result.result).toEqual(validReview);
+  });
+
+  it("accepts JSON wrapped in a code fence", async () => {
+    mock.create.mockResolvedValue(response("```json\n" + JSON.stringify(validReview) + "\n```"));
+    const result = await reviewDiffWithUsage("title", "diff");
+    expect(result.result).toEqual(validReview);
+  });
+
   it("rejects an empty LLM response", async () => {
     mock.create.mockResolvedValue(response(null));
     await expect(reviewDiffWithUsage("title", "diff")).rejects.toThrow("No response from AI");
@@ -34,5 +46,32 @@ describe("reviewDiffWithUsage", () => {
   it("propagates a timeout from the mocked client", async () => {
     mock.create.mockRejectedValue(new Error("request timeout"));
     await expect(reviewDiffWithUsage("title", "diff")).rejects.toThrow("request timeout");
+  });
+});
+
+import { numberPatch, parseJsonObject } from "./ai";
+
+describe("parseJsonObject", () => {
+  it("handles braces inside strings when recovering", () => {
+    expect(parseJsonObject('note: {"a":"}{","b":{"c":1}} trailing')).toEqual({ a: "}{", b: { c: 1 } });
+  });
+  it("throws when there is no object", () => {
+    expect(() => parseJsonObject("nothing here")).toThrow();
+  });
+});
+
+describe("numberPatch", () => {
+  it("labels added and context lines with new-file numbers and skips removed lines", () => {
+    const patch = ["@@ -10,3 +10,3 @@ fn", " a", "-b", "+B", " c", "@@ -40,1 +40,2 @@", " x", "+y"].join("\n");
+    expect(numberPatch(patch).split("\n")).toEqual([
+      "@@ -10,3 +10,3 @@ fn",
+      "L10    a",
+      "      -b",
+      "L11   +B",
+      "L12    c",
+      "@@ -40,1 +40,2 @@",
+      "L40    x",
+      "L41   +y",
+    ]);
   });
 });

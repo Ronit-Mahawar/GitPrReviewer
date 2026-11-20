@@ -48,3 +48,7 @@ next-env.d.ts
 !/eval/results/.gitkeep
 __pycache__/
 *.py[cod]
+
+# planted-bug eval: generated test-bed checkout and run outputs
+/evals/planted-bugs/.testbed/
+/evals/planted-bugs/results/
