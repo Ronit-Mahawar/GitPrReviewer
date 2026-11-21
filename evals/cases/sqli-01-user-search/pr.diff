@@ -1,0 +1,27 @@
+diff --git a/src/routes/admin.ts b/src/routes/admin.ts
+new file mode 100644
+index 0000000..3e51fca
+--- /dev/null
++++ b/src/routes/admin.ts
+@@ -0,0 +1,9 @@
++import type { Req, Res } from "../http";
++import { searchUsers } from "../users";
++
++export async function searchUsersHandler(req: Req, res: Res) {
++  const q = (req.query.q ?? "").trim();
++  if (q.length < 2) return res.status(400).json({ error: "query too short" });
++  const users = await searchUsers(q);
++  res.json({ users });
++}
+diff --git a/src/users.ts b/src/users.ts
+index eea55a2..6c73113 100644
+--- a/src/users.ts
++++ b/src/users.ts
+@@ -22,3 +22,7 @@ export async function findUserByEmail(email: string): Promise<User | undefined>
+   const rows = await query<User>("SELECT * FROM users WHERE email = $1", [email]);
+   return rows[0];
+ }
++
++export async function searchUsers(term: string, limit = 25): Promise<User[]> {
++  return query<User>(`SELECT * FROM users WHERE email ILIKE '%${term}%' ORDER BY email LIMIT ${limit}`);
++}

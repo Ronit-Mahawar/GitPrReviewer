@@ -1,0 +1,17 @@
+diff --git a/src/middleware/logging.ts b/src/middleware/logging.ts
+new file mode 100644
+index 0000000..f4a8e0c
+--- /dev/null
++++ b/src/middleware/logging.ts
+@@ -0,0 +1,11 @@
++import type { Next, Req, Res } from "../http";
++import { logger } from "../logger";
++
++export function requestLogger(req: Req, _res: Res, next: Next) {
++  const started = Date.now();
++  logger.info(
++    `${req.method} ${req.path} auth=${req.headers.authorization ?? "-"} body=${JSON.stringify(req.body ?? {})}`,
++  );
++  next();
++  logger.info(`${req.method} ${req.path} done in ${Date.now() - started}ms`);
++}

@@ -7,7 +7,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts", "eval/e2e/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "evals/lib/**/*.test.ts"],
     clearMocks: true,
     restoreMocks: true,
   },

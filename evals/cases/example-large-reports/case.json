@@ -1,0 +1,11 @@
+{
+  "id": "example-large-reports",
+  "title": "Admin reporting module",
+  "kind": "large",
+  "bug": {
+    "file": "src/reports/revenue-by-month.ts",
+    "line": 23,
+    "category": "off-by-one",
+    "description": "The month loop runs from 1 to 13 inclusive (`month <= 13`), so the report has a 13th row \"<year>-13\" that isn't a real month. It should be `month <= 12`."
+  }
+}

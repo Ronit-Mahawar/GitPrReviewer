@@ -1,0 +1,41 @@
+diff --git a/src/routes/users.ts b/src/routes/users.ts
+index 5b0d799..0d06952 100644
+--- a/src/routes/users.ts
++++ b/src/routes/users.ts
+@@ -1,5 +1,5 @@
+ import type { Req, Res } from "../http";
+-import { findUserById } from "../users";
++import { deleteUser, findUserById } from "../users";
+ 
+ /** GET /users/:id — a member can read their own profile; admins can read anyone's. */
+ export async function getUserHandler(req: Req, res: Res) {
+@@ -15,3 +15,17 @@ export async function getUserHandler(req: Req, res: Res) {
+   if (!user) return res.status(404).json({ error: "not found" });
+   res.json({ id: user.id, email: user.email, role: user.role, profile: user.profile });
+ }
++
++/** DELETE /users/:id — members can delete their own account; admins can delete any account. */
++export async function deleteUserHandler(req: Req, res: Res) {
++  if (!req.userId) return res.status(401).json({ error: "unauthorized" });
++
++  const requester = await findUserById(req.userId);
++  if (!requester) return res.status(401).json({ error: "unauthorized" });
++  if (requester.role !== "admin" && requester.id !== req.query.userId) {
++    return res.status(403).json({ error: "forbidden" });
++  }
++
++  await deleteUser(req.params.id);
++  res.status(204).json(null);
++}
+diff --git a/src/users.ts b/src/users.ts
+index eea55a2..c4c9d04 100644
+--- a/src/users.ts
++++ b/src/users.ts
+@@ -22,3 +22,7 @@ export async function findUserByEmail(email: string): Promise<User | undefined>
+   const rows = await query<User>("SELECT * FROM users WHERE email = $1", [email]);
+   return rows[0];
+ }
++
++export async function deleteUser(id: string): Promise<void> {
++  await query("DELETE FROM users WHERE id = $1", [id]);
++}

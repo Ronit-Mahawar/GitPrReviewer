@@ -1,0 +1,11 @@
+{
+  "id": "secret-01-payments-key",
+  "title": "Integrate payment provider client",
+  "kind": "bug",
+  "bug": {
+    "file": "src/payments.ts",
+    "line": 4,
+    "category": "leaked-secret",
+    "description": "Production API key is hard-coded in source; move it to an env var (config) and rotate the key."
+  }
+}

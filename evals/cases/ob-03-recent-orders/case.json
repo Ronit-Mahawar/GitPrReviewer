@@ -1,0 +1,11 @@
+{
+  "id": "ob-03-recent-orders",
+  "title": "Show the N most recent orders on the dashboard",
+  "kind": "bug",
+  "bug": {
+    "file": "src/orders.ts",
+    "line": 41,
+    "category": "off-by-one",
+    "description": "`slice(sorted.length - n - 1)` returns n + 1 orders; should be `slice(-n)` / `slice(sorted.length - n)`."
+  }
+}

@@ -1,0 +1,18 @@
+diff --git a/src/config.ts b/src/config.ts
+index b932f9e..6436a1e 100644
+--- a/src/config.ts
++++ b/src/config.ts
+@@ -6,7 +6,10 @@ function required(name: string): string {
+ 
+ export const config = {
+   port: Number(process.env.PORT ?? 3000),
+-  databaseUrl: required("DATABASE_URL"),
+-  redisUrl: required("REDIS_URL"),
+-  jwtSecret: required("JWT_SECRET"),
++  databaseUrl: process.env.DATABASE_URL ?? "postgres://localhost:5432/shop",
++  redisUrl: process.env.REDIS_URL ?? "redis://localhost:6379",
++  jwtSecret: process.env.JWT_SECRET ?? "x9Kf2qLz7Wm4Rt8vB1nY6pQ3sD5hJ0cE",
+ };
++
++// keep the helper around for values that truly have no default
++export { required };

@@ -1,0 +1,1634 @@
+{
+  "label": "v1-baseline",
+  "startedAt": "2026-11-21T14:11:55.195Z",
+  "model": "gemini-3.1-flash-lite",
+  "temperature": 0,
+  "runs": 3,
+  "gitCommit": "7adbfbb+dirty",
+  "caseIds": [
+    "clean-01-find-users-by-ids",
+    "clean-02-format-cents",
+    "clean-03-atomic-reserve",
+    "example-bug-delete-user-idor",
+    "example-clean-page-param",
+    "example-large-reports",
+    "null-01-display-name",
+    "null-02-shipping-label",
+    "null-03-price-lookup",
+    "null-04-auth-header",
+    "ob-01-pagination",
+    "ob-02-chunk",
+    "ob-03-recent-orders",
+    "ob-04-retry",
+    "race-01-reserve-stock",
+    "race-02-rate-limit",
+    "race-03-webhook-idempotency",
+    "race-04-wallet-debit",
+    "secret-01-payments-key",
+    "secret-02-jwt-fallback",
+    "secret-03-aws-backup",
+    "secret-04-request-logging",
+    "sqli-01-user-search",
+    "sqli-02-order-sort",
+    "sqli-03-cancel-reason",
+    "sqli-04-sales-report"
+  ],
+  "records": [
+    {
+      "caseId": "clean-01-find-users-by-ids",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1416,
+      "promptTokens": 937,
+      "completionTokens": 46,
+      "summary": "Added a batch user lookup function using PostgreSQL ANY operator. The implementation is efficient and correctly handles empty input arrays.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "clean-01-find-users-by-ids",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 4021,
+      "promptTokens": 937,
+      "completionTokens": 46,
+      "summary": "Added a batch user lookup function using PostgreSQL ANY operator. The implementation is efficient and correctly handles empty input arrays.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "clean-01-find-users-by-ids",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1316,
+      "promptTokens": 937,
+      "completionTokens": 46,
+      "summary": "Added a batch user lookup function using PostgreSQL ANY operator. The implementation is efficient and correctly handles empty input arrays.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "clean-02-format-cents",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 794,
+      "promptTokens": 1250,
+      "completionTokens": 45,
+      "summary": "Added a utility function to format integer cents into currency strings using Intl.NumberFormat with a caching mechanism.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "clean-02-format-cents",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 1518,
+      "promptTokens": 1250,
+      "completionTokens": 45,
+      "summary": "Added a utility function to format integer cents into currency strings using Intl.NumberFormat with a caching mechanism.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "clean-02-format-cents",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 107231,
+      "promptTokens": 1250,
+      "completionTokens": 45,
+      "summary": "Added a utility function to format integer cents into currency strings using Intl.NumberFormat with a caching mechanism.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "clean-03-atomic-reserve",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1601,
+      "promptTokens": 1001,
+      "completionTokens": 54,
+      "summary": "The PR introduces an atomic inventory reservation function using a single SQL UPDATE statement with a conditional check. This approach correctly prevents race conditions and over-selling.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "clean-03-atomic-reserve",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 3435,
+      "promptTokens": 1001,
+      "completionTokens": 54,
+      "summary": "The PR introduces an atomic inventory reservation function using a single SQL UPDATE statement with a conditional check. This approach correctly prevents race conditions and over-selling.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "clean-03-atomic-reserve",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 802,
+      "promptTokens": 1001,
+      "completionTokens": 54,
+      "summary": "The PR introduces an atomic inventory reservation function using a single SQL UPDATE statement with a conditional check. This approach correctly prevents race conditions and over-selling.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1329,
+      "promptTokens": 1343,
+      "completionTokens": 155,
+      "summary": "Added a deleteUserHandler to allow users to delete their accounts. The implementation contains a logic error in the authorization check.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/routes/users.ts",
+          "line": 25,
+          "severity": "high",
+          "category": "bug",
+          "message": "The authorization check compares the requester's ID against req.query.userId instead of the target user ID (req.params.id).",
+          "suggestion": "Change req.query.userId to req.params.id in the conditional check."
+        }
+      ]
+    },
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 64253,
+      "promptTokens": 1343,
+      "completionTokens": 155,
+      "summary": "Added a deleteUserHandler to allow users to delete their accounts. The implementation contains a logic error in the authorization check.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/routes/users.ts",
+          "line": 25,
+          "severity": "high",
+          "category": "bug",
+          "message": "The authorization check compares the requester's ID against req.query.userId instead of the target user ID (req.params.id).",
+          "suggestion": "Change req.query.userId to req.params.id in the conditional check."
+        }
+      ]
+    },
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2037,
+      "promptTokens": 1343,
+      "completionTokens": 155,
+      "summary": "Added a deleteUserHandler to allow users to delete their accounts. The implementation contains a logic error in the authorization check.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/routes/users.ts",
+          "line": 25,
+          "severity": "high",
+          "category": "bug",
+          "message": "The authorization check compares the requester's ID against req.query.userId instead of the target user ID (req.params.id).",
+          "suggestion": "Change req.query.userId to req.params.id in the conditional check."
+        }
+      ]
+    },
+    {
+      "caseId": "example-clean-page-param",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1938,
+      "promptTokens": 1058,
+      "completionTokens": 48,
+      "summary": "Added utility functions for clamping numeric values and parsing page query parameters. The implementation is robust and handles edge cases correctly.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "example-clean-page-param",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 964,
+      "promptTokens": 1058,
+      "completionTokens": 48,
+      "summary": "Added utility functions for clamping numeric values and parsing page query parameters. The implementation is robust and handles edge cases correctly.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "example-clean-page-param",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2019,
+      "promptTokens": 1058,
+      "completionTokens": 48,
+      "summary": "Added utility functions for clamping numeric values and parsing page query parameters. The implementation is robust and handles edge cases correctly.",
+      "riskScore": 5,
+      "comments": []
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3654,
+      "promptTokens": 40141,
+      "completionTokens": 310,
+      "summary": "The PR adds an admin reporting module with various SQL-based reports. The implementation is generally sound, but there is a critical issue with the package-lock.json file containing invalid/corrupted dependency versions.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "package-lock.json",
+          "line": 17,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The package-lock.json contains invalid version numbers (e.g., '1.2.6' for pg, which is not a valid pg version). This suggests a corrupted lockfile that will cause installation failures or security risks.",
+          "suggestion": "Delete the package-lock.json and regenerate it by running 'npm install' to ensure valid, consistent dependency versions."
+        },
+        {
+          "file": "src/reports/revenue-by-month.ts",
+          "line": 23,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop runs from 1 to 13, which will result in 13 iterations (months 01 through 13). Month 13 is not a valid calendar month.",
+          "suggestion": "Change the loop condition to 'month <= 12'."
+        }
+      ]
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 3247,
+      "promptTokens": 40141,
+      "completionTokens": 310,
+      "summary": "The PR adds an admin reporting module with various SQL-based reports. The implementation is generally sound, but there is a critical issue with the package-lock.json file containing invalid/corrupted dependency versions.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "package-lock.json",
+          "line": 17,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The package-lock.json contains invalid version numbers (e.g., '1.2.6' for pg, which is not a valid pg version). This suggests a corrupted lockfile that will cause installation failures or security risks.",
+          "suggestion": "Delete the package-lock.json and regenerate it by running 'npm install' to ensure valid, consistent dependency versions."
+        },
+        {
+          "file": "src/reports/revenue-by-month.ts",
+          "line": 23,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop runs from 1 to 13, which will result in 13 iterations (months 01 through 13). Month 13 is not a valid calendar month.",
+          "suggestion": "Change the loop condition to 'month <= 12'."
+        }
+      ]
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 4093,
+      "promptTokens": 40141,
+      "completionTokens": 310,
+      "summary": "The PR adds an admin reporting module with various SQL-based reports. The implementation is generally sound, but there is a critical issue with the package-lock.json file containing invalid/corrupted dependency versions.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "package-lock.json",
+          "line": 17,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The package-lock.json contains invalid version numbers (e.g., '1.2.6' for pg, which is not a valid pg version). This suggests a corrupted lockfile that will cause installation failures or security risks.",
+          "suggestion": "Delete the package-lock.json and regenerate it by running 'npm install' to ensure valid, consistent dependency versions."
+        },
+        {
+          "file": "src/reports/revenue-by-month.ts",
+          "line": 23,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop runs from 1 to 13, which will result in 13 iterations (months 01 through 13). Month 13 is not a valid calendar month.",
+          "suggestion": "Change the loop condition to 'month <= 12'."
+        }
+      ]
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 7965,
+      "promptTokens": 962,
+      "completionTokens": 167,
+      "summary": "Added a getDisplayName utility function to fetch and format user names. The implementation assumes the profile property is always present on the user object.",
+      "riskScore": 20,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 30,
+          "severity": "high",
+          "category": "bug",
+          "message": "The code uses the non-null assertion operator (!) on user.profile, which will cause a runtime crash if a user exists in the database but lacks a profile record.",
+          "suggestion": "Use optional chaining (user.profile?.name) and provide a fallback value or handle the missing profile case explicitly."
+        }
+      ]
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 3248,
+      "promptTokens": 962,
+      "completionTokens": 167,
+      "summary": "Added a getDisplayName utility function to fetch and format user names. The implementation assumes the profile property is always present on the user object.",
+      "riskScore": 20,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 30,
+          "severity": "high",
+          "category": "bug",
+          "message": "The code uses the non-null assertion operator (!) on user.profile, which will cause a runtime crash if a user exists in the database but lacks a profile record.",
+          "suggestion": "Use optional chaining (user.profile?.name) and provide a fallback value or handle the missing profile case explicitly."
+        }
+      ]
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2150,
+      "promptTokens": 962,
+      "completionTokens": 167,
+      "summary": "Added a getDisplayName utility function to fetch and format user names. The implementation assumes the profile property is always present on the user object.",
+      "riskScore": 20,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 30,
+          "severity": "high",
+          "category": "bug",
+          "message": "The code uses the non-null assertion operator (!) on user.profile, which will cause a runtime crash if a user exists in the database but lacks a profile record.",
+          "suggestion": "Use optional chaining (user.profile?.name) and provide a fallback value or handle the missing profile case explicitly."
+        }
+      ]
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1644,
+      "promptTokens": 941,
+      "completionTokens": 160,
+      "summary": "Added shipping label generation logic and a function to filter and process paid orders. The implementation assumes the existence of shippingAddress and its properties without validation.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 38,
+          "severity": "high",
+          "category": "bug",
+          "message": "The code performs an unsafe type assertion 'as Address' and accesses properties without verifying if 'shippingAddress' exists.",
+          "suggestion": "Add a null check for 'order.shippingAddress' and validate that the object contains the required fields before accessing them."
+        }
+      ]
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 1796,
+      "promptTokens": 941,
+      "completionTokens": 160,
+      "summary": "Added shipping label generation logic and a function to filter and process paid orders. The implementation assumes the existence of shippingAddress and its properties without validation.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 38,
+          "severity": "high",
+          "category": "bug",
+          "message": "The code performs an unsafe type assertion 'as Address' and accesses properties without verifying if 'shippingAddress' exists.",
+          "suggestion": "Add a null check for 'order.shippingAddress' and validate that the object contains the required fields before accessing them."
+        }
+      ]
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2438,
+      "promptTokens": 941,
+      "completionTokens": 160,
+      "summary": "Added shipping label generation logic and a function to filter and process paid orders. The implementation assumes the existence of shippingAddress and its properties without validation.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 38,
+          "severity": "high",
+          "category": "bug",
+          "message": "The code performs an unsafe type assertion 'as Address' and accesses properties without verifying if 'shippingAddress' exists.",
+          "suggestion": "Add a null check for 'order.shippingAddress' and validate that the object contains the required fields before accessing them."
+        }
+      ]
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1370,
+      "promptTokens": 999,
+      "completionTokens": 170,
+      "summary": "The implementation uses a non-null assertion operator on a find operation that may return undefined, leading to runtime crashes if a SKU is missing or inactive.",
+      "riskScore": 80,
+      "comments": [
+        {
+          "file": "src/cart.ts",
+          "line": 13,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The use of the non-null assertion operator (!) will cause a runtime exception if the SKU is not found in the catalog or is inactive.",
+          "suggestion": "Handle the undefined case by throwing a descriptive error or returning a default value (e.g., 0) if the item is not found."
+        }
+      ]
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 3194,
+      "promptTokens": 999,
+      "completionTokens": 170,
+      "summary": "The implementation uses a non-null assertion operator on a find operation that may return undefined, leading to runtime crashes if a SKU is missing or inactive.",
+      "riskScore": 80,
+      "comments": [
+        {
+          "file": "src/cart.ts",
+          "line": 13,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The use of the non-null assertion operator (!) will cause a runtime exception if the SKU is not found in the catalog or is inactive.",
+          "suggestion": "Handle the undefined case by throwing a descriptive error or returning a default value (e.g., 0) if the item is not found."
+        }
+      ]
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 11847,
+      "promptTokens": 999,
+      "completionTokens": 170,
+      "summary": "The implementation uses a non-null assertion operator on a find operation that may return undefined, leading to runtime crashes if a SKU is missing or inactive.",
+      "riskScore": 80,
+      "comments": [
+        {
+          "file": "src/cart.ts",
+          "line": 13,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The use of the non-null assertion operator (!) will cause a runtime exception if the SKU is not found in the catalog or is inactive.",
+          "suggestion": "Handle the undefined case by throwing a descriptive error or returning a default value (e.g., 0) if the item is not found."
+        }
+      ]
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2098,
+      "promptTokens": 907,
+      "completionTokens": 160,
+      "summary": "Added a requireAuth middleware to validate session tokens. The implementation contains a potential runtime crash due to unsafe property access on the authorization header.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/middleware/auth.ts",
+          "line": 5,
+          "severity": "high",
+          "category": "bug",
+          "message": "Accessing req.headers.authorization! without checking if it exists will throw a TypeError if the header is missing.",
+          "suggestion": "Check if req.headers.authorization exists before calling replace, or use optional chaining: req.headers.authorization?.replace(...)"
+        }
+      ]
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 5282,
+      "promptTokens": 907,
+      "completionTokens": 160,
+      "summary": "Added a requireAuth middleware to validate session tokens. The implementation contains a potential runtime crash due to unsafe property access on the authorization header.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/middleware/auth.ts",
+          "line": 5,
+          "severity": "high",
+          "category": "bug",
+          "message": "Accessing req.headers.authorization! without checking if it exists will throw a TypeError if the header is missing.",
+          "suggestion": "Check if req.headers.authorization exists before calling replace, or use optional chaining: req.headers.authorization?.replace(...)"
+        }
+      ]
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 4156,
+      "promptTokens": 907,
+      "completionTokens": 160,
+      "summary": "Added a requireAuth middleware to validate session tokens. The implementation contains a potential runtime crash due to unsafe property access on the authorization header.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/middleware/auth.ts",
+          "line": 5,
+          "severity": "high",
+          "category": "bug",
+          "message": "Accessing req.headers.authorization! without checking if it exists will throw a TypeError if the header is missing.",
+          "suggestion": "Check if req.headers.authorization exists before calling replace, or use optional chaining: req.headers.authorization?.replace(...)"
+        }
+      ]
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 4749,
+      "promptTokens": 1003,
+      "completionTokens": 167,
+      "summary": "Added a pagination helper function. The implementation contains an off-by-one error in the index calculation, causing the first page to be skipped.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 45,
+          "severity": "high",
+          "category": "bug",
+          "message": "The pagination logic uses 1-based indexing but calculates the start index as 'page * pageSize', which skips the first page (page 1 starts at index 20 instead of 0).",
+          "suggestion": "Change the start calculation to '(page - 1) * pageSize'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 6441,
+      "promptTokens": 1003,
+      "completionTokens": 167,
+      "summary": "Added a pagination helper function. The implementation contains an off-by-one error in the index calculation, causing the first page to be skipped.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 45,
+          "severity": "high",
+          "category": "bug",
+          "message": "The pagination logic uses 1-based indexing but calculates the start index as 'page * pageSize', which skips the first page (page 1 starts at index 20 instead of 0).",
+          "suggestion": "Change the start calculation to '(page - 1) * pageSize'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 4856,
+      "promptTokens": 1003,
+      "completionTokens": 167,
+      "summary": "Added a pagination helper function. The implementation contains an off-by-one error in the index calculation, causing the first page to be skipped.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 45,
+          "severity": "high",
+          "category": "bug",
+          "message": "The pagination logic uses 1-based indexing but calculates the start index as 'page * pageSize', which skips the first page (page 1 starts at index 20 instead of 0).",
+          "suggestion": "Change the start calculation to '(page - 1) * pageSize'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1320,
+      "promptTokens": 1229,
+      "completionTokens": 167,
+      "summary": "The implementation of the chunking utility contains an off-by-one error in the loop condition, causing an extra empty array to be appended to the result. The notification logic is otherwise functional.",
+      "riskScore": 20,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 7,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop condition 'i <= items.length' causes an extra empty array to be pushed to the output when 'items.length' is a multiple of 'size'.",
+          "suggestion": "Change the condition to 'i < items.length'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 6782,
+      "promptTokens": 1229,
+      "completionTokens": 167,
+      "summary": "The implementation of the chunking utility contains an off-by-one error in the loop condition, causing an extra empty array to be appended to the result. The notification logic is otherwise functional.",
+      "riskScore": 20,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 7,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop condition 'i <= items.length' causes an extra empty array to be pushed to the output when 'items.length' is a multiple of 'size'.",
+          "suggestion": "Change the condition to 'i < items.length'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1848,
+      "promptTokens": 1229,
+      "completionTokens": 167,
+      "summary": "The implementation of the chunking utility contains an off-by-one error in the loop condition, causing an extra empty array to be appended to the result. The notification logic is otherwise functional.",
+      "riskScore": 20,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 7,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop condition 'i <= items.length' causes an extra empty array to be pushed to the output when 'items.length' is a multiple of 'size'.",
+          "suggestion": "Change the condition to 'i < items.length'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 5215,
+      "promptTokens": 924,
+      "completionTokens": 149,
+      "summary": "The implementation of mostRecent contains an off-by-one error in the slice index, causing it to return n+1 elements instead of n.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 41,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The slice index calculation 'sorted.length - n - 1' is incorrect and will return n+1 elements.",
+          "suggestion": "Change the slice index to 'sorted.length - n'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 5201,
+      "promptTokens": 924,
+      "completionTokens": 149,
+      "summary": "The implementation of mostRecent contains an off-by-one error in the slice index, causing it to return n+1 elements instead of n.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 41,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The slice index calculation 'sorted.length - n - 1' is incorrect and will return n+1 elements.",
+          "suggestion": "Change the slice index to 'sorted.length - n'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 36623,
+      "promptTokens": 924,
+      "completionTokens": 149,
+      "summary": "The implementation of mostRecent contains an off-by-one error in the slice index, causing it to return n+1 elements instead of n.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 41,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The slice index calculation 'sorted.length - n - 1' is incorrect and will return n+1 elements.",
+          "suggestion": "Change the slice index to 'sorted.length - n'."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2266,
+      "promptTokens": 992,
+      "completionTokens": 196,
+      "summary": "The retry helper incorrectly calculates the number of attempts. The loop condition 'attempt < attempts' causes the function to execute at most 'attempts - 1' times, failing to reach the requested number of retries.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 8,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop condition 'attempt < attempts' results in one fewer execution than intended. If 'attempts' is 3, the loop runs for attempt 1 and 2, meaning the function is called at most twice.",
+          "suggestion": "Change the loop condition to 'attempt <= attempts' or adjust the logic to ensure the function is called exactly 'attempts' times."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 1786,
+      "promptTokens": 992,
+      "completionTokens": 196,
+      "summary": "The retry helper incorrectly calculates the number of attempts. The loop condition 'attempt < attempts' causes the function to execute at most 'attempts - 1' times, failing to reach the requested number of retries.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 8,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop condition 'attempt < attempts' results in one fewer execution than intended. If 'attempts' is 3, the loop runs for attempt 1 and 2, meaning the function is called at most twice.",
+          "suggestion": "Change the loop condition to 'attempt <= attempts' or adjust the logic to ensure the function is called exactly 'attempts' times."
+        }
+      ]
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 3128,
+      "promptTokens": 992,
+      "completionTokens": 196,
+      "summary": "The retry helper incorrectly calculates the number of attempts. The loop condition 'attempt < attempts' causes the function to execute at most 'attempts - 1' times, failing to reach the requested number of retries.",
+      "riskScore": 30,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 8,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The loop condition 'attempt < attempts' results in one fewer execution than intended. If 'attempts' is 3, the loop runs for attempt 1 and 2, meaning the function is called at most twice.",
+          "suggestion": "Change the loop condition to 'attempt <= attempts' or adjust the logic to ensure the function is called exactly 'attempts' times."
+        }
+      ]
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2673,
+      "promptTokens": 952,
+      "completionTokens": 191,
+      "summary": "The reserveStock function introduces a race condition by performing a read-then-write operation without database-level locking or atomic updates, which will lead to overselling inventory under concurrent requests.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/inventory.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The update operation is susceptible to a race condition. Between the check in getStock and the update, another process could modify the inventory, leading to incorrect stock levels.",
+          "suggestion": "Perform the update atomically in a single query: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+        }
+      ]
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2420,
+      "promptTokens": 952,
+      "completionTokens": 191,
+      "summary": "The reserveStock function introduces a race condition by performing a read-then-write operation without database-level locking or atomic updates, which will lead to overselling inventory under concurrent requests.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/inventory.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The update operation is susceptible to a race condition. Between the check in getStock and the update, another process could modify the inventory, leading to incorrect stock levels.",
+          "suggestion": "Perform the update atomically in a single query: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+        }
+      ]
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1495,
+      "promptTokens": 952,
+      "completionTokens": 191,
+      "summary": "The reserveStock function introduces a race condition by performing a read-then-write operation without database-level locking or atomic updates, which will lead to overselling inventory under concurrent requests.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/inventory.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The update operation is susceptible to a race condition. Between the check in getStock and the update, another process could modify the inventory, leading to incorrect stock levels.",
+          "suggestion": "Perform the update atomically in a single query: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+        }
+      ]
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1962,
+      "promptTokens": 1206,
+      "completionTokens": 184,
+      "summary": "Implemented per-user rate limiting on the login endpoint using Redis. The implementation contains a race condition where concurrent requests can bypass the limit.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/rate-limit.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The rate limiting logic is susceptible to a race condition. Between the 'get' and 'set' operations, multiple concurrent requests can read the same value and increment it incorrectly, allowing more requests than the defined limit.",
+          "suggestion": "Use a Lua script with redis.eval or the INCR/EXPIRE commands atomically to ensure the increment and expiration are handled as a single operation."
+        }
+      ]
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 1410,
+      "promptTokens": 1206,
+      "completionTokens": 184,
+      "summary": "Implemented per-user rate limiting on the login endpoint using Redis. The implementation contains a race condition where concurrent requests can bypass the limit.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/rate-limit.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The rate limiting logic is susceptible to a race condition. Between the 'get' and 'set' operations, multiple concurrent requests can read the same value and increment it incorrectly, allowing more requests than the defined limit.",
+          "suggestion": "Use a Lua script with redis.eval or the INCR/EXPIRE commands atomically to ensure the increment and expiration are handled as a single operation."
+        }
+      ]
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1573,
+      "promptTokens": 1206,
+      "completionTokens": 184,
+      "summary": "Implemented per-user rate limiting on the login endpoint using Redis. The implementation contains a race condition where concurrent requests can bypass the limit.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/rate-limit.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The rate limiting logic is susceptible to a race condition. Between the 'get' and 'set' operations, multiple concurrent requests can read the same value and increment it incorrectly, allowing more requests than the defined limit.",
+          "suggestion": "Use a Lua script with redis.eval or the INCR/EXPIRE commands atomically to ensure the increment and expiration are handled as a single operation."
+        }
+      ]
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2121,
+      "promptTokens": 1119,
+      "completionTokens": 339,
+      "summary": "The implementation of idempotency is vulnerable to race conditions. Multiple concurrent requests with the same event ID can bypass the 'seen' check because the check and the insertion are not performed within a single atomic transaction.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/webhooks.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The check-then-insert pattern is not atomic. Two concurrent requests for the same event ID can both pass the 'seen' check at line 13 before either has inserted the record at line 23, leading to duplicate processing.",
+          "suggestion": "Wrap the entire function in a database transaction and use 'INSERT ... ON CONFLICT DO NOTHING' or a unique constraint on the 'processed_events.id' column to ensure atomicity."
+        },
+        {
+          "file": "src/webhooks.ts",
+          "line": 18,
+          "severity": "high",
+          "category": "bug",
+          "message": "The business logic (updating orders and accounts) is executed outside of a transaction. If the process crashes or the database connection fails after the order update but before the event is marked as processed, the event will be re-processed on retry, causing double-crediting.",
+          "suggestion": "Execute the status update, account credit, and event insertion within a single database transaction."
+        }
+      ]
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2117,
+      "promptTokens": 1119,
+      "completionTokens": 339,
+      "summary": "The implementation of idempotency is vulnerable to race conditions. Multiple concurrent requests with the same event ID can bypass the 'seen' check because the check and the insertion are not performed within a single atomic transaction.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/webhooks.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The check-then-insert pattern is not atomic. Two concurrent requests for the same event ID can both pass the 'seen' check at line 13 before either has inserted the record at line 23, leading to duplicate processing.",
+          "suggestion": "Wrap the entire function in a database transaction and use 'INSERT ... ON CONFLICT DO NOTHING' or a unique constraint on the 'processed_events.id' column to ensure atomicity."
+        },
+        {
+          "file": "src/webhooks.ts",
+          "line": 18,
+          "severity": "high",
+          "category": "bug",
+          "message": "The business logic (updating orders and accounts) is executed outside of a transaction. If the process crashes or the database connection fails after the order update but before the event is marked as processed, the event will be re-processed on retry, causing double-crediting.",
+          "suggestion": "Execute the status update, account credit, and event insertion within a single database transaction."
+        }
+      ]
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2154,
+      "promptTokens": 1119,
+      "completionTokens": 339,
+      "summary": "The implementation of idempotency is vulnerable to race conditions. Multiple concurrent requests with the same event ID can bypass the 'seen' check because the check and the insertion are not performed within a single atomic transaction.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/webhooks.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The check-then-insert pattern is not atomic. Two concurrent requests for the same event ID can both pass the 'seen' check at line 13 before either has inserted the record at line 23, leading to duplicate processing.",
+          "suggestion": "Wrap the entire function in a database transaction and use 'INSERT ... ON CONFLICT DO NOTHING' or a unique constraint on the 'processed_events.id' column to ensure atomicity."
+        },
+        {
+          "file": "src/webhooks.ts",
+          "line": 18,
+          "severity": "high",
+          "category": "bug",
+          "message": "The business logic (updating orders and accounts) is executed outside of a transaction. If the process crashes or the database connection fails after the order update but before the event is marked as processed, the event will be re-processed on retry, causing double-crediting.",
+          "suggestion": "Execute the status update, account credit, and event insertion within a single database transaction."
+        }
+      ]
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2650,
+      "promptTokens": 1025,
+      "completionTokens": 178,
+      "summary": "The implementation of debitWallet is vulnerable to race conditions. Multiple concurrent requests could read the same balance and perform conflicting updates, leading to an incorrect final balance or negative funds.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/wallet.ts",
+          "line": 6,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The balance check and update are not atomic, creating a race condition.",
+          "suggestion": "Use a single SQL UPDATE statement with a WHERE clause: UPDATE wallets SET balance_cents = balance_cents - $1 WHERE user_id = $2 AND balance_cents >= $1. Check the affected row count to verify success."
+        }
+      ]
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2091,
+      "promptTokens": 1025,
+      "completionTokens": 178,
+      "summary": "The implementation of debitWallet is vulnerable to race conditions. Multiple concurrent requests could read the same balance and perform conflicting updates, leading to an incorrect final balance or negative funds.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/wallet.ts",
+          "line": 6,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The balance check and update are not atomic, creating a race condition.",
+          "suggestion": "Use a single SQL UPDATE statement with a WHERE clause: UPDATE wallets SET balance_cents = balance_cents - $1 WHERE user_id = $2 AND balance_cents >= $1. Check the affected row count to verify success."
+        }
+      ]
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 222031,
+      "promptTokens": 1025,
+      "completionTokens": 178,
+      "summary": "The implementation of debitWallet is vulnerable to race conditions. Multiple concurrent requests could read the same balance and perform conflicting updates, leading to an incorrect final balance or negative funds.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/wallet.ts",
+          "line": 6,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The balance check and update are not atomic, creating a race condition.",
+          "suggestion": "Use a single SQL UPDATE statement with a WHERE clause: UPDATE wallets SET balance_cents = balance_cents - $1 WHERE user_id = $2 AND balance_cents >= $1. Check the affected row count to verify success."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2945,
+      "promptTokens": 1192,
+      "completionTokens": 331,
+      "summary": "The PR introduces a payment client with a hardcoded production API key and an unsafe retry mechanism that ignores response bodies and potential errors.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/payments.ts",
+          "line": 4,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded production API key detected.",
+          "suggestion": "Remove the hardcoded key and use an environment variable (e.g., process.env.PAYMENTS_API_KEY)."
+        },
+        {
+          "file": "src/payments-http.ts",
+          "line": 3,
+          "severity": "high",
+          "category": "bug",
+          "message": "The retry mechanism does not check if the second fetch succeeds and ignores the response of the first attempt without consuming it.",
+          "suggestion": "Use a proper retry library or implement a loop that checks response status and handles potential network exceptions."
+        },
+        {
+          "file": "src/payments.ts",
+          "line": 18,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The code assumes the response is always successful and valid JSON without checking res.ok.",
+          "suggestion": "Check res.ok before calling res.json() and handle non-2xx status codes appropriately."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2966,
+      "promptTokens": 1192,
+      "completionTokens": 331,
+      "summary": "The PR introduces a payment client with a hardcoded production API key and an unsafe retry mechanism that ignores response bodies and potential errors.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/payments.ts",
+          "line": 4,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded production API key detected.",
+          "suggestion": "Remove the hardcoded key and use an environment variable (e.g., process.env.PAYMENTS_API_KEY)."
+        },
+        {
+          "file": "src/payments-http.ts",
+          "line": 3,
+          "severity": "high",
+          "category": "bug",
+          "message": "The retry mechanism does not check if the second fetch succeeds and ignores the response of the first attempt without consuming it.",
+          "suggestion": "Use a proper retry library or implement a loop that checks response status and handles potential network exceptions."
+        },
+        {
+          "file": "src/payments.ts",
+          "line": 18,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The code assumes the response is always successful and valid JSON without checking res.ok.",
+          "suggestion": "Check res.ok before calling res.json() and handle non-2xx status codes appropriately."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 6819,
+      "promptTokens": 1192,
+      "completionTokens": 331,
+      "summary": "The PR introduces a payment client with a hardcoded production API key and an unsafe retry mechanism that ignores response bodies and potential errors.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/payments.ts",
+          "line": 4,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded production API key detected.",
+          "suggestion": "Remove the hardcoded key and use an environment variable (e.g., process.env.PAYMENTS_API_KEY)."
+        },
+        {
+          "file": "src/payments-http.ts",
+          "line": 3,
+          "severity": "high",
+          "category": "bug",
+          "message": "The retry mechanism does not check if the second fetch succeeds and ignores the response of the first attempt without consuming it.",
+          "suggestion": "Use a proper retry library or implement a loop that checks response status and handles potential network exceptions."
+        },
+        {
+          "file": "src/payments.ts",
+          "line": 18,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The code assumes the response is always successful and valid JSON without checking res.ok.",
+          "suggestion": "Check res.ok before calling res.json() and handle non-2xx status codes appropriately."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 6426,
+      "promptTokens": 989,
+      "completionTokens": 205,
+      "summary": "The PR removes mandatory environment variable checks for database, Redis, and JWT configurations, providing hardcoded defaults instead. This allows local development without a .env file but introduces a security risk if these defaults are accidentally used in production environments.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/config.ts",
+          "line": 11,
+          "severity": "high",
+          "category": "security",
+          "message": "Hardcoding a default JWT secret in the source code is a security risk. If the environment variable is missing in production, the application will use a known, static secret, making it vulnerable to token forgery.",
+          "suggestion": "Ensure the production environment always sets JWT_SECRET and consider throwing an error if it is missing in production environments (e.g., check process.env.NODE_ENV)."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 9899,
+      "promptTokens": 989,
+      "completionTokens": 205,
+      "summary": "The PR removes mandatory environment variable checks for database, Redis, and JWT configurations, providing hardcoded defaults instead. This allows local development without a .env file but introduces a security risk if these defaults are accidentally used in production environments.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/config.ts",
+          "line": 11,
+          "severity": "high",
+          "category": "security",
+          "message": "Hardcoding a default JWT secret in the source code is a security risk. If the environment variable is missing in production, the application will use a known, static secret, making it vulnerable to token forgery.",
+          "suggestion": "Ensure the production environment always sets JWT_SECRET and consider throwing an error if it is missing in production environments (e.g., check process.env.NODE_ENV)."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 11468,
+      "promptTokens": 989,
+      "completionTokens": 205,
+      "summary": "The PR removes mandatory environment variable checks for database, Redis, and JWT configurations, providing hardcoded defaults instead. This allows local development without a .env file but introduces a security risk if these defaults are accidentally used in production environments.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/config.ts",
+          "line": 11,
+          "severity": "high",
+          "category": "security",
+          "message": "Hardcoding a default JWT secret in the source code is a security risk. If the environment variable is missing in production, the application will use a known, static secret, making it vulnerable to token forgery.",
+          "suggestion": "Ensure the production environment always sets JWT_SECRET and consider throwing an error if it is missing in production environments (e.g., check process.env.NODE_ENV)."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 5877,
+      "promptTokens": 1137,
+      "completionTokens": 222,
+      "summary": "The script implements a database backup process. It contains critical security vulnerabilities regarding hardcoded credentials and command injection.",
+      "riskScore": 100,
+      "comments": [
+        {
+          "file": "scripts/backup.ts",
+          "line": 8,
+          "severity": "critical",
+          "category": "security",
+          "message": "AWS credentials are hardcoded in the source code.",
+          "suggestion": "Use environment variables or IAM instance profiles to manage credentials securely."
+        },
+        {
+          "file": "scripts/backup.ts",
+          "line": 15,
+          "severity": "critical",
+          "category": "security",
+          "message": "The use of execSync with an interpolated environment variable is vulnerable to command injection if DATABASE_URL contains shell metacharacters.",
+          "suggestion": "Use execFile or spawn with arguments passed as an array to avoid shell interpretation."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 6264,
+      "promptTokens": 1137,
+      "completionTokens": 222,
+      "summary": "The script implements a database backup process. It contains critical security vulnerabilities regarding hardcoded credentials and command injection.",
+      "riskScore": 100,
+      "comments": [
+        {
+          "file": "scripts/backup.ts",
+          "line": 8,
+          "severity": "critical",
+          "category": "security",
+          "message": "AWS credentials are hardcoded in the source code.",
+          "suggestion": "Use environment variables or IAM instance profiles to manage credentials securely."
+        },
+        {
+          "file": "scripts/backup.ts",
+          "line": 15,
+          "severity": "critical",
+          "category": "security",
+          "message": "The use of execSync with an interpolated environment variable is vulnerable to command injection if DATABASE_URL contains shell metacharacters.",
+          "suggestion": "Use execFile or spawn with arguments passed as an array to avoid shell interpretation."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1613,
+      "promptTokens": 1137,
+      "completionTokens": 222,
+      "summary": "The script implements a database backup process. It contains critical security vulnerabilities regarding hardcoded credentials and command injection.",
+      "riskScore": 100,
+      "comments": [
+        {
+          "file": "scripts/backup.ts",
+          "line": 8,
+          "severity": "critical",
+          "category": "security",
+          "message": "AWS credentials are hardcoded in the source code.",
+          "suggestion": "Use environment variables or IAM instance profiles to manage credentials securely."
+        },
+        {
+          "file": "scripts/backup.ts",
+          "line": 15,
+          "severity": "critical",
+          "category": "security",
+          "message": "The use of execSync with an interpolated environment variable is vulnerable to command injection if DATABASE_URL contains shell metacharacters.",
+          "suggestion": "Use execFile or spawn with arguments passed as an array to avoid shell interpretation."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3860,
+      "promptTokens": 933,
+      "completionTokens": 253,
+      "summary": "Added a request logging middleware that logs request details and execution time. The implementation logs sensitive authorization headers and potentially large request bodies, which poses a security and performance risk.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "security",
+          "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to log files.",
+          "suggestion": "Remove the authorization header from the log output or mask the value."
+        },
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "medium",
+          "category": "performance",
+          "message": "JSON.stringify(req.body) can cause significant performance degradation or memory issues if the request body is large or contains circular references.",
+          "suggestion": "Truncate the body string or omit it for non-JSON content types."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2443,
+      "promptTokens": 933,
+      "completionTokens": 253,
+      "summary": "Added a request logging middleware that logs request details and execution time. The implementation logs sensitive authorization headers and potentially large request bodies, which poses a security and performance risk.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "security",
+          "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to log files.",
+          "suggestion": "Remove the authorization header from the log output or mask the value."
+        },
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "medium",
+          "category": "performance",
+          "message": "JSON.stringify(req.body) can cause significant performance degradation or memory issues if the request body is large or contains circular references.",
+          "suggestion": "Truncate the body string or omit it for non-JSON content types."
+        }
+      ]
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2371,
+      "promptTokens": 933,
+      "completionTokens": 253,
+      "summary": "Added a request logging middleware that logs request details and execution time. The implementation logs sensitive authorization headers and potentially large request bodies, which poses a security and performance risk.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "security",
+          "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to log files.",
+          "suggestion": "Remove the authorization header from the log output or mask the value."
+        },
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "medium",
+          "category": "performance",
+          "message": "JSON.stringify(req.body) can cause significant performance degradation or memory issues if the request body is large or contains circular references.",
+          "suggestion": "Truncate the body string or omit it for non-JSON content types."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2453,
+      "promptTokens": 1062,
+      "completionTokens": 164,
+      "summary": "The PR adds a user search endpoint. It contains a critical SQL injection vulnerability in the searchUsers function due to string interpolation of user-provided input.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 27,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via string interpolation of 'term' and 'limit'.",
+          "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 4068,
+      "promptTokens": 1062,
+      "completionTokens": 164,
+      "summary": "The PR adds a user search endpoint. It contains a critical SQL injection vulnerability in the searchUsers function due to string interpolation of user-provided input.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 27,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via string interpolation of 'term' and 'limit'.",
+          "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 5708,
+      "promptTokens": 1062,
+      "completionTokens": 164,
+      "summary": "The PR adds a user search endpoint. It contains a critical SQL injection vulnerability in the searchUsers function due to string interpolation of user-provided input.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 27,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via string interpolation of 'term' and 'limit'.",
+          "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3102,
+      "promptTokens": 1110,
+      "completionTokens": 142,
+      "summary": "The PR introduces dynamic sorting for order history. However, it introduces a SQL injection vulnerability by directly interpolating user-provided query parameters into the SQL query string.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 26,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via sortBy and dir parameters.",
+          "suggestion": "Use an allow-list of permitted column names and sort directions instead of direct string interpolation."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 8644,
+      "promptTokens": 1110,
+      "completionTokens": 142,
+      "summary": "The PR introduces dynamic sorting for order history. However, it introduces a SQL injection vulnerability by directly interpolating user-provided query parameters into the SQL query string.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 26,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via sortBy and dir parameters.",
+          "suggestion": "Use an allow-list of permitted column names and sort directions instead of direct string interpolation."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1725,
+      "promptTokens": 1110,
+      "completionTokens": 142,
+      "summary": "The PR introduces dynamic sorting for order history. However, it introduces a SQL injection vulnerability by directly interpolating user-provided query parameters into the SQL query string.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 26,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via sortBy and dir parameters.",
+          "suggestion": "Use an allow-list of permitted column names and sort directions instead of direct string interpolation."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 5939,
+      "promptTokens": 1078,
+      "completionTokens": 171,
+      "summary": "The PR adds order cancellation functionality. It contains a critical SQL injection vulnerability in the cancelOrder function due to string interpolation of the reason parameter.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 39,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via template literal interpolation of the 'reason' parameter.",
+          "suggestion": "Use parameterized queries for the reason field: UPDATE orders SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending', and pass [orderId, reason] to the query function."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 5323,
+      "promptTokens": 1078,
+      "completionTokens": 171,
+      "summary": "The PR adds order cancellation functionality. It contains a critical SQL injection vulnerability in the cancelOrder function due to string interpolation of the reason parameter.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 39,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via template literal interpolation of the 'reason' parameter.",
+          "suggestion": "Use parameterized queries for the reason field: UPDATE orders SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending', and pass [orderId, reason] to the query function."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2237,
+      "promptTokens": 1078,
+      "completionTokens": 171,
+      "summary": "The PR adds order cancellation functionality. It contains a critical SQL injection vulnerability in the cancelOrder function due to string interpolation of the reason parameter.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 39,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability via template literal interpolation of the 'reason' parameter.",
+          "suggestion": "Use parameterized queries for the reason field: UPDATE orders SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending', and pass [orderId, reason] to the query function."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 4099,
+      "promptTokens": 1122,
+      "completionTokens": 145,
+      "summary": "The implementation contains a critical SQL injection vulnerability in the salesReport function, as user-provided query parameters are concatenated directly into the SQL string.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/reports.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability due to direct concatenation of 'from' and 'to' parameters.",
+          "suggestion": "Use parameterized queries (prepared statements) provided by your database driver instead of string concatenation."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 35545,
+      "promptTokens": 1122,
+      "completionTokens": 145,
+      "summary": "The implementation contains a critical SQL injection vulnerability in the salesReport function, as user-provided query parameters are concatenated directly into the SQL string.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/reports.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability due to direct concatenation of 'from' and 'to' parameters.",
+          "suggestion": "Use parameterized queries (prepared statements) provided by your database driver instead of string concatenation."
+        }
+      ]
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 3866,
+      "promptTokens": 1122,
+      "completionTokens": 145,
+      "summary": "The implementation contains a critical SQL injection vulnerability in the salesReport function, as user-provided query parameters are concatenated directly into the SQL string.",
+      "riskScore": 95,
+      "comments": [
+        {
+          "file": "src/reports.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability due to direct concatenation of 'from' and 'to' parameters.",
+          "suggestion": "Use parameterized queries (prepared statements) provided by your database driver instead of string concatenation."
+        }
+      ]
+    }
+  ]
+}

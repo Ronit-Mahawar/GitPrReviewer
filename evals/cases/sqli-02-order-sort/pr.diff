@@ -1,0 +1,29 @@
+diff --git a/src/orders.ts b/src/orders.ts
+index 265b8f0..bf66bfe 100644
+--- a/src/orders.ts
++++ b/src/orders.ts
+@@ -22,8 +22,8 @@ export interface Order {
+   status: "pending" | "paid" | "shipped" | "cancelled";
+ }
+ 
+-export async function listOrdersForUser(userId: string): Promise<Order[]> {
+-  return query<Order>("SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC", [userId]);
++export async function listOrdersForUser(userId: string, sortBy = "created_at", dir = "DESC"): Promise<Order[]> {
++  return query<Order>(`SELECT * FROM orders WHERE user_id = $1 ORDER BY ${sortBy} ${dir}`, [userId]);
+ }
+ 
+ export function orderSubtotal(order: Order): number {
+diff --git a/src/routes/orders.ts b/src/routes/orders.ts
+new file mode 100644
+index 0000000..8858010
+--- /dev/null
++++ b/src/routes/orders.ts
+@@ -0,0 +1,8 @@
++import type { Req, Res } from "../http";
++import { listOrdersForUser } from "../orders";
++
++export async function orderHistoryHandler(req: Req, res: Res) {
++  if (!req.userId) return res.status(401).json({ error: "unauthorized" });
++  const orders = await listOrdersForUser(req.userId, req.query.sort, req.query.dir?.toUpperCase());
++  res.json({ orders });
++}

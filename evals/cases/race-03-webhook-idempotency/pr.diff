@@ -1,0 +1,30 @@
+diff --git a/src/webhooks.ts b/src/webhooks.ts
+new file mode 100644
+index 0000000..8136741
+--- /dev/null
++++ b/src/webhooks.ts
+@@ -0,0 +1,24 @@
++import { query } from "./db";
++import { logger } from "./logger";
++
++export interface PaymentEvent {
++  id: string;
++  type: "payment.succeeded" | "payment.refunded";
++  orderId: string;
++  amountCents: number;
++}
++
++export async function handlePaymentEvent(event: PaymentEvent): Promise<void> {
++  const seen = await query("SELECT 1 FROM processed_events WHERE id = $1", [event.id]);
++  if (seen.length > 0) {
++    logger.info(`skipping duplicate event ${event.id}`);
++    return;
++  }
++
++  if (event.type === "payment.succeeded") {
++    await query("UPDATE orders SET status = 'paid' WHERE id = $1", [event.orderId]);
++    await query("UPDATE accounts SET credit_cents = credit_cents + $1 WHERE order_id = $2", [event.amountCents, event.orderId]);
++  }
++
++  await query("INSERT INTO processed_events (id) VALUES ($1)", [event.id]);
++}

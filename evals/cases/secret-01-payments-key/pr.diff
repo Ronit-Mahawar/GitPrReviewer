@@ -1,0 +1,36 @@
+diff --git a/src/payments-http.ts b/src/payments-http.ts
+new file mode 100644
+index 0000000..edaad01
+--- /dev/null
++++ b/src/payments-http.ts
+@@ -0,0 +1,5 @@
++export async function retryableFetch(url: string, init: RequestInit): Promise<Response> {
++  const res = await fetch(url, init);
++  if (res.status >= 500) return fetch(url, init);
++  return res;
++}
+diff --git a/src/payments.ts b/src/payments.ts
+new file mode 100644
+index 0000000..34ded78
+--- /dev/null
++++ b/src/payments.ts
+@@ -0,0 +1,19 @@
++import { retryableFetch } from "./payments-http";
++
++const PAYMENTS_BASE_URL = "https://api.payments-provider.example/v2";
++const PAYMENTS_API_KEY = "pp_prod_9f8c2e7a41b64d0b8e3f5a1c7d2e9b40c6a1f3e2";
++
++export interface PaymentIntent {
++  id: string;
++  clientSecret: string;
++  amountCents: number;
++}
++
++export async function createPaymentIntent(orderId: string, amountCents: number): Promise<PaymentIntent> {
++  const res = await retryableFetch(`${PAYMENTS_BASE_URL}/intents`, {
++    method: "POST",
++    headers: { authorization: `Bearer ${PAYMENTS_API_KEY}`, "content-type": "application/json" },
++    body: JSON.stringify({ orderId, amountCents, currency: "usd" }),
++  });
++  return res.json() as Promise<PaymentIntent>;
++}

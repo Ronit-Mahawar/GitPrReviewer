@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { inngest } from "@/server/inngest";
+import { logger } from "@/server/lib/logger";
 import {
   fetchPullRequest,
   getGitHubAccessToken,
@@ -49,7 +50,6 @@ export const reviewRouter = createTRPCRouter({
         repo,
         input.prNumber,
       );
-      console.log("1. review.trigger started");
 
       const review = await ctx.db.review.create({
         data: {
@@ -61,8 +61,6 @@ export const reviewRouter = createTRPCRouter({
           status: "PENDING",
         },
       });
-      console.log("2. Review created:", review.id);
-       
 
       await inngest.send({
         name: "review/pr.requested",
@@ -73,7 +71,7 @@ export const reviewRouter = createTRPCRouter({
           userId: ctx.user.id,
         },
       });
-      console.log("3. Inngest event sent");
+      logger.info("manual review queued", { reviewId: review.id });
 
       return { reviewId: review.id };
     }),

@@ -1,0 +1,11 @@
+{
+  "id": "sqli-04-sales-report",
+  "title": "Sales report by SKU for a date range",
+  "kind": "bug",
+  "bug": {
+    "file": "src/reports.ts",
+    "line": 12,
+    "category": "sql-injection",
+    "description": "`from`/`to` are concatenated into the SQL string; use BETWEEN $1 AND $2."
+  }
+}

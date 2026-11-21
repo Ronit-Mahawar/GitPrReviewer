@@ -1,0 +1,11 @@
+{
+  "id": "sqli-01-user-search",
+  "title": "Admin: search users by email",
+  "kind": "bug",
+  "bug": {
+    "file": "src/users.ts",
+    "line": 27,
+    "category": "sql-injection",
+    "description": "`term` (from req.query.q) is interpolated into the SQL string; use `ILIKE $1` with `%${term}%` as a parameter."
+  }
+}

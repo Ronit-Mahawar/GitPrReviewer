@@ -1,0 +1,11 @@
+{
+  "id": "null-03-price-lookup",
+  "title": "Compute cart totals from the catalog",
+  "kind": "bug",
+  "bug": {
+    "file": "src/cart.ts",
+    "line": 13,
+    "category": "null-check",
+    "description": "`catalog.find(...)!` is undefined for an unknown/discontinued SKU sent by the client, causing a TypeError (500). Validate and return 400."
+  }
+}

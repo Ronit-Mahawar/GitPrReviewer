@@ -1,0 +1,11 @@
+{
+  "id": "secret-04-request-logging",
+  "title": "Add request logging middleware",
+  "kind": "bug",
+  "bug": {
+    "file": "src/middleware/logging.ts",
+    "line": 7,
+    "category": "leaked-secret",
+    "description": "Logs the raw Authorization header (bearer session tokens) and full request body (login passwords) to the log pipeline; redact them."
+  }
+}

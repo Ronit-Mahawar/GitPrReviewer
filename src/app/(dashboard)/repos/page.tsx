@@ -20,7 +20,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
-  GitBranch,
   Lock,
   Globe,
   RefreshCw,
@@ -28,7 +27,6 @@ import {
   Trash2,
   ArrowRight,
   Star,
-  GitPullRequest,
   Search,
   X,
   CheckCircle,

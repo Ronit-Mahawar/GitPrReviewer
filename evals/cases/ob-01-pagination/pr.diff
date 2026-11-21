@@ -1,0 +1,24 @@
+diff --git a/src/orders.ts b/src/orders.ts
+index 265b8f0..2364948 100644
+--- a/src/orders.ts
++++ b/src/orders.ts
+@@ -33,3 +33,19 @@ export function orderSubtotal(order: Order): number {
+   }
+   return total;
+ }
++
++export interface Page<T> {
++  data: T[];
++  page: number;
++  totalPages: number;
++}
++
++/** Returns one page of results. `page` is 1-indexed (page=1 is the first page). */
++export function paginate<T>(items: T[], page: number, pageSize = 20): Page<T> {
++  const start = page * pageSize;
++  return {
++    data: items.slice(start, start + pageSize),
++    page,
++    totalPages: Math.ceil(items.length / pageSize),
++  };
++}

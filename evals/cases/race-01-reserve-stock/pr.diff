@@ -1,0 +1,16 @@
+diff --git a/src/inventory.ts b/src/inventory.ts
+index 64c54b7..a51cc69 100644
+--- a/src/inventory.ts
++++ b/src/inventory.ts
+@@ -4,3 +4,11 @@ export async function getStock(sku: string): Promise<number> {
+   const rows = await query<{ quantity: number }>("SELECT quantity FROM inventory WHERE sku = $1", [sku]);
+   return rows[0]?.quantity ?? 0;
+ }
++
++/** Reserves `qty` units of `sku`. Returns false if there isn't enough stock. */
++export async function reserveStock(sku: string, qty: number): Promise<boolean> {
++  const available = await getStock(sku);
++  if (available < qty) return false;
++  await query("UPDATE inventory SET quantity = $1 WHERE sku = $2", [available - qty, sku]);
++  return true;
++}

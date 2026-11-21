@@ -1,0 +1,40 @@
+diff --git a/src/money.test.ts b/src/money.test.ts
+new file mode 100644
+index 0000000..1a4a3d1
+--- /dev/null
++++ b/src/money.test.ts
+@@ -0,0 +1,15 @@
++import { describe, expect, it } from "vitest";
++import { formatCents } from "./money";
++
++describe("formatCents", () => {
++  it("formats whole and fractional amounts", () => {
++    expect(formatCents(123456)).toBe("$1,234.56");
++    expect(formatCents(5)).toBe("$0.05");
++  });
++  it("formats negatives", () => {
++    expect(formatCents(-250)).toBe("-$2.50");
++  });
++  it("rejects non-integers", () => {
++    expect(() => formatCents(1.5)).toThrow(TypeError);
++  });
++});
+diff --git a/src/money.ts b/src/money.ts
+new file mode 100644
+index 0000000..53ed911
+--- /dev/null
++++ b/src/money.ts
+@@ -0,0 +1,13 @@
++const formatters = new Map<string, Intl.NumberFormat>();
++
++/** Formats an integer number of cents, e.g. formatCents(123456) === "$1,234.56". */
++export function formatCents(cents: number, currency = "USD", locale = "en-US"): string {
++  if (!Number.isInteger(cents)) throw new TypeError("cents must be an integer");
++  const key = `${locale}:${currency}`;
++  let fmt = formatters.get(key);
++  if (!fmt) {
++    fmt = new Intl.NumberFormat(locale, { style: "currency", currency });
++    formatters.set(key, fmt);
++  }
++  return fmt.format(cents / 100);
++}

@@ -1,0 +1,11 @@
+{
+  "id": "sqli-03-cancel-reason",
+  "title": "Record a reason when an order is cancelled",
+  "kind": "bug",
+  "bug": {
+    "file": "src/orders.ts",
+    "line": 39,
+    "category": "sql-injection",
+    "description": "orderId is parameterized but `reason` (free text from the customer) is interpolated into the UPDATE; pass it as $2."
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "id": "clean-03-atomic-reserve",
+  "title": "Reserve inventory atomically at checkout",
+  "kind": "clean"
+}

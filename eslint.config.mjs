@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Eval test-bed code: deliberately buggy fixture files, not part of the app.
+    "evals/planted-bugs/fixtures/**",
+    "evals/planted-bugs/.testbed/**",
+    "evals/fixture-repo/**",
   ]),
 ]);
 

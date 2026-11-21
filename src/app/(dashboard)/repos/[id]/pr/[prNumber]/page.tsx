@@ -20,7 +20,6 @@ import {
   XCircle,
   CheckCircle,
   Loader2,
-  Sparkles,
   GitBranch,
   ArrowRight,
   Wand2,

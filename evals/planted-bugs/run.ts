@@ -1,5 +1,5 @@
 /**
- * Runs the production reviewer (`reviewCode` from src/server/services/ai.ts) on every
+ * Runs the production reviewer (`reviewPullRequest` from src/server/review/) on every
  * test-bed PR, using the same GitHub "list PR files" payload the Inngest job uses.
  * The DB/Inngest/webhook layers are skipped; the model call, prompt, and parsing are identical.
  *
@@ -12,7 +12,10 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { performance } from "node:perf_hooks";
-import { reviewCode, ReviewOutputValidationError, type ReviewComment } from "../../src/server/services/ai";
+import { ReviewOutputValidationError } from "../../src/server/review/parse";
+import { reviewPullRequest } from "../../src/server/review/review-pull-request";
+import type { ReviewComment } from "../../src/server/review/schema";
+import { createGeminiLlm } from "../../src/server/services/ai";
 import type { GroundTruth } from "./setup-testbed";
 
 const HERE = resolve(__dirname);
@@ -27,6 +30,7 @@ const gapMs = Number(opt("--gap-ms") ?? 1500);
 
 const truth = JSON.parse(readFileSync(join(HERE, "ground-truth.json"), "utf8")) as GroundTruth;
 if (!truth.repo) throw new Error("ground-truth.json has no repo; run setup-testbed.ts with --repo first.");
+const llm = createGeminiLlm(); // same settings as production (temperature 0.3)
 const token = process.env.GITHUB_TOKEN || execFileSync("gh", ["auth", "token"], { encoding: "utf8" }).trim();
 
 async function ghJson<T>(path: string): Promise<T> {
@@ -66,25 +70,21 @@ async function main() {
       `/pulls/${c.prNumber}/files?per_page=100`,
     );
     for (let r = 1; r <= runs; r++) {
-      const silenced = console.log;
-      console.log = () => {}; // reviewCode prints the raw model output
       const t0 = performance.now();
       let rec: RunRecord;
       try {
-        const { result, usage } = await reviewCode(pr.title, files);
+        const review = await reviewPullRequest({ title: pr.title, files }, { llm });
         rec = {
           caseId: c.id, prNumber: c.prNumber!, run: r, ok: true, latencyMs: performance.now() - t0,
-          promptTokens: usage.prompt_tokens, completionTokens: usage.completion_tokens,
-          riskScore: result.riskScore, summary: result.summary, comments: result.comments,
+          promptTokens: review.meta.promptTokens, completionTokens: review.meta.completionTokens,
+          riskScore: review.riskScore, summary: review.summary, comments: review.comments,
         };
       } catch (err) {
-        const usage = err instanceof ReviewOutputValidationError ? err.usage : { prompt_tokens: null, completion_tokens: null };
+        const usage = err instanceof ReviewOutputValidationError ? err.usage : { promptTokens: null, completionTokens: null };
         rec = {
           caseId: c.id, prNumber: c.prNumber!, run: r, ok: false, error: String((err as Error).message ?? err),
-          latencyMs: performance.now() - t0, promptTokens: usage.prompt_tokens, completionTokens: usage.completion_tokens, comments: [],
+          latencyMs: performance.now() - t0, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, comments: [],
         };
-      } finally {
-        console.log = silenced;
       }
       out.records.push(rec);
       console.log(

@@ -1,0 +1,20 @@
+diff --git a/src/wallet.ts b/src/wallet.ts
+new file mode 100644
+index 0000000..6090202
+--- /dev/null
++++ b/src/wallet.ts
+@@ -0,0 +1,14 @@
++import { query } from "./db";
++
++export class InsufficientFundsError extends Error {}
++
++export async function debitWallet(userId: string, amountCents: number, orderId: string): Promise<number> {
++  const rows = await query<{ balance_cents: number }>("SELECT balance_cents FROM wallets WHERE user_id = $1", [userId]);
++  const balance = rows[0]?.balance_cents ?? 0;
++  if (balance < amountCents) throw new InsufficientFundsError();
++
++  const newBalance = balance - amountCents;
++  await query("UPDATE wallets SET balance_cents = $1 WHERE user_id = $2", [newBalance, userId]);
++  await query("INSERT INTO wallet_ledger (user_id, order_id, delta_cents) VALUES ($1, $2, $3)", [userId, orderId, -amountCents]);
++  return newBalance;
++}

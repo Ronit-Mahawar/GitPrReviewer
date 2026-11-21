@@ -1,0 +1,11 @@
+{
+  "id": "ob-01-pagination",
+  "title": "Add pagination helper for order history",
+  "kind": "bug",
+  "bug": {
+    "file": "src/orders.ts",
+    "line": 45,
+    "category": "off-by-one",
+    "description": "page is 1-indexed, so start must be (page - 1) * pageSize; page 1 currently skips the first pageSize orders."
+  }
+}

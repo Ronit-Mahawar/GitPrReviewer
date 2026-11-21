@@ -1,0 +1,11 @@
+{
+  "id": "secret-02-jwt-fallback",
+  "title": "Make local dev work without a .env file",
+  "kind": "bug",
+  "bug": {
+    "file": "src/config.ts",
+    "line": 11,
+    "category": "leaked-secret",
+    "description": "A real-looking JWT signing secret is committed as a fallback; if JWT_SECRET is unset in prod, sessions are signed with a public key anyone can forge. Fail fast in production."
+  }
+}

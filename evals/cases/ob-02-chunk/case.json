@@ -1,0 +1,11 @@
+{
+  "id": "ob-02-chunk",
+  "title": "Batch notification sends in groups of 100",
+  "kind": "bug",
+  "bug": {
+    "file": "src/utils.ts",
+    "line": 7,
+    "category": "off-by-one",
+    "description": "Loop condition `i <= items.length` produces an extra empty chunk when length is a multiple of size (and for empty input), so an empty batch is sent to the provider."
+  }
+}

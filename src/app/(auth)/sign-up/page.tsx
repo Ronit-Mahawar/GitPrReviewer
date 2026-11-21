@@ -16,7 +16,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { set } from "zod";
 
 export default function SignUpPage() {
   const router = useRouter();

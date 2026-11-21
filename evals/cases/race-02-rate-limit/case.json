@@ -1,0 +1,11 @@
+{
+  "id": "race-02-rate-limit",
+  "title": "Per-user rate limiting on the login endpoint",
+  "kind": "bug",
+  "bug": {
+    "file": "src/rate-limit.ts",
+    "line": 6,
+    "category": "race-condition",
+    "description": "GET then SET is not atomic: concurrent requests read the same count and all pass, so the limit can be bypassed by parallel requests. Use INCR + EXPIRE (or a Lua script)."
+  }
+}

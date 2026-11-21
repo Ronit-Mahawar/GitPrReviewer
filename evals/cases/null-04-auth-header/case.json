@@ -1,0 +1,11 @@
+{
+  "id": "null-04-auth-header",
+  "title": "Add requireAuth middleware",
+  "kind": "bug",
+  "bug": {
+    "file": "src/middleware/auth.ts",
+    "line": 5,
+    "category": "null-check",
+    "description": "`req.headers.authorization!` is undefined for unauthenticated requests, so `.replace` throws (500) instead of returning 401."
+  }
+}

@@ -1,14 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+type Handler = (ctx: { event: unknown; step: unknown }) => Promise<unknown>;
 const mock = vi.hoisted(() => ({
-  handler: undefined as any,
-  reviewUpdate: vi.fn(), reviewUpdateMany: vi.fn(), repositoryFindUnique: vi.fn(), getToken: vi.fn(), fetchFiles: vi.fn(), fetchPr: vi.fn(), reviewCode: vi.fn(),
+  handler: undefined as unknown as Handler,
+  reviewUpdate: vi.fn(), reviewUpdateMany: vi.fn(), repositoryFindUnique: vi.fn(), getToken: vi.fn(), fetchFiles: vi.fn(), fetchPr: vi.fn(), reviewPullRequest: vi.fn(),
 }));
-vi.mock("../client", () => ({ inngest: { createFunction: vi.fn((opts: any, _trigger: any, handler: any) => { mock.handler = handler; return { opts, fn: handler }; }) } }));
+vi.mock("../client", () => ({ inngest: { createFunction: vi.fn((opts: unknown, _trigger: unknown, handler: Handler) => { mock.handler = handler; return { opts, fn: handler }; }) } }));
 vi.mock("@/server/db", () => ({ db: { review: { update: mock.reviewUpdate, updateMany: mock.reviewUpdateMany }, repository: { findUnique: mock.repositoryFindUnique } } }));
 vi.mock("@/server/services/github", () => ({ getGitHubAccessToken: mock.getToken, fetchPullRequestFiles: mock.fetchFiles, fetchPullRequest: mock.fetchPr }));
-vi.mock("@/server/services/ai", () => ({ reviewCode: mock.reviewCode, ReviewOutputValidationError: class extends Error {} }));
+vi.mock("@/server/review/review-pull-request", () => ({ reviewPullRequest: mock.reviewPullRequest }));
+vi.mock("@/server/services/ai", () => ({ createGeminiLlm: vi.fn(() => vi.fn()) }));
 
+import { ReviewOutputValidationError } from "@/server/review/parse";
 import { reviewPR } from "./review-pr";
 
 const event = { data: { reviewId: "review-1", repositoryId: "repo-1", prNumber: 3, userId: "user-1" } };
@@ -26,11 +29,20 @@ describe("reviewPR failure state", () => {
   });
 
   it("retries LLM errors and ends the stored review in a terminal state", async () => {
-    mock.reviewCode.mockRejectedValue(new Error("LLM unavailable"));
-    const attempts = Number((reviewPR as any).opts.retries ?? 0) + 1;
+    mock.reviewPullRequest.mockRejectedValue(new Error("LLM unavailable"));
+    const attempts = Number((reviewPR as unknown as { opts: { retries?: number } }).opts.retries ?? 0) + 1;
     for (let i = 0; i < attempts; i++) await expect(mock.handler({ event, step })).rejects.toThrow("LLM unavailable");
-    expect(mock.reviewCode).toHaveBeenCalledTimes(attempts);
+    expect(mock.reviewPullRequest).toHaveBeenCalledTimes(attempts);
     expect(mock.reviewUpdate).not.toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ status: "COMPLETED" }) }));
+  });
+
+  it("saves token usage and zodValid=false when the model output is invalid", async () => {
+    mock.reviewPullRequest.mockRejectedValue(new ReviewOutputValidationError("not-json", { promptTokens: 30, completionTokens: 7 }, new Error("bad")));
+    await expect(mock.handler({ event, step })).rejects.toBeInstanceOf(ReviewOutputValidationError);
+    expect(mock.reviewUpdate).toHaveBeenCalledWith({
+      where: { id: "review-1" },
+      data: { promptTokens: 30, completionTokens: 7, zodValid: false },
+    });
   });
 
   it("throws on the first forced benchmark attempt and completes on retry", async () => {
@@ -39,10 +51,9 @@ describe("reviewPR failure state", () => {
       .mockResolvedValueOnce({ count: 1 })
       .mockResolvedValueOnce({ count: 0 })
       .mockResolvedValueOnce({ count: 1 });
-    mock.reviewCode.mockResolvedValue({
-      result: { summary: "Reviewed", riskScore: 0, comments: [] },
-      usage: { prompt_tokens: 10, completion_tokens: 5 },
-      zodValid: true,
+    mock.reviewPullRequest.mockResolvedValue({
+      summary: "Reviewed", riskScore: 0, comments: [],
+      meta: { model: "m", promptTokens: 10, completionTokens: 5, latencyMs: 1, finishReason: "stop" },
     });
     const retryEvent = { data: { ...event.data, forceRetryTest: true } };
 
@@ -52,7 +63,7 @@ describe("reviewPR failure state", () => {
     expect(mock.reviewUpdateMany).toHaveBeenCalledTimes(3);
     expect(mock.reviewUpdate).toHaveBeenCalledWith(expect.objectContaining({
       where: { id: "review-1" },
-      data: expect.objectContaining({ status: "COMPLETED", zodValid: true }),
+      data: expect.objectContaining({ status: "COMPLETED", zodValid: true, promptTokens: 10, completionTokens: 5 }),
     }));
   });
 });

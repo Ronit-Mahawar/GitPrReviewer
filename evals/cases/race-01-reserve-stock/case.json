@@ -1,0 +1,11 @@
+{
+  "id": "race-01-reserve-stock",
+  "title": "Reserve inventory at checkout",
+  "kind": "bug",
+  "bug": {
+    "file": "src/inventory.ts",
+    "line": 10,
+    "category": "race-condition",
+    "description": "Read-then-write across an await (TOCTOU): two concurrent checkouts both read the same quantity and both succeed, overselling. Use `UPDATE ... SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1` or SELECT FOR UPDATE in a transaction."
+  }
+}

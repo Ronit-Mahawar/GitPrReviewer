@@ -1,0 +1,1540 @@
+diff --git a/package-lock.json b/package-lock.json
+new file mode 100644
+index 0000000..692f9d5
+--- /dev/null
++++ b/package-lock.json
+@@ -0,0 +1,989 @@
++{
++  "name": "shop-api",
++  "version": "0.1.0",
++  "lockfileVersion": 3,
++  "requires": true,
++  "packages": {
++    "": {
++      "name": "shop-api",
++      "version": "0.1.0",
++      "dependencies": {
++        "csv-stringify": "^6.5.0",
++        "pg": "^8.13.0",
++        "redis": "^4.7.0"
++      }
++    },
++    "node_modules/pg": {
++      "version": "1.2.6",
++      "resolved": "https://registry.npmjs.org/pg/-/pg-1.2.6.tgz",
++      "integrity": "sha512-bccbcaa887345ef750692e69310b91000e27421536d1ad5932e4e66ff9f55ab476550160cfd305483da2b5==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types": {
++      "version": "1.8.2",
++      "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-1.8.2.tgz",
++      "integrity": "sha512-4d07139f2008ddf40b79d17b79e2013e865b03b1f0a2422253b3c5206b8d6c8907445ee65430b431fe7b71==",
++      "license": "MIT"
++    },
++    "node_modules/pg-protocol": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/pg-protocol/-/pg-protocol-1.2.0.tgz",
++      "integrity": "sha512-7ad68e052dc87d40ac5969c06a611ad7a2f8ac50be6b14fb8312dc313182169a325634997faf7aa3450e9c==",
++      "license": "MIT"
++    },
++    "node_modules/pg-pool": {
++      "version": "1.7.10",
++      "resolved": "https://registry.npmjs.org/pg-pool/-/pg-pool-1.7.10.tgz",
++      "integrity": "sha512-eebf70f7116327ea1e55b2a307c0d32bfcf55d80224c50b98f4d626e2c07163b48d105807e676dd7d1acd0==",
++      "license": "MIT"
++    },
++    "node_modules/pg-connection-string": {
++      "version": "1.2.5",
++      "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-1.2.5.tgz",
++      "integrity": "sha512-c3356313b2d6eb0f8d172b80beaf0e6531ad91da1dad43bc19a88e923eaf0257dc992e59c6ffed11f96dd2==",
++      "license": "MIT"
++    },
++    "node_modules/pgpass": {
++      "version": "1.6.7",
++      "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-1.6.7.tgz",
++      "integrity": "sha512-1b124129dd364973ad0916712d90be5d33d42abc7d61a92da8e62186e8dd6234264c44fb192ba186dfcbdd==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-array": {
++      "version": "1.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-1.5.9.tgz",
++      "integrity": "sha512-bf76b58a99f879c5fed0e30ee16683caf692eacc37adc81977ff28f559bc1c3d30aa4e85719675287afcbc==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea": {
++      "version": "1.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-1.5.9.tgz",
++      "integrity": "sha512-7b598deccdcd3113f63ff2a3e9c6db1dacfedda74d5dc95ecad0f1dc5ae775667c0ad561eb1ab8a24777ee==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date": {
++      "version": "1.4.6",
++      "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-1.4.6.tgz",
++      "integrity": "sha512-72e3ea5a1d1bf0893a77a8d2900d6777460420ca6d1dab5516a0decf47531270c16a74dbb8e658ef9d776a==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-interval": {
++      "version": "1.8.7",
++      "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-1.8.7.tgz",
++      "integrity": "sha512-8b0db0ab43a095d47b40b21604448dd55fa4e81fa2f77a7b67923132156c1132074800721a761f98830314==",
++      "license": "MIT"
++    },
++    "node_modules/redis": {
++      "version": "1.5.4",
++      "resolved": "https://registry.npmjs.org/redis/-/redis-1.5.4.tgz",
++      "integrity": "sha512-289c038b3b282ac435da6a739502eed7a22f7a46a1f8bd2df1c0db9b249848ca30a2a5514e473643b24b74==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/client": {
++      "version": "1.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/client/-/client-1.4.6.tgz",
++      "integrity": "sha512-dc9405080258bcb8a0cf4d524332c0a6f1c4d3fcac18c04a59ef7fef8ac511ff708406a7af059f056670bd==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/bloom": {
++      "version": "1.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/bloom/-/bloom-1.3.3.tgz",
++      "integrity": "sha512-461105b7f499e57f5eae869383ac346970a50db8c3da2e864073ed6e84c45a16228b05e6356b1f8d357097==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/graph": {
++      "version": "1.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/graph/-/graph-1.3.3.tgz",
++      "integrity": "sha512-2744d448043440a2abdc8db3551e17c69f1aa9d830b92fb2272fa11638221921272eec67e1249521f6420b==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/@redis/json/-/json-1.2.0.tgz",
++      "integrity": "sha512-c940460e7aec3ba2afdd4ef90d56728e8ffc0cfeba3abf7f6c3b0c346dfe012ca21164236c27bb23b7d374==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/search": {
++      "version": "1.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/search/-/search-1.4.6.tgz",
++      "integrity": "sha512-3abf6d2236830642e17f0f4eb9d7aa4fb74a56619c590ca62abb84ce5f8c7800cdbc9fa3e3f4c2da4ae8de==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/time-series": {
++      "version": "1.0.10",
++      "resolved": "https://registry.npmjs.org/@redis/time-series/-/time-series-1.0.10.tgz",
++      "integrity": "sha512-6f20321f7a7a16ed1eeb4a67029c82311801193566c8cd5bf2eeb3b31d672808689ecbd2f7b8ab18864315==",
++      "license": "MIT"
++    },
++    "node_modules/cluster-key-slot": {
++      "version": "1.7.4",
++      "resolved": "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-1.7.4.tgz",
++      "integrity": "sha512-4850d913873db180ba19c39d38a30f6a62f2a1d10e6ab0c3b72d8f1460c6c6145e283b5ed73b09feb00206==",
++      "license": "MIT"
++    },
++    "node_modules/generic-pool": {
++      "version": "1.3.3",
++      "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-1.3.3.tgz",
++      "integrity": "sha512-2a7510a8f5d9762ee2ed77c950c926d010744ce2a4c1a3bceee13638c50fec50db509f54905cdaf52b3f0b==",
++      "license": "MIT"
++    },
++    "node_modules/yallist": {
++      "version": "1.7.10",
++      "resolved": "https://registry.npmjs.org/yallist/-/yallist-1.7.10.tgz",
++      "integrity": "sha512-2392c7eb90df337a7c4f4d32bd7a547100b93403451666cae3906826015163bdc41cc2bf836f21ae4a7f1b==",
++      "license": "MIT"
++    },
++    "node_modules/csv-stringify": {
++      "version": "1.4.6",
++      "resolved": "https://registry.npmjs.org/csv-stringify/-/csv-stringify-1.4.6.tgz",
++      "integrity": "sha512-1d8af27c9328978517d7e5d93fd485ac9d5106a4d9b698ed53374b721baea0801d494b49858549212ed921==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns": {
++      "version": "1.8.2",
++      "resolved": "https://registry.npmjs.org/date-fns/-/date-fns-1.8.2.tgz",
++      "integrity": "sha512-d6be09617c7a4ee2cde4aa78a4790456f4c9bd2dec739887eb09aa66e30a3b3c095ffe9057f31cc35c4a86==",
++      "license": "MIT"
++    },
++    "node_modules/split2": {
++      "version": "1.6.7",
++      "resolved": "https://registry.npmjs.org/split2/-/split2-1.6.7.tgz",
++      "integrity": "sha512-9796b066d609a19fe940ce383b1aeafe0c8703b5b4091387597d289b353bb6be5cfcf9d751c439f233bba3==",
++      "license": "MIT"
++    },
++    "node_modules/xtend": {
++      "version": "1.5.4",
++      "resolved": "https://registry.npmjs.org/xtend/-/xtend-1.5.4.tgz",
++      "integrity": "sha512-78513880f13f9e559836a2e782ca4008bd3228da473221489062037205d60f9f894357d8bc39a2ae4ba8f5==",
++      "license": "MIT"
++    },
++    "node_modules/obuf": {
++      "version": "1.4.1",
++      "resolved": "https://registry.npmjs.org/obuf/-/obuf-1.4.1.tgz",
++      "integrity": "sha512-7e27fab83ea9da950f1755e629089f16fd9f55674e13f1f0be5896a4199e30eb173d490f21e7df78419d13==",
++      "license": "MIT"
++    },
++    "node_modules/buffer-writer": {
++      "version": "1.4.6",
++      "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-1.4.6.tgz",
++      "integrity": "sha512-b71de8d1ca070dd536a784a2951b5ba2d97f59cf6a201840eaa4782faa1c1156f9690d9cb9b45204b65697==",
++      "license": "MIT"
++    },
++    "node_modules/packet-reader": {
++      "version": "1.4.6",
++      "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-1.4.6.tgz",
++      "integrity": "sha512-88030b4b1cf0ce538950a624f7430b2c2cbc2cb5a0fb35d3c1236390ad6f315e0cab0a32ee2bc4fd996453==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/pg": {
++      "version": "2.2.6",
++      "resolved": "https://registry.npmjs.org/pg/-/pg-2.2.6.tgz",
++      "integrity": "sha512-caafa2a905c2e2a80583f6cf49062a2065ce8251400516b99ddcd647bb91b4652f1f3915edb6ca56fae0b4==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/pg-types": {
++      "version": "2.8.2",
++      "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-2.8.2.tgz",
++      "integrity": "sha512-af9d85b0f2a73ff4ff4f4b4fec30ce95715229bb662ee5404c46ac6c56ad8cc93e4841b7b7ce8af827c0dd==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/pg-protocol": {
++      "version": "2.2.0",
++      "resolved": "https://registry.npmjs.org/pg-protocol/-/pg-protocol-2.2.0.tgz",
++      "integrity": "sha512-4f22cdf334987d0ca94408f0f6c7fd777c5a6be33c1b252774a7ea0960caca70e995d5295bb16e07a994d1==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/pg-pool": {
++      "version": "2.7.10",
++      "resolved": "https://registry.npmjs.org/pg-pool/-/pg-pool-2.7.10.tgz",
++      "integrity": "sha512-304adcbe9661e1cf3825c095fbf5645e1ebd7a8937304ef77351574aa1688c90e0eb5f43b087d6d67f0337==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/pg-connection-string": {
++      "version": "2.2.5",
++      "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-2.2.5.tgz",
++      "integrity": "sha512-b7289aee17abc7a491675aefdf9a4481fc2077cbd5fc8f5e5ff2a155c4283e92cc1ded5ad5461e418f2277==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/pgpass": {
++      "version": "2.6.7",
++      "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-2.6.7.tgz",
++      "integrity": "sha512-90b847c3c117b83ddd1ab96e8012a477c8b55c15921e9bacc62249ecfd60ad6d999717fc04b99c4c7dac91==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/postgres-array": {
++      "version": "2.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-2.5.9.tgz",
++      "integrity": "sha512-52b2614448712d0ed90ea50a9470bf05aa435da958de0f2be0264bd3b524f5daa22216de668161462fc9c8==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/postgres-bytea": {
++      "version": "2.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-2.5.9.tgz",
++      "integrity": "sha512-38372cc88be37349826860eb6fabd62abf0aa1be965e2adc18c61cadae7dfadf55d713bc273e98cfc78ba8==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/postgres-date": {
++      "version": "2.4.6",
++      "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-2.4.6.tgz",
++      "integrity": "sha512-edd8635cca80de28e73d104209903957f7186b3c6fb08c26814c2f36f63b5f07f57d0bb0f48b8b38c949f7==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/postgres-interval": {
++      "version": "2.8.7",
++      "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-2.8.7.tgz",
++      "integrity": "sha512-7ea4035136247d6d7b107cecb4a74905ca0ce9f473c911b46f3aaae2f2afd2d2c18e4c190d2e05c64ce5d6==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/redis": {
++      "version": "2.5.4",
++      "resolved": "https://registry.npmjs.org/redis/-/redis-2.5.4.tgz",
++      "integrity": "sha512-6fa87dccb0c3d02c56fda5b7983e271630dc964a176326fc46c981a2cb3875c072da971e4079e562da5252==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/@redis/client": {
++      "version": "2.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/client/-/client-2.4.6.tgz",
++      "integrity": "sha512-b79c703f57e920df692c716ddd33682683118c4c955d88cb7bee09ea1e81fd064df79dbfb3c0de3c285a03==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/@redis/bloom": {
++      "version": "2.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/bloom/-/bloom-2.3.3.tgz",
++      "integrity": "sha512-e26b5d0ffa88ef01b6612800acb183e6ebb6ac926cc5c1ef83822fa5675b1163229601f0cdc4058fe38ef2==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/@redis/graph": {
++      "version": "2.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/graph/-/graph-2.3.3.tgz",
++      "integrity": "sha512-0605c6e1e0e70ee1ac12e9dd206424d510e5ff76031540f0a665ee1addbe0e818b5d0f217d101545dd60d4==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/@redis/json": {
++      "version": "2.2.0",
++      "resolved": "https://registry.npmjs.org/@redis/json/-/json-2.2.0.tgz",
++      "integrity": "sha512-374580517150dc45c2d778f2437b7015f5496169d48e052f2c3bbf09266517b911106e24d012c2f19295b5==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/@redis/search": {
++      "version": "2.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/search/-/search-2.4.6.tgz",
++      "integrity": "sha512-d65f19ad7abf2639b336ecb788ab4354c95de967b25844a1bc37bb5a98e423b1be74783a719db6038e775c==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/@redis/time-series": {
++      "version": "2.0.10",
++      "resolved": "https://registry.npmjs.org/@redis/time-series/-/time-series-2.0.10.tgz",
++      "integrity": "sha512-47c2aeb2032e1780d1eb6f964ba01c483093bc9f748be0927591fe8021344734e40d7b2997ca47842756e2==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/cluster-key-slot": {
++      "version": "2.7.4",
++      "resolved": "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-2.7.4.tgz",
++      "integrity": "sha512-110ce604598331a56988c10bde5cd3753483363511e654eab065f606f9e707b884be8f467f0666413aee3a==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/generic-pool": {
++      "version": "2.3.3",
++      "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-2.3.3.tgz",
++      "integrity": "sha512-f758f7519b7ca70b84c2744777d7a7774e50a8d7efbe5f946c4c5402c1f9924227927fab527ad47213df33==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/yallist": {
++      "version": "2.7.10",
++      "resolved": "https://registry.npmjs.org/yallist/-/yallist-2.7.10.tgz",
++      "integrity": "sha512-5ac292afaf75e436943b2166dde086f4ed8fd0974f7e2b4c3d691aed6348bb0ea1adef6df1cc929ce170f7==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/csv-stringify": {
++      "version": "2.4.6",
++      "resolved": "https://registry.npmjs.org/csv-stringify/-/csv-stringify-2.4.6.tgz",
++      "integrity": "sha512-097f7616de91f8b36b650174ee5f6c8e4f3ff0d710ff44ecc2eb3b5532c2cdfd6686845f0d04a2525e37f8==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/date-fns": {
++      "version": "2.8.2",
++      "resolved": "https://registry.npmjs.org/date-fns/-/date-fns-2.8.2.tgz",
++      "integrity": "sha512-665428d551171059d7112ac97c3ffab7074c75aeb025809e9634314c54b62cc0b13517d9ac31de332a2f18==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/split2": {
++      "version": "2.6.7",
++      "resolved": "https://registry.npmjs.org/split2/-/split2-2.6.7.tgz",
++      "integrity": "sha512-2b0a7978fb055d70dcf8228412ee4d45c5fd3c77e5ab8c43ccbe050b88e4ba04879d53950246549269e18a==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/xtend": {
++      "version": "2.5.4",
++      "resolved": "https://registry.npmjs.org/xtend/-/xtend-2.5.4.tgz",
++      "integrity": "sha512-71fbe20f05978a530e38ae9bb9cd336d6a9d939fa5678d4f2d45d965ef162a69dd4fb7ebc7ec29811acf41==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/obuf": {
++      "version": "2.4.1",
++      "resolved": "https://registry.npmjs.org/obuf/-/obuf-2.4.1.tgz",
++      "integrity": "sha512-8c1063bf56d72932945dda6e1083718040f2512f7f2cf01994665c6990d09acb9e6a99eca144998cedd4ff==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/buffer-writer": {
++      "version": "2.4.6",
++      "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-2.4.6.tgz",
++      "integrity": "sha512-bc646ffba516b361d2550af8b6daf4433c79178f22406214f126a5f80413ccb7401ebf91a7c227258a216c==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-bytea/node_modules/packet-reader": {
++      "version": "2.4.6",
++      "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-2.4.6.tgz",
++      "integrity": "sha512-f92fbd00f6c9d80b954d9dd88c059a87d6bf15e9872cf903bcfbf97218cf948c71a06b43510daea90b953d==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/pg": {
++      "version": "3.2.6",
++      "resolved": "https://registry.npmjs.org/pg/-/pg-3.2.6.tgz",
++      "integrity": "sha512-d78af4df895c86a5441887dbacca34d5a579ef1eab3c832154db5eb4b9567c658b0837bd5d9729089c4150==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/pg-types": {
++      "version": "3.8.2",
++      "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-3.8.2.tgz",
++      "integrity": "sha512-59b2c333a4cbb7289ebadf10085b93dad1c736bef7903b4f96ad55d84724751d14fbe399fcb28819418b77==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/pg-protocol": {
++      "version": "3.2.0",
++      "resolved": "https://registry.npmjs.org/pg-protocol/-/pg-protocol-3.2.0.tgz",
++      "integrity": "sha512-fcd272b59a82bde838ed002bc5e4eca2a1afafe2905e586e2725fb61be632489304906d8f3eeb6bc5096e8==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/pg-pool": {
++      "version": "3.7.10",
++      "resolved": "https://registry.npmjs.org/pg-pool/-/pg-pool-3.7.10.tgz",
++      "integrity": "sha512-d53a88b115dd909ec7d5cc306d577ca3059e96f4cc7167050539ce2133ca6fec7345cb3f476d4d79cb1c1a==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/pg-connection-string": {
++      "version": "3.2.5",
++      "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-3.2.5.tgz",
++      "integrity": "sha512-8c060b3bba5c3e7680913a8f9df4115eb9c7a66be0a00b0f0d5db0f501bc7d28ac70d5830cdaa39a45cbc7==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/pgpass": {
++      "version": "3.6.7",
++      "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-3.6.7.tgz",
++      "integrity": "sha512-ec757eed9f81a58813d9f8701050da09b3c7fd8fb5a6c518b49c42c7a98e09be83dfdc7ed0dc87e677f502==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/postgres-array": {
++      "version": "3.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-3.5.9.tgz",
++      "integrity": "sha512-7f3fb67afc9f23279f867aeb35dfdff9eb3055db5783adec29757d354c8b35b202082dd2821269aac6273c==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/postgres-bytea": {
++      "version": "3.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-3.5.9.tgz",
++      "integrity": "sha512-de032cc34d22f3b342400b85739016c3aa39174582bd64e08866833224b437fe6236d95bdf1c4a403a65bf==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/postgres-date": {
++      "version": "3.4.6",
++      "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-3.4.6.tgz",
++      "integrity": "sha512-4fea83fd4c0120b388e69e967c037ec7d1a5c19df4236bf3ecd9b5e4a428f936aae15b7eaa888f27a04682==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/postgres-interval": {
++      "version": "3.8.7",
++      "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-3.8.7.tgz",
++      "integrity": "sha512-fb35aa933f8b9c0c8777533ab7ba181b685f42c137469c8280639762b801ef233c317f5e14e1d54266d3d8==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/redis": {
++      "version": "3.5.4",
++      "resolved": "https://registry.npmjs.org/redis/-/redis-3.5.4.tgz",
++      "integrity": "sha512-bdd0e3a24cb2fa15977f5f1acfc5a44d491b1ad5981bb802c8585785535b3b21459981c07b8b2f63e92fbf==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/@redis/client": {
++      "version": "3.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/client/-/client-3.4.6.tgz",
++      "integrity": "sha512-898d6a7d635988578a0650712973514177a0509f1f80e801582aecb22f8a034490ebdd9f98b693c83d324f==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/@redis/bloom": {
++      "version": "3.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/bloom/-/bloom-3.3.3.tgz",
++      "integrity": "sha512-0d536bfc2db094120d0ca5ff907c2ebb2610b5f710d3cff07cf14520c7a8d2e8fc66afb384bbf5e11b7664==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/@redis/graph": {
++      "version": "3.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/graph/-/graph-3.3.3.tgz",
++      "integrity": "sha512-89c33024334dc2236760cb81a238eb6fa4ae81a8a6a3a804d7dc4c87604d3dbfa539bde1d7ebf78e3e4a3c==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/@redis/json": {
++      "version": "3.2.0",
++      "resolved": "https://registry.npmjs.org/@redis/json/-/json-3.2.0.tgz",
++      "integrity": "sha512-79e8d77dca2bd69a239c77c5ae3a6a97822e559da8c84850b1e3fba1c774d344269eeef7ac64ca1fdc81b7==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/@redis/search": {
++      "version": "3.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/search/-/search-3.4.6.tgz",
++      "integrity": "sha512-91974a194fa5ace4c1278ae4cbe8da106137a7c19936f799c78229e9f8638f12f341fd392f836721e20ffb==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/@redis/time-series": {
++      "version": "3.0.10",
++      "resolved": "https://registry.npmjs.org/@redis/time-series/-/time-series-3.0.10.tgz",
++      "integrity": "sha512-dac649ce303ef96572062748549bb989bb4d0bb1ff7e55bdc5afd118996c8701472726e6a4480e0ddb225c==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/cluster-key-slot": {
++      "version": "3.7.4",
++      "resolved": "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-3.7.4.tgz",
++      "integrity": "sha512-042e93d2a074019c8996fedf7d69b5e082aac1d6bc5966a7369cc21e8c24afad5e45cf832bcfe7ff13ac83==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/generic-pool": {
++      "version": "3.3.3",
++      "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-3.3.3.tgz",
++      "integrity": "sha512-605f85e2cc76523bc5dee29bcd05c66f9bc50f54f5375993a376d93074bbcb480bc24e2a173705bdb00371==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/yallist": {
++      "version": "3.7.10",
++      "resolved": "https://registry.npmjs.org/yallist/-/yallist-3.7.10.tgz",
++      "integrity": "sha512-570d88328b9092fb56778340ac1db5d444bc16e55c903ef3b88fc774cf82cce615d4fb4dd4899a3a76e3de==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/csv-stringify": {
++      "version": "3.4.6",
++      "resolved": "https://registry.npmjs.org/csv-stringify/-/csv-stringify-3.4.6.tgz",
++      "integrity": "sha512-9c7f96564552f8d5fb4aa66ab05a48ce279d4a27c109f4ac39e9bd947730a705983285e686004a5f5ee2de==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/date-fns": {
++      "version": "3.8.2",
++      "resolved": "https://registry.npmjs.org/date-fns/-/date-fns-3.8.2.tgz",
++      "integrity": "sha512-6a2addc3fcd6766d9f3e3d877802d9577539e6cf46dd7d257a758db08e95ed5d1d0af5030ce9b01209603b==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/split2": {
++      "version": "3.6.7",
++      "resolved": "https://registry.npmjs.org/split2/-/split2-3.6.7.tgz",
++      "integrity": "sha512-f5a91c0c5e48076055f77db2eba9970675a90a7fd99733af3c55daed61105244f707a6a571f9992ad3091d==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/xtend": {
++      "version": "3.5.4",
++      "resolved": "https://registry.npmjs.org/xtend/-/xtend-3.5.4.tgz",
++      "integrity": "sha512-9bd02cce17f35bb20329e660f539218ad7c42982220a355272b8a738c6b1b4a4118d62360d59efaefd72e2==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/obuf": {
++      "version": "3.4.1",
++      "resolved": "https://registry.npmjs.org/obuf/-/obuf-3.4.1.tgz",
++      "integrity": "sha512-4aa4567a1609d3e9cf82e5dfedda1e7cd18e3ec2754358b17c2f23d4b182cbfa5b187de43d427bcc61f238==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/buffer-writer": {
++      "version": "3.4.6",
++      "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-3.4.6.tgz",
++      "integrity": "sha512-aeed2f62e567e60830016632651f67ba0a8a2bc022e0771d1e0b34cb9ab8e75c9fae77ef4461cd1d72438d==",
++      "license": "MIT"
++    },
++    "node_modules/@redis/json/node_modules/packet-reader": {
++      "version": "3.4.6",
++      "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-3.4.6.tgz",
++      "integrity": "sha512-8f8cd534b736d0738b26ef6342756d7689683f198444ed173fe9cb8ceeea3c04ab2896804f7959ade2f784==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/pg": {
++      "version": "4.2.6",
++      "resolved": "https://registry.npmjs.org/pg/-/pg-4.2.6.tgz",
++      "integrity": "sha512-29aa711c2de0f28fb1ada217bd7034065ea5969f6b12eeb49d2806fd40df9e7ba2797d74fac4721dc4d0aa==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/pg-types": {
++      "version": "4.8.2",
++      "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-4.8.2.tgz",
++      "integrity": "sha512-650b4d907bf7e5486b983cc9bac47ae223f21039e86af788ff2ce9cbfebc39d034855df46333e7d50bbbb8==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/pg-protocol": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmjs.org/pg-protocol/-/pg-protocol-4.2.0.tgz",
++      "integrity": "sha512-2d92ca97edef89c173fea07c02c9a168a2ec6ce478796f1740115b197980c326ce8fa87fd70fac73f7bfc2==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/pg-pool": {
++      "version": "4.7.10",
++      "resolved": "https://registry.npmjs.org/pg-pool/-/pg-pool-4.7.10.tgz",
++      "integrity": "sha512-a898b7ccccd70b66c8ec5b36117ce10ba03d6f365e7eaa85cc0cb4011d46b280def09d680fe91c647ac630==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/pg-connection-string": {
++      "version": "4.2.5",
++      "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-4.2.5.tgz",
++      "integrity": "sha512-7c7037f819a91dda53bf2313e1c73eace0305d2576d255194c6c73d956f654b50830f5d2efd752377da4dc==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/pgpass": {
++      "version": "4.6.7",
++      "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-4.6.7.tgz",
++      "integrity": "sha512-197dadb96b48d064f04570bd8758008e6e121c052a99f1be8e2e46f0bb991d45510840bc37018dcf043f3f==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/postgres-array": {
++      "version": "4.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-4.5.9.tgz",
++      "integrity": "sha512-4ffefaae8204c4ace722ee26257da2d6c9e4754dc570ce9a11902bb45c8724d31bcf62ce654dbb70cd7ed7==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/postgres-bytea": {
++      "version": "4.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-4.5.9.tgz",
++      "integrity": "sha512-3d8e63da86c3fbe688bdd5595a0a35d9f012b417870a29ff411fa66a9f8e325a02ba2648674c70ac7f733b==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/postgres-date": {
++      "version": "4.4.6",
++      "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-4.4.6.tgz",
++      "integrity": "sha512-03384b88e23f5204be24d259ccceec2e573227feb4a369bac038f3e00f095f5aeeb4cc136d10ca22b70620==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/postgres-interval": {
++      "version": "4.8.7",
++      "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-4.8.7.tgz",
++      "integrity": "sha512-5febbc1db7c0b538c2f86f7c45eb4d62067517a7b876e2f517a204178f042bfec44df79562c7d6b1575b77==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/redis": {
++      "version": "4.5.4",
++      "resolved": "https://registry.npmjs.org/redis/-/redis-4.5.4.tgz",
++      "integrity": "sha512-fecf0bb67084e46763c65eef4f2a45c057a603d8351a41ec51d1e4aca4d371dc1e4131209e8c58b8a69195==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/@redis/client": {
++      "version": "4.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/client/-/client-4.4.6.tgz",
++      "integrity": "sha512-4fa1eaa373aaa13c9b89ca87b6edf1a41acaecdcd7e421f88ed7847cd3d2a4c7cb2ea58198075fc0f4b6cb==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/@redis/bloom": {
++      "version": "4.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/bloom/-/bloom-4.3.3.tgz",
++      "integrity": "sha512-63e674088c41f19dbc5dbda0db9f5f7a6a07cbb4b2786150c90d2a82c74a4a2cd0e2904bb65723b6a13e5b==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/@redis/graph": {
++      "version": "4.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/graph/-/graph-4.3.3.tgz",
++      "integrity": "sha512-bcaf0020b055056e4ed9e3f74f278fdb27d1eb379d34814f697b626b33e65d1cc6b5b2ac5c398798c55237==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/@redis/json": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmjs.org/@redis/json/-/json-4.2.0.tgz",
++      "integrity": "sha512-9be6b00c2315b3d57db4233a268d341829cdefa7ead97057260cbcae5e06915ea9c2772c8571ccfb21c742==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/@redis/search": {
++      "version": "4.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/search/-/search-4.4.6.tgz",
++      "integrity": "sha512-f66837b40352398db5bbc7f79459519f786bd86f37a6e39c6499ff56eb62c711ea18300d342f107e946443==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/@redis/time-series": {
++      "version": "4.0.10",
++      "resolved": "https://registry.npmjs.org/@redis/time-series/-/time-series-4.0.10.tgz",
++      "integrity": "sha512-c757b4f52764fe68364b27f0ce91d66a2cb37441de2df6aeed48d9015a6cb6471d4756e0d489285d94935e==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/cluster-key-slot": {
++      "version": "4.7.4",
++      "resolved": "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-4.7.4.tgz",
++      "integrity": "sha512-4b2fa9d7e36527d369bd4f57d79c298d3ad68bdee180fd3692afb3528370260e6be36ca48e55d75ba98e16==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/generic-pool": {
++      "version": "4.3.3",
++      "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-4.3.3.tgz",
++      "integrity": "sha512-cbc4b19502d76b0b46d88eb9716f77851393cef40c1894ec0e066c622453176f779144642be37c44205f81==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/yallist": {
++      "version": "4.7.10",
++      "resolved": "https://registry.npmjs.org/yallist/-/yallist-4.7.10.tgz",
++      "integrity": "sha512-7ee8a236e7ead1dc2bedfc2d3e6c3faaf5d0a3b889319f8c5f930199758d81b40a7f655bd7ef2bc4bcd8d9==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/csv-stringify": {
++      "version": "4.4.6",
++      "resolved": "https://registry.npmjs.org/csv-stringify/-/csv-stringify-4.4.6.tgz",
++      "integrity": "sha512-937e23d02325f5407755525a744e2e279a0c6d2855cdbc3d175f689a45b22585f4dd78e8e803dd4ceaf7d8==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/date-fns": {
++      "version": "4.8.2",
++      "resolved": "https://registry.npmjs.org/date-fns/-/date-fns-4.8.2.tgz",
++      "integrity": "sha512-bc0423306efe02d4cd70ded1075d6798c5831a9cdf48e046923a6289b5ed94292f99e6bb6fa576c6df5998==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/split2": {
++      "version": "4.6.7",
++      "resolved": "https://registry.npmjs.org/split2/-/split2-4.6.7.tgz",
++      "integrity": "sha512-0a025545d1fe80b150d078c7142467085b22c03d4675e89857a62ea5d53fa046564c9a885fcc01992171a9==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/xtend": {
++      "version": "4.5.4",
++      "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.5.4.tgz",
++      "integrity": "sha512-a3459be74709c7d3fcbbaae3d285d78474a1f412fa4766365a969f1bc3dfd4693007580b77447021e104ef==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/obuf": {
++      "version": "4.4.1",
++      "resolved": "https://registry.npmjs.org/obuf/-/obuf-4.4.1.tgz",
++      "integrity": "sha512-4979c1f90ff292466d6129cfcdce3a4eef6ad34e7254a0f7970bd1bca2ab1c492e2d0ee8ba6fbdfef853a3==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/buffer-writer": {
++      "version": "4.4.6",
++      "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-4.4.6.tgz",
++      "integrity": "sha512-50b770736315901fb7e3dfe255fe6f3d78937a8988cf3ecc9b7a64abf8453d337c8f9134da2a3393c3c3bb==",
++      "license": "MIT"
++    },
++    "node_modules/date-fns/node_modules/packet-reader": {
++      "version": "4.4.6",
++      "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-4.4.6.tgz",
++      "integrity": "sha512-882dd13d2dec85472facc8b6e6dfab89163a8d4d59cb307b4a1c52b830c09c76d7162910935abe22e3be5d==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/pg": {
++      "version": "5.2.6",
++      "resolved": "https://registry.npmjs.org/pg/-/pg-5.2.6.tgz",
++      "integrity": "sha512-7d53b22fe3d323bff398e5f419c29e55e10cb966e8f4adc31791f61742d3d0df11ddcfd035ba25db68af8b==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/pg-types": {
++      "version": "5.8.2",
++      "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-5.8.2.tgz",
++      "integrity": "sha512-b406f835f9e413007cd433eb9e7097ce3e38bfde9f4255f3adc7a4f41b64c632ec830a95cd01b233a85a73==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/pg-protocol": {
++      "version": "5.2.0",
++      "resolved": "https://registry.npmjs.org/pg-protocol/-/pg-protocol-5.2.0.tgz",
++      "integrity": "sha512-8deb9d7cbb82b11a0bcf05e258de82e88937870a4910d3554aad74540dffdab52117c3cf9c3d46740b811b==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/pg-pool": {
++      "version": "5.7.10",
++      "resolved": "https://registry.npmjs.org/pg-pool/-/pg-pool-5.7.10.tgz",
++      "integrity": "sha512-6c964cfcaeeb6f8e89b5495122cbf78db6ce04164017168046e74c00c4a8088e8b537129fe303cad6e0b1a==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/pg-connection-string": {
++      "version": "5.2.5",
++      "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-5.2.5.tgz",
++      "integrity": "sha512-2430699427da339dd136667d4e514f40b4e474f440bde5414a90c61133bd71afbb62a1970f04aa6f5ef341==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/pgpass": {
++      "version": "5.6.7",
++      "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-5.6.7.tgz",
++      "integrity": "sha512-a3a11e6d7f7789802156d945cf19dcdda7dfcc9d068cf55012545a6fab55a5b1c0ec62b37fbb1aefffecf3==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/postgres-array": {
++      "version": "5.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-5.5.9.tgz",
++      "integrity": "sha512-eb78b24fdf213c1c6e6368a041319c5d1ba53be92320560d70aac64326bc8417f2285da10c3386ff0faa1e==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/postgres-bytea": {
++      "version": "5.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-5.5.9.tgz",
++      "integrity": "sha512-0103058ab767ecc11839c54bafd3cce1ffab6d1e16f823aa01c4d4c6a29186c9d05a5d262c74899b48b2b2==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/postgres-date": {
++      "version": "5.4.6",
++      "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-5.4.6.tgz",
++      "integrity": "sha512-99bffbf5dd554384071975927ead4f04547dc389fbe1b1214b79cd3da27e4df0965078429b03cbea484c14==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/postgres-interval": {
++      "version": "5.8.7",
++      "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-5.8.7.tgz",
++      "integrity": "sha512-08823c2d25141a99bacbb242cf7a2fd9585c5bb4863ef8fa1c998fec9626bb1505e71995e3195eba331547==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/redis": {
++      "version": "5.5.4",
++      "resolved": "https://registry.npmjs.org/redis/-/redis-5.5.4.tgz",
++      "integrity": "sha512-c4be41fa792f6e86628eab7753587f0e2bcd0bf62943996ca9a427f8abf26b38b380d98b6a96fe1998a6a7==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/@redis/client": {
++      "version": "5.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/client/-/client-5.4.6.tgz",
++      "integrity": "sha512-04723b677217bde963e560c75409e83a10fca948f8b3590fba3488465a6bf817da904f915c103ba34b82a2==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/@redis/bloom": {
++      "version": "5.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/bloom/-/bloom-5.3.3.tgz",
++      "integrity": "sha512-5b6418f19cb2e43cd4da3a41eec84a8aac8d8dbd67f1302d76bea1429105ccd91c012f0b6bf8ba124df035==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/@redis/graph": {
++      "version": "5.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/graph/-/graph-5.3.3.tgz",
++      "integrity": "sha512-9e0af9a29746c401a5c025be46a57cbdbaec90c0ab2ddd24879b04c3b11fffe5aa74cbeacfb2b933800766==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/@redis/json": {
++      "version": "5.2.0",
++      "resolved": "https://registry.npmjs.org/@redis/json/-/json-5.2.0.tgz",
++      "integrity": "sha512-0e13abd43107d22793c1ee4df270b9a64db2f8c0617efb76cc4313e1af2ee4366172c3d1f26b53a6ac0c22==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/@redis/search": {
++      "version": "5.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/search/-/search-5.4.6.tgz",
++      "integrity": "sha512-b4f19752235479888dd833e0fce64da914d4f77b966a4587b6f7720f86f3dde882be72dabf555914b5b406==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/@redis/time-series": {
++      "version": "5.0.10",
++      "resolved": "https://registry.npmjs.org/@redis/time-series/-/time-series-5.0.10.tgz",
++      "integrity": "sha512-b7213a766cdb1eed0a243d344beb2ac8374c0cf783152eea6b05ad945e0b1594cf015aa3354a31d09988e1==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/cluster-key-slot": {
++      "version": "5.7.4",
++      "resolved": "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-5.7.4.tgz",
++      "integrity": "sha512-6b25cd16e5b59e686c4f60035f7a5def765406c8f1a25e994bb33f31118c8f10737f009b33889e7ab05f6e==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/generic-pool": {
++      "version": "5.3.3",
++      "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-5.3.3.tgz",
++      "integrity": "sha512-170dde68293d8859ed63078e6d6f2ddb6aef16733ab49a9561f6e2c78d85fedb35cd66c9d7c6536f98f6dc==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/yallist": {
++      "version": "5.7.10",
++      "resolved": "https://registry.npmjs.org/yallist/-/yallist-5.7.10.tgz",
++      "integrity": "sha512-fc551f7086e86ede28eddc2ef1f116bb538e9312f247067719c724e338f4d5cda5f298aea797150ce74001==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/csv-stringify": {
++      "version": "5.4.6",
++      "resolved": "https://registry.npmjs.org/csv-stringify/-/csv-stringify-5.4.6.tgz",
++      "integrity": "sha512-4b91bd77f00bca21b80000ac12cd73dd22679543e2b57f645230e826319f189bc03f368548b530a39bdd20==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/date-fns": {
++      "version": "5.8.2",
++      "resolved": "https://registry.npmjs.org/date-fns/-/date-fns-5.8.2.tgz",
++      "integrity": "sha512-169d14a287eb12196e8c3cf102cda29b35fdf4160cac4b800fccb3bad3973d9c9c36f318c642968a0b114b==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/split2": {
++      "version": "5.6.7",
++      "resolved": "https://registry.npmjs.org/split2/-/split2-5.6.7.tgz",
++      "integrity": "sha512-13fdaa2cc6466127b341f5862850b15b936466db4a6728f29b44854db5e4cd5d7c6400304409e1fdfed3e7==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/xtend": {
++      "version": "5.5.4",
++      "resolved": "https://registry.npmjs.org/xtend/-/xtend-5.5.4.tgz",
++      "integrity": "sha512-f8666d6da38de89403281f8da103c88bb2bdf3fe9bcf0379655adc958b3aab1de77d6fd3dbf32517abe689==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/obuf": {
++      "version": "5.4.1",
++      "resolved": "https://registry.npmjs.org/obuf/-/obuf-5.4.1.tgz",
++      "integrity": "sha512-4eff48ee3e1f6b163c73246ea43fd800ba53b9452f0f8777e8d445589d4775c9a79a26f0c3470465a1f9f1==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/buffer-writer": {
++      "version": "5.4.6",
++      "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-5.4.6.tgz",
++      "integrity": "sha512-4ada6d1c010cce4890d8961762b5525bfe8f42566e95c0df99ca328b71c472a7fc42ed5416b84ca91eb15f==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types/node_modules/packet-reader": {
++      "version": "5.4.6",
++      "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-5.4.6.tgz",
++      "integrity": "sha512-bc2d7b4ea8c1084a59f25a79d1de2052f40b74d83842f232676bcb4afa90df93d8bbc135882a93272bb952==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/pg": {
++      "version": "6.2.6",
++      "resolved": "https://registry.npmjs.org/pg/-/pg-6.2.6.tgz",
++      "integrity": "sha512-fd3b54da5526a9a6c409c31538370311d70bdeb941e3b9a223f7a34482fc28dcf71859c7eda31571dd4362==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/pg-types": {
++      "version": "6.8.2",
++      "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-6.8.2.tgz",
++      "integrity": "sha512-f0f26a30d2f8df7714bec69bf1784ff9f33ebf2fd318d11adc1cddb6e1e3e49f6bad84bf0d58d01c91a019==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/pg-protocol": {
++      "version": "6.2.0",
++      "resolved": "https://registry.npmjs.org/pg-protocol/-/pg-protocol-6.2.0.tgz",
++      "integrity": "sha512-de10cd3b04048c06b1c7a57ee1331e6b7cd7c17649227cbf7807ac7a2f69312fdd540d526696bd370b5f52==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/pg-pool": {
++      "version": "6.7.10",
++      "resolved": "https://registry.npmjs.org/pg-pool/-/pg-pool-6.7.10.tgz",
++      "integrity": "sha512-d8be3d5f35cb2d17bbbd45830e280d4940122d704f584e5aa55894f73172506f7b9faedcfa76747b9a3baa==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/pg-connection-string": {
++      "version": "6.2.5",
++      "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-6.2.5.tgz",
++      "integrity": "sha512-024df71a8bc8d00098464eeae85ea7bdc9432c562d0069f0ba5d480446435e5e13d85d78c594861d91a235==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/pgpass": {
++      "version": "6.6.7",
++      "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-6.6.7.tgz",
++      "integrity": "sha512-911254a5269e5f8c0cf4b0a40dac2ad7393092f22fce7a7550e6f536071bfcdae12c9799f61f387c610a90==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/postgres-array": {
++      "version": "6.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-6.5.9.tgz",
++      "integrity": "sha512-fbcbd788b250a1399b1bd0095a027c703966c8d336b1ec0bfc387eb24fa89b8a882dbab9a11ab7217995bf==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/postgres-bytea": {
++      "version": "6.5.9",
++      "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-6.5.9.tgz",
++      "integrity": "sha512-239a7595ffe01a0d1221cfffdd0b9761f8dcbf4706823da87ec095ebeb8a174b67451ec44391822a8369b1==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/postgres-date": {
++      "version": "6.4.6",
++      "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-6.4.6.tgz",
++      "integrity": "sha512-9328ac2cd7ae06c5d8c091176acca538f4a4360b6a00e1796108f13d35f40cf0601e0ecb90040c2159712b==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/postgres-interval": {
++      "version": "6.8.7",
++      "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-6.8.7.tgz",
++      "integrity": "sha512-2539b10cff4f1a8f58799f86e2c710aa6fd6ef2f33e64a2084df9ad37e6eaaa490b537e3419483d3ad3f23==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/redis": {
++      "version": "6.5.4",
++      "resolved": "https://registry.npmjs.org/redis/-/redis-6.5.4.tgz",
++      "integrity": "sha512-48176543ad45d4bd1897c938e0852f5ef2e1322c82c75505eae89210acee50d1c2e6c35f83652bf832bdb8==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/@redis/client": {
++      "version": "6.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/client/-/client-6.4.6.tgz",
++      "integrity": "sha512-2a5ba2d9cabb9a4ebbe3676c33a90f672944302abdf881df4bce07b27cd73d8262a93dc80062adc4255124==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/@redis/bloom": {
++      "version": "6.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/bloom/-/bloom-6.3.3.tgz",
++      "integrity": "sha512-93e9f18a8398777e08b9c4b0323391932d502590505ba17a2083e83a88de5821bebda1c7255bd43d53010e==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/@redis/graph": {
++      "version": "6.3.3",
++      "resolved": "https://registry.npmjs.org/@redis/graph/-/graph-6.3.3.tgz",
++      "integrity": "sha512-4aa0e88516902a79b7c07d4544992377719f383586bd329a0f97e70de161067d74d3e7c18b2248811d75f1==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/@redis/json": {
++      "version": "6.2.0",
++      "resolved": "https://registry.npmjs.org/@redis/json/-/json-6.2.0.tgz",
++      "integrity": "sha512-3c5378fca9ba4215b9361eefe0eecc8ab605b8c763ea94f317f4bb4260d7a0579cb44d3d82217fcb18639d==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/@redis/search": {
++      "version": "6.4.6",
++      "resolved": "https://registry.npmjs.org/@redis/search/-/search-6.4.6.tgz",
++      "integrity": "sha512-954a57da68d5dcb1e4b228e51ff9c196ff90eb014f300b8a32038211d0da85d28b33ea10be9aa856f18471==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/@redis/time-series": {
++      "version": "6.0.10",
++      "resolved": "https://registry.npmjs.org/@redis/time-series/-/time-series-6.0.10.tgz",
++      "integrity": "sha512-48e1409a38bf66ca77f1d67b1cf6833a85dae0c929df0b371dc6b448a2e983d883d4cec40cb017a142144d==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/cluster-key-slot": {
++      "version": "6.7.4",
++      "resolved": "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-6.7.4.tgz",
++      "integrity": "sha512-5902c62c8c7eada5dc94ad4b885be39cfe29295f5dbe59862a333fe1efcc1b78f1f640a5a727c2333c2f17==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/generic-pool": {
++      "version": "6.3.3",
++      "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-6.3.3.tgz",
++      "integrity": "sha512-cf9b47c09a73a5d91434a09aab8026bb62be0bac4a62d5c25adc0283aec0b812b84ca559625eac5e1594a5==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/yallist": {
++      "version": "6.7.10",
++      "resolved": "https://registry.npmjs.org/yallist/-/yallist-6.7.10.tgz",
++      "integrity": "sha512-d1977bca5c26e52c26dfb8c92c956ba53b9b50a8b991670e91d8dbd3dd4ae0108088eb78799a664d07a402==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/csv-stringify": {
++      "version": "6.4.6",
++      "resolved": "https://registry.npmjs.org/csv-stringify/-/csv-stringify-6.4.6.tgz",
++      "integrity": "sha512-3d061d2296aba8f93c62711a1e57059a63cb82b35d16925727c9eb191afcd7b68ff3b6b5470035aa584289==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/date-fns": {
++      "version": "6.8.2",
++      "resolved": "https://registry.npmjs.org/date-fns/-/date-fns-6.8.2.tgz",
++      "integrity": "sha512-02741b48a856a022ee7c5496eb7a74fc81d742bfa222901c28b25a85c802fad60de774ad86dfdff0f6ed45==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/split2": {
++      "version": "6.6.7",
++      "resolved": "https://registry.npmjs.org/split2/-/split2-6.6.7.tgz",
++      "integrity": "sha512-b290df0320864d2d7210a3d4edbefb896f314f47626a7412cc3217ca848ea491712d47190d8361a30548bf==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/xtend": {
++      "version": "6.5.4",
++      "resolved": "https://registry.npmjs.org/xtend/-/xtend-6.5.4.tgz",
++      "integrity": "sha512-5405c80958e82e035bbd4fb2266f9c6a534f16ab164c06a24bb1d0ec29857edbce66942194619495432dc0==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/obuf": {
++      "version": "6.4.1",
++      "resolved": "https://registry.npmjs.org/obuf/-/obuf-6.4.1.tgz",
++      "integrity": "sha512-05fce207788ec4470d0eb12f91d94bcd17daf3b187097c4b04bf5146e6e1dae3baecd412a78452651582ed==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/buffer-writer": {
++      "version": "6.4.6",
++      "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-6.4.6.tgz",
++      "integrity": "sha512-8682453f892ee9207badc9e41bae88d8abfa6dae19c4046b1008e0a9ed8e3113d0f2f9a0464d4cb6f7f241==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-date/node_modules/packet-reader": {
++      "version": "6.4.6",
++      "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-6.4.6.tgz",
++      "integrity": "sha512-ae68095c1a9891955943ba424e55fd603d452debb6960e9ba4fa77e37cacf99cb1acaccaf83861b0d83b74==",
++      "license": "MIT"
++    }
++  }
++}
+diff --git a/package.json b/package.json
+index c9ac3b6..d08ff12 100644
+--- a/package.json
++++ b/package.json
+@@ -3,7 +3,18 @@
+   "version": "0.1.0",
+   "private": true,
+   "type": "module",
+-  "scripts": { "build": "tsc", "test": "vitest run" },
+-  "dependencies": { "pg": "^8.13.0", "redis": "^4.7.0" },
+-  "devDependencies": { "@types/pg": "^8.11.0", "typescript": "^5.6.0", "vitest": "^2.1.0" }
++  "scripts": {
++    "build": "tsc",
++    "test": "vitest run"
++  },
++  "dependencies": {
++    "pg": "^8.13.0",
++    "redis": "^4.7.0",
++    "csv-stringify": "^6.5.0"
++  },
++  "devDependencies": {
++    "@types/pg": "^8.11.0",
++    "typescript": "^5.6.0",
++    "vitest": "^2.1.0"
++  }
+ }
+diff --git a/src/reports/active-users.ts b/src/reports/active-users.ts
+new file mode 100644
+index 0000000..59b8ce4
+--- /dev/null
++++ b/src/reports/active-users.ts
+@@ -0,0 +1,28 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface ActiveUsersRow {
++  day: string;
++  users: number;
++}
++
++/** Active users per day. */
++export async function activeUsersReport(range: DateRange): Promise<ReportResult<ActiveUsersRow>> {
++  assertValidRange(range);
++  const rows = await query<ActiveUsersRow>(
++    "SELECT date_trunc('day', last_seen_at) AS day, COUNT(*) AS users FROM sessions WHERE last_seen_at BETWEEN $1 AND $2 GROUP BY day ORDER BY day",
++    [range.from, range.to],
++  );
++  return {
++    title: "Active users per day",
++    rows,
++    totals: {
++      users: rows.reduce((sum, row) => sum + Number(row.users), 0),
++    },
++  };
++}
++
++export function activeUsersReportCsv(result: ReportResult<ActiveUsersRow>): string {
++  return toCsv(["day", "users"], result.rows.map((row) => [row.day, row.users]));
++}
+diff --git a/src/reports/average-basket.ts b/src/reports/average-basket.ts
+new file mode 100644
+index 0000000..50c12ef
+--- /dev/null
++++ b/src/reports/average-basket.ts
+@@ -0,0 +1,30 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface AverageBasketRow {
++  day: string;
++  items: number;
++  cents: number;
++}
++
++/** Average basket size. */
++export async function averageBasketReport(range: DateRange): Promise<ReportResult<AverageBasketRow>> {
++  assertValidRange(range);
++  const rows = await query<AverageBasketRow>(
++    "SELECT date_trunc('day', created_at) AS day, AVG(item_count) AS items, AVG(total_cents) AS cents FROM orders WHERE created_at BETWEEN $1 AND $2 GROUP BY day ORDER BY day",
++    [range.from, range.to],
++  );
++  return {
++    title: "Average basket size",
++    rows,
++    totals: {
++      items: rows.reduce((sum, row) => sum + Number(row.items), 0),
++      cents: rows.reduce((sum, row) => sum + Number(row.cents), 0),
++    },
++  };
++}
++
++export function averageBasketReportCsv(result: ReportResult<AverageBasketRow>): string {
++  return toCsv(["day", "items", "cents"], result.rows.map((row) => [row.day, row.items, row.cents]));
++}
+diff --git a/src/reports/index.ts b/src/reports/index.ts
+new file mode 100644
+index 0000000..1d4f2d2
+--- /dev/null
++++ b/src/reports/index.ts
+@@ -0,0 +1,32 @@
++import { activeUsersReport } from "./active-users";
++import { averageBasketReport } from "./average-basket";
++import { lowInventoryReport } from "./inventory-low";
++import { orderStatusReport } from "./order-status";
++import { refundsReport } from "./refunds";
++import { salesByDayReport } from "./sales-by-day";
++import { salesBySkuReport } from "./sales-by-sku";
++import { signupsReport } from "./signups";
++import { topCustomersReport } from "./top-customers";
++import { walletUsageReport } from "./wallet-usage";
++import { revenueByMonthReport } from "./revenue-by-month";
++
++/** Every report, by the name used in GET /reports/:name. */
++export const reports = {
++  "active-users": activeUsersReport,
++  "average-basket": averageBasketReport,
++  "inventory-low": lowInventoryReport,
++  "order-status": orderStatusReport,
++  "refunds": refundsReport,
++  "sales-by-day": salesByDayReport,
++  "sales-by-sku": salesBySkuReport,
++  "signups": signupsReport,
++  "top-customers": topCustomersReport,
++  "wallet-usage": walletUsageReport,
++  "revenue-by-month": revenueByMonthReport,
++} as const;
++
++export type ReportName = keyof typeof reports;
++
++export function isReportName(name: string): name is ReportName {
++  return Object.prototype.hasOwnProperty.call(reports, name);
++}
+diff --git a/src/reports/inventory-low.ts b/src/reports/inventory-low.ts
+new file mode 100644
+index 0000000..00685e6
+--- /dev/null
++++ b/src/reports/inventory-low.ts
+@@ -0,0 +1,29 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface InventoryLowRow {
++  sku: string;
++  quantity: number;
++  reorder_level: number;
++}
++
++/** SKUs below reorder level. */
++export async function lowInventoryReport(limit = 50): Promise<ReportResult<InventoryLowRow>> {
++  const rows = await query<InventoryLowRow>(
++    "SELECT sku, quantity, reorder_level FROM inventory WHERE quantity < reorder_level ORDER BY quantity ASC LIMIT $1",
++    [limit],
++  );
++  return {
++    title: "SKUs below reorder level",
++    rows,
++    totals: {
++      quantity: rows.reduce((sum, row) => sum + Number(row.quantity), 0),
++      reorder_level: rows.reduce((sum, row) => sum + Number(row.reorder_level), 0),
++    },
++  };
++}
++
++export function lowInventoryReportCsv(result: ReportResult<InventoryLowRow>): string {
++  return toCsv(["sku", "quantity", "reorder_level"], result.rows.map((row) => [row.sku, row.quantity, row.reorder_level]));
++}
+diff --git a/src/reports/order-status.ts b/src/reports/order-status.ts
+new file mode 100644
+index 0000000..731612b
+--- /dev/null
++++ b/src/reports/order-status.ts
+@@ -0,0 +1,28 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface OrderStatusRow {
++  status: string;
++  orders: number;
++}
++
++/** Orders by status. */
++export async function orderStatusReport(range: DateRange): Promise<ReportResult<OrderStatusRow>> {
++  assertValidRange(range);
++  const rows = await query<OrderStatusRow>(
++    "SELECT status, COUNT(*) AS orders FROM orders WHERE created_at BETWEEN $1 AND $2 GROUP BY status",
++    [range.from, range.to],
++  );
++  return {
++    title: "Orders by status",
++    rows,
++    totals: {
++      orders: rows.reduce((sum, row) => sum + Number(row.orders), 0),
++    },
++  };
++}
++
++export function orderStatusReportCsv(result: ReportResult<OrderStatusRow>): string {
++  return toCsv(["status", "orders"], result.rows.map((row) => [row.status, row.orders]));
++}
+diff --git a/src/reports/refunds.ts b/src/reports/refunds.ts
+new file mode 100644
+index 0000000..734a317
+--- /dev/null
++++ b/src/reports/refunds.ts
+@@ -0,0 +1,30 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface RefundsRow {
++  reason: string;
++  refunds: number;
++  cents: number;
++}
++
++/** Refunds by reason. */
++export async function refundsReport(range: DateRange): Promise<ReportResult<RefundsRow>> {
++  assertValidRange(range);
++  const rows = await query<RefundsRow>(
++    "SELECT reason, COUNT(*) AS refunds, SUM(amount_cents) AS cents FROM refunds WHERE created_at BETWEEN $1 AND $2 GROUP BY reason ORDER BY cents DESC",
++    [range.from, range.to],
++  );
++  return {
++    title: "Refunds by reason",
++    rows,
++    totals: {
++      refunds: rows.reduce((sum, row) => sum + Number(row.refunds), 0),
++      cents: rows.reduce((sum, row) => sum + Number(row.cents), 0),
++    },
++  };
++}
++
++export function refundsReportCsv(result: ReportResult<RefundsRow>): string {
++  return toCsv(["reason", "refunds", "cents"], result.rows.map((row) => [row.reason, row.refunds, row.cents]));
++}
+diff --git a/src/reports/revenue-by-month.ts b/src/reports/revenue-by-month.ts
+new file mode 100644
+index 0000000..956ccb8
+--- /dev/null
++++ b/src/reports/revenue-by-month.ts
+@@ -0,0 +1,37 @@
++import { query } from "../db";
++import type { ReportResult } from "./types";
++import { toCsv } from "./types";
++
++export interface RevenueByMonthRow {
++  month: string; // "2026-01"
++  cents: number;
++}
++
++/** Paid revenue for each month of a calendar year; months with no sales are 0. */
++export async function revenueByMonthReport(year: number): Promise<ReportResult<RevenueByMonthRow>> {
++  if (!Number.isInteger(year) || year < 2000 || year > 2100) throw new RangeError("year out of range");
++
++  const found = await query<{ month: string; cents: number }>(
++    "SELECT to_char(created_at, 'YYYY-MM') AS month, SUM(total_cents) AS cents FROM orders " +
++      "WHERE status = 'paid' AND created_at >= make_date($1, 1, 1) AND created_at < make_date($1 + 1, 1, 1) " +
++      "GROUP BY month",
++    [year],
++  );
++  const byMonth = new Map(found.map((row) => [row.month, Number(row.cents)]));
++
++  const rows: RevenueByMonthRow[] = [];
++  for (let month = 1; month <= 13; month++) {
++    const key = `${year}-${String(month).padStart(2, "0")}`;
++    rows.push({ month: key, cents: byMonth.get(key) ?? 0 });
++  }
++
++  return {
++    title: `Revenue by month, ${year}`,
++    rows,
++    totals: { cents: rows.reduce((sum, row) => sum + row.cents, 0) },
++  };
++}
++
++export function revenueByMonthCsv(result: ReportResult<RevenueByMonthRow>): string {
++  return toCsv(["month", "cents"], result.rows.map((row) => [row.month, row.cents]));
++}
+diff --git a/src/reports/sales-by-day.ts b/src/reports/sales-by-day.ts
+new file mode 100644
+index 0000000..280063b
+--- /dev/null
++++ b/src/reports/sales-by-day.ts
+@@ -0,0 +1,28 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface SalesByDayRow {
++  day: string;
++  cents: number;
++}
++
++/** Sales per day. */
++export async function salesByDayReport(range: DateRange): Promise<ReportResult<SalesByDayRow>> {
++  assertValidRange(range);
++  const rows = await query<SalesByDayRow>(
++    "SELECT date_trunc('day', created_at) AS day, SUM(total_cents) AS cents FROM orders WHERE status = 'paid' AND created_at BETWEEN $1 AND $2 GROUP BY day ORDER BY day",
++    [range.from, range.to],
++  );
++  return {
++    title: "Sales per day",
++    rows,
++    totals: {
++      cents: rows.reduce((sum, row) => sum + Number(row.cents), 0),
++    },
++  };
++}
++
++export function salesByDayReportCsv(result: ReportResult<SalesByDayRow>): string {
++  return toCsv(["day", "cents"], result.rows.map((row) => [row.day, row.cents]));
++}
+diff --git a/src/reports/sales-by-sku.ts b/src/reports/sales-by-sku.ts
+new file mode 100644
+index 0000000..ecf76b5
+--- /dev/null
++++ b/src/reports/sales-by-sku.ts
+@@ -0,0 +1,30 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface SalesBySkuRow {
++  sku: string;
++  units: number;
++  cents: number;
++}
++
++/** Units sold per SKU. */
++export async function salesBySkuReport(range: DateRange, limit = 20): Promise<ReportResult<SalesBySkuRow>> {
++  assertValidRange(range);
++  const rows = await query<SalesBySkuRow>(
++    "SELECT sku, SUM(quantity) AS units, SUM(quantity * unit_price) AS cents FROM order_items WHERE created_at BETWEEN $1 AND $2 GROUP BY sku ORDER BY units DESC LIMIT $3",
++    [range.from, range.to, limit],
++  );
++  return {
++    title: "Units sold per SKU",
++    rows,
++    totals: {
++      units: rows.reduce((sum, row) => sum + Number(row.units), 0),
++      cents: rows.reduce((sum, row) => sum + Number(row.cents), 0),
++    },
++  };
++}
++
++export function salesBySkuReportCsv(result: ReportResult<SalesBySkuRow>): string {
++  return toCsv(["sku", "units", "cents"], result.rows.map((row) => [row.sku, row.units, row.cents]));
++}
+diff --git a/src/reports/signups.ts b/src/reports/signups.ts
+new file mode 100644
+index 0000000..80cd37c
+--- /dev/null
++++ b/src/reports/signups.ts
+@@ -0,0 +1,28 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface SignupsRow {
++  day: string;
++  signups: number;
++}
++
++/** Sign-ups per day. */
++export async function signupsReport(range: DateRange): Promise<ReportResult<SignupsRow>> {
++  assertValidRange(range);
++  const rows = await query<SignupsRow>(
++    "SELECT date_trunc('day', created_at) AS day, COUNT(*) AS signups FROM users WHERE created_at BETWEEN $1 AND $2 GROUP BY day ORDER BY day",
++    [range.from, range.to],
++  );
++  return {
++    title: "Sign-ups per day",
++    rows,
++    totals: {
++      signups: rows.reduce((sum, row) => sum + Number(row.signups), 0),
++    },
++  };
++}
++
++export function signupsReportCsv(result: ReportResult<SignupsRow>): string {
++  return toCsv(["day", "signups"], result.rows.map((row) => [row.day, row.signups]));
++}
+diff --git a/src/reports/top-customers.ts b/src/reports/top-customers.ts
+new file mode 100644
+index 0000000..b118fd1
+--- /dev/null
++++ b/src/reports/top-customers.ts
+@@ -0,0 +1,30 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface TopCustomersRow {
++  user_id: string;
++  orders: number;
++  cents: number;
++}
++
++/** Top customers by spend. */
++export async function topCustomersReport(range: DateRange, limit = 20): Promise<ReportResult<TopCustomersRow>> {
++  assertValidRange(range);
++  const rows = await query<TopCustomersRow>(
++    "SELECT user_id, COUNT(*) AS orders, SUM(total_cents) AS cents FROM orders WHERE status = 'paid' AND created_at BETWEEN $1 AND $2 GROUP BY user_id ORDER BY cents DESC LIMIT $3",
++    [range.from, range.to, limit],
++  );
++  return {
++    title: "Top customers by spend",
++    rows,
++    totals: {
++      orders: rows.reduce((sum, row) => sum + Number(row.orders), 0),
++      cents: rows.reduce((sum, row) => sum + Number(row.cents), 0),
++    },
++  };
++}
++
++export function topCustomersReportCsv(result: ReportResult<TopCustomersRow>): string {
++  return toCsv(["user_id", "orders", "cents"], result.rows.map((row) => [row.user_id, row.orders, row.cents]));
++}
+diff --git a/src/reports/types.ts b/src/reports/types.ts
+new file mode 100644
+index 0000000..5ff9ee1
+--- /dev/null
++++ b/src/reports/types.ts
+@@ -0,0 +1,31 @@
++export interface DateRange {
++  /** ISO date, inclusive */
++  from: string;
++  /** ISO date, exclusive */
++  to: string;
++}
++
++export interface ReportResult<Row> {
++  title: string;
++  rows: Row[];
++  totals: Record<string, number>;
++}
++
++const MAX_RANGE_DAYS = 366;
++
++export function assertValidRange(range: DateRange): void {
++  const from = Date.parse(range.from);
++  const to = Date.parse(range.to);
++  if (Number.isNaN(from) || Number.isNaN(to)) throw new RangeError("from and to must be ISO dates");
++  if (to <= from) throw new RangeError("to must be after from");
++  if ((to - from) / 86_400_000 > MAX_RANGE_DAYS) throw new RangeError(`range must be at most ${MAX_RANGE_DAYS} days`);
++}
++
++function csvCell(value: unknown): string {
++  const text = String(value ?? "");
++  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
++}
++
++export function toCsv(header: string[], rows: unknown[][]): string {
++  return [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\n");
++}
+diff --git a/src/reports/wallet-usage.ts b/src/reports/wallet-usage.ts
+new file mode 100644
+index 0000000..bf09e3d
+--- /dev/null
++++ b/src/reports/wallet-usage.ts
+@@ -0,0 +1,28 @@
++import { query } from "../db";
++import type { DateRange, ReportResult } from "./types";
++import { assertValidRange, toCsv } from "./types";
++
++export interface WalletUsageRow {
++  day: string;
++  cents: number;
++}
++
++/** Wallet credit used per day. */
++export async function walletUsageReport(range: DateRange): Promise<ReportResult<WalletUsageRow>> {
++  assertValidRange(range);
++  const rows = await query<WalletUsageRow>(
++    "SELECT date_trunc('day', created_at) AS day, SUM(-delta_cents) AS cents FROM wallet_ledger WHERE delta_cents < 0 AND created_at BETWEEN $1 AND $2 GROUP BY day ORDER BY day",
++    [range.from, range.to],
++  );
++  return {
++    title: "Wallet credit used per day",
++    rows,
++    totals: {
++      cents: rows.reduce((sum, row) => sum + Number(row.cents), 0),
++    },
++  };
++}
++
++export function walletUsageReportCsv(result: ReportResult<WalletUsageRow>): string {
++  return toCsv(["day", "cents"], result.rows.map((row) => [row.day, row.cents]));
++}
+diff --git a/src/routes/reports.ts b/src/routes/reports.ts
+new file mode 100644
+index 0000000..33f737d
+--- /dev/null
++++ b/src/routes/reports.ts
+@@ -0,0 +1,46 @@
++import type { Req, Res } from "../http";
++import { findUserById } from "../users";
++import { isReportName } from "../reports";
++import { activeUsersReport } from "../reports/active-users";
++import { averageBasketReport } from "../reports/average-basket";
++import { lowInventoryReport } from "../reports/inventory-low";
++import { orderStatusReport } from "../reports/order-status";
++import { refundsReport } from "../reports/refunds";
++import { revenueByMonthReport } from "../reports/revenue-by-month";
++import { salesByDayReport } from "../reports/sales-by-day";
++import { salesBySkuReport } from "../reports/sales-by-sku";
++import { signupsReport } from "../reports/signups";
++import { topCustomersReport } from "../reports/top-customers";
++import { walletUsageReport } from "../reports/wallet-usage";
++
++/** GET /reports/:name?from=&to=&year=&limit= — admin only. */
++export async function reportHandler(req: Req, res: Res) {
++  if (!req.userId) return res.status(401).json({ error: "unauthorized" });
++  const requester = await findUserById(req.userId);
++  if (!requester || requester.role !== "admin") return res.status(403).json({ error: "forbidden" });
++
++  const name = req.params.name;
++  if (!isReportName(name)) return res.status(404).json({ error: "unknown report" });
++
++  const range = { from: req.query.from ?? "", to: req.query.to ?? "" };
++  const limit = Math.min(Math.max(Number(req.query.limit ?? 20) || 20, 1), 500);
++
++  try {
++    switch (name) {
++      case "active-users": return res.json(await activeUsersReport(range));
++      case "average-basket": return res.json(await averageBasketReport(range));
++      case "inventory-low": return res.json(await lowInventoryReport(limit));
++      case "order-status": return res.json(await orderStatusReport(range));
++      case "refunds": return res.json(await refundsReport(range));
++      case "revenue-by-month": return res.json(await revenueByMonthReport(Number(req.query.year)));
++      case "sales-by-day": return res.json(await salesByDayReport(range));
++      case "sales-by-sku": return res.json(await salesBySkuReport(range, limit));
++      case "signups": return res.json(await signupsReport(range));
++      case "top-customers": return res.json(await topCustomersReport(range, limit));
++      case "wallet-usage": return res.json(await walletUsageReport(range));
++    }
++  } catch (err) {
++    if (err instanceof RangeError) return res.status(400).json({ error: err.message });
++    throw err;
++  }
++}

@@ -1,0 +1,24 @@
+diff --git a/src/utils.ts b/src/utils.ts
+index 421bda0..dd5b0bd 100644
+--- a/src/utils.ts
++++ b/src/utils.ts
+@@ -1,3 +1,19 @@
+ export function sleep(ms: number): Promise<void> {
+   return new Promise((resolve) => setTimeout(resolve, ms));
+ }
++
++/** Restricts `value` to the range [min, max]. */
++export function clamp(value: number, min: number, max: number): number {
++  if (min > max) throw new RangeError("min must be <= max");
++  return Math.min(Math.max(value, min), max);
++}
++
++/**
++ * Parses a ?page= query value into a 1-indexed page number.
++ * Missing, non-numeric or out-of-range values fall back to a valid page.
++ */
++export function parsePageParam(raw: string | undefined, maxPage = 1000): number {
++  const page = Number.parseInt(raw ?? "", 10);
++  if (Number.isNaN(page)) return 1;
++  return clamp(page, 1, maxPage);
++}

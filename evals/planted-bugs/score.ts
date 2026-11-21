@@ -13,7 +13,7 @@
  */
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { ReviewComment } from "../../src/server/services/ai";
+import type { ReviewComment } from "../../src/server/review/schema";
 import type { BugKind } from "./cases";
 import type { RunRecord } from "./run";
 import type { GroundTruth } from "./setup-testbed";

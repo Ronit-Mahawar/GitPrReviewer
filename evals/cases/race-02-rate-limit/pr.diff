@@ -1,0 +1,37 @@
+diff --git a/src/rate-limit.ts b/src/rate-limit.ts
+new file mode 100644
+index 0000000..ccfaaee
+--- /dev/null
++++ b/src/rate-limit.ts
+@@ -0,0 +1,10 @@
++import { redis } from "./redis";
++
++const WINDOW_SECONDS = 60;
++
++export async function allowRequest(key: string, limit = 10): Promise<boolean> {
++  const current = Number((await redis.get(`rl:${key}`)) ?? 0);
++  if (current >= limit) return false;
++  await redis.set(`rl:${key}`, String(current + 1), { EX: WINDOW_SECONDS });
++  return true;
++}
+diff --git a/src/routes/login.ts b/src/routes/login.ts
+new file mode 100644
+index 0000000..6f4e363
+--- /dev/null
++++ b/src/routes/login.ts
+@@ -0,0 +1,15 @@
++import type { Req, Res } from "../http";
++import { allowRequest } from "../rate-limit";
++import { findUserByEmail } from "../users";
++import { signSession } from "../auth";
++import { verifyPassword } from "../passwords";
++
++export async function loginHandler(req: Req, res: Res) {
++  const email = String(req.body?.email ?? "").toLowerCase();
++  if (!(await allowRequest(`login:${email}`))) return res.status(429).json({ error: "too many attempts" });
++  const user = await findUserByEmail(email);
++  if (!user || !(await verifyPassword(user.id, String(req.body?.password ?? "")))) {
++    return res.status(401).json({ error: "invalid credentials" });
++  }
++  res.json({ token: signSession(user.id) });
++}

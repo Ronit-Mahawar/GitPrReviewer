@@ -1,0 +1,11 @@
+{
+  "id": "race-03-webhook-idempotency",
+  "title": "Make payment webhooks idempotent",
+  "kind": "bug",
+  "bug": {
+    "file": "src/webhooks.ts",
+    "line": 12,
+    "category": "race-condition",
+    "description": "Check-then-insert is not atomic: two concurrent deliveries of the same event both see no row and both credit the account. Use INSERT ... ON CONFLICT DO NOTHING (unique key) inside the same transaction as the credit."
+  }
+}

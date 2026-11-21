@@ -1,0 +1,11 @@
+{
+  "id": "race-04-wallet-debit",
+  "title": "Pay for orders with wallet balance",
+  "kind": "bug",
+  "bug": {
+    "file": "src/wallet.ts",
+    "line": 6,
+    "category": "race-condition",
+    "description": "Balance is read, checked, and written back as an absolute value: concurrent debits cause lost updates / overdraft. Use a single conditional UPDATE (balance = balance - $1 WHERE balance >= $1) or SELECT ... FOR UPDATE in withTransaction."
+  }
+}

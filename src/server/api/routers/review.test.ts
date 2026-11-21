@@ -8,8 +8,9 @@ vi.mock("@/server/inngest", () => ({ inngest: { send: mock.send } }));
 
 import { reviewRouter } from "./review";
 
-function caller(session: any, db: any) {
-  return (reviewRouter as any).createCaller({ session, db, headers: new Headers() });
+type CallerContext = Parameters<typeof reviewRouter.createCaller>[0];
+function caller(session: unknown, db: unknown) {
+  return reviewRouter.createCaller({ session, db, headers: new Headers() } as unknown as CallerContext);
 }
 const userSession = { user: { id: "user-a", name: "A", email: "a@example.test" }, session: { id: "session" } };
 

@@ -1,0 +1,11 @@
+{
+  "id": "null-02-shipping-label",
+  "title": "Generate shipping labels for paid orders",
+  "kind": "bug",
+  "bug": {
+    "file": "src/orders.ts",
+    "line": 38,
+    "category": "null-check",
+    "description": "`shippingAddress` is undefined for digital-only orders; the cast hides it and `addr.line1` throws. Skip/guard those orders."
+  }
+}

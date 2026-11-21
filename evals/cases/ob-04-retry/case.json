@@ -1,0 +1,11 @@
+{
+  "id": "ob-04-retry",
+  "title": "Add retry-with-backoff helper for flaky upstream calls",
+  "kind": "bug",
+  "bug": {
+    "file": "src/utils.ts",
+    "line": 8,
+    "category": "off-by-one",
+    "description": "Loop runs attempts - 1 times (`attempt < attempts` starting at 1); with attempts=1 fn is never called and `undefined` is thrown."
+  }
+}

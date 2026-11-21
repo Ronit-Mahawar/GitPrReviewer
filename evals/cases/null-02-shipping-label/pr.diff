@@ -1,0 +1,17 @@
+diff --git a/src/orders.ts b/src/orders.ts
+index 265b8f0..76cbf6b 100644
+--- a/src/orders.ts
++++ b/src/orders.ts
+@@ -33,3 +33,12 @@ export function orderSubtotal(order: Order): number {
+   }
+   return total;
+ }
++
++export function shippingLabel(order: Order): string {
++  const addr = order.shippingAddress as Address;
++  return [`ORDER ${order.id}`, addr.line1, `${addr.city.toUpperCase()} ${addr.postalCode}`].join("\n");
++}
++
++export async function printLabelsForPaidOrders(orders: Order[]): Promise<string[]> {
++  return orders.filter((o) => o.status === "paid").map(shippingLabel);
++}

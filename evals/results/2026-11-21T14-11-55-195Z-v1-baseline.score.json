@@ -1,0 +1,1337 @@
+{
+  "run": "2026-11-21T14-11-55-195Z-v1-baseline.json",
+  "judgeModel": "gemini-3-flash-preview",
+  "metrics": {
+    "reviews": 78,
+    "failedReviews": 0,
+    "catchRate": {
+      "overall": {
+        "caught": 66,
+        "total": 66
+      },
+      "byKind": {
+        "bug": {
+          "caught": 63,
+          "total": 63
+        },
+        "large": {
+          "caught": 3,
+          "total": 3
+        }
+      },
+      "byCategory": {
+        "broken-access-control": {
+          "caught": 3,
+          "total": 3
+        },
+        "off-by-one": {
+          "caught": 15,
+          "total": 15
+        },
+        "null-check": {
+          "caught": 12,
+          "total": 12
+        },
+        "race-condition": {
+          "caught": 12,
+          "total": 12
+        },
+        "leaked-secret": {
+          "caught": 12,
+          "total": 12
+        },
+        "sql-injection": {
+          "caught": 12,
+          "total": 12
+        }
+      }
+    },
+    "noisePerPr": 0.23076923076923078,
+    "cleanFalseAlarms": {
+      "reviewsWithHighOrCritical": 0,
+      "cleanReviews": 12
+    },
+    "latencyMs": {
+      "avg": 9274.71794871795,
+      "median": 2945,
+      "p95": 36623
+    },
+    "tokensPerPr": {
+      "prompt": 2562,
+      "completion": 173.80769230769232
+    },
+    "perCase": [
+      {
+        "id": "clean-01-find-users-by-ids",
+        "kind": "clean",
+        "category": null,
+        "caught": 0,
+        "runs": 3,
+        "avgComments": 0,
+        "avgNoise": 0
+      },
+      {
+        "id": "clean-02-format-cents",
+        "kind": "clean",
+        "category": null,
+        "caught": 0,
+        "runs": 3,
+        "avgComments": 0,
+        "avgNoise": 0
+      },
+      {
+        "id": "clean-03-atomic-reserve",
+        "kind": "clean",
+        "category": null,
+        "caught": 0,
+        "runs": 3,
+        "avgComments": 0,
+        "avgNoise": 0
+      },
+      {
+        "id": "example-bug-delete-user-idor",
+        "kind": "bug",
+        "category": "broken-access-control",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "example-clean-page-param",
+        "kind": "clean",
+        "category": null,
+        "caught": 0,
+        "runs": 3,
+        "avgComments": 0,
+        "avgNoise": 0
+      },
+      {
+        "id": "example-large-reports",
+        "kind": "large",
+        "category": "off-by-one",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 2,
+        "avgNoise": 1
+      },
+      {
+        "id": "null-01-display-name",
+        "kind": "bug",
+        "category": "null-check",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "null-02-shipping-label",
+        "kind": "bug",
+        "category": "null-check",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "null-03-price-lookup",
+        "kind": "bug",
+        "category": "null-check",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "null-04-auth-header",
+        "kind": "bug",
+        "category": "null-check",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "ob-01-pagination",
+        "kind": "bug",
+        "category": "off-by-one",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "ob-02-chunk",
+        "kind": "bug",
+        "category": "off-by-one",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "ob-03-recent-orders",
+        "kind": "bug",
+        "category": "off-by-one",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "ob-04-retry",
+        "kind": "bug",
+        "category": "off-by-one",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "race-01-reserve-stock",
+        "kind": "bug",
+        "category": "race-condition",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "race-02-rate-limit",
+        "kind": "bug",
+        "category": "race-condition",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "race-03-webhook-idempotency",
+        "kind": "bug",
+        "category": "race-condition",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 2,
+        "avgNoise": 1
+      },
+      {
+        "id": "race-04-wallet-debit",
+        "kind": "bug",
+        "category": "race-condition",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "secret-01-payments-key",
+        "kind": "bug",
+        "category": "leaked-secret",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 3,
+        "avgNoise": 2
+      },
+      {
+        "id": "secret-02-jwt-fallback",
+        "kind": "bug",
+        "category": "leaked-secret",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "secret-03-aws-backup",
+        "kind": "bug",
+        "category": "leaked-secret",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 2,
+        "avgNoise": 1
+      },
+      {
+        "id": "secret-04-request-logging",
+        "kind": "bug",
+        "category": "leaked-secret",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 2,
+        "avgNoise": 1
+      },
+      {
+        "id": "sqli-01-user-search",
+        "kind": "bug",
+        "category": "sql-injection",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "sqli-02-order-sort",
+        "kind": "bug",
+        "category": "sql-injection",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "sqli-03-cancel-reason",
+        "kind": "bug",
+        "category": "sql-injection",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      },
+      {
+        "id": "sqli-04-sales-report",
+        "kind": "bug",
+        "category": "sql-injection",
+        "caught": 3,
+        "runs": 3,
+        "avgComments": 1,
+        "avgNoise": 0
+      }
+    ]
+  },
+  "judgements": [
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/routes/users.ts",
+        "line": 25,
+        "severity": "high",
+        "category": "bug",
+        "message": "The authorization check compares the requester's ID against req.query.userId instead of the target user ID (req.params.id).",
+        "suggestion": "Change req.query.userId to req.params.id in the conditional check."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the authorization check uses the wrong source (req.query.userId) instead of the target user ID (req.params.id)."
+    },
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/routes/users.ts",
+        "line": 25,
+        "severity": "high",
+        "category": "bug",
+        "message": "The authorization check compares the requester's ID against req.query.userId instead of the target user ID (req.params.id).",
+        "suggestion": "Change req.query.userId to req.params.id in the conditional check."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the authorization check uses the wrong source (req.query.userId) instead of the target user ID (req.params.id)."
+    },
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/routes/users.ts",
+        "line": 25,
+        "severity": "high",
+        "category": "bug",
+        "message": "The authorization check compares the requester's ID against req.query.userId instead of the target user ID (req.params.id).",
+        "suggestion": "Change req.query.userId to req.params.id in the conditional check."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the authorization check uses the wrong source (req.query.userId) instead of the target user ID (req.params.id)."
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 1,
+      "commentIndex": 1,
+      "comment": {
+        "file": "src/reports/revenue-by-month.ts",
+        "line": 23,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop runs from 1 to 13, which will result in 13 iterations (months 01 through 13). Month 13 is not a valid calendar month.",
+        "suggestion": "Change the loop condition to 'month <= 12'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the loop runs until month 13, which is invalid, and suggests changing the limit to 12."
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 2,
+      "commentIndex": 1,
+      "comment": {
+        "file": "src/reports/revenue-by-month.ts",
+        "line": 23,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop runs from 1 to 13, which will result in 13 iterations (months 01 through 13). Month 13 is not a valid calendar month.",
+        "suggestion": "Change the loop condition to 'month <= 12'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the loop runs until month 13, which is invalid, and suggests changing the limit to 12."
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 3,
+      "commentIndex": 1,
+      "comment": {
+        "file": "src/reports/revenue-by-month.ts",
+        "line": 23,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop runs from 1 to 13, which will result in 13 iterations (months 01 through 13). Month 13 is not a valid calendar month.",
+        "suggestion": "Change the loop condition to 'month <= 12'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the loop runs until month 13, which is invalid, and suggests changing the limit to 12."
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/users.ts",
+        "line": 30,
+        "severity": "high",
+        "category": "bug",
+        "message": "The code uses the non-null assertion operator (!) on user.profile, which will cause a runtime crash if a user exists in the database but lacks a profile record.",
+        "suggestion": "Use optional chaining (user.profile?.name) and provide a fallback value or handle the missing profile case explicitly."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the non-null assertion on user.profile will cause a runtime crash if the profile is missing and suggests providing a fallback value."
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/users.ts",
+        "line": 30,
+        "severity": "high",
+        "category": "bug",
+        "message": "The code uses the non-null assertion operator (!) on user.profile, which will cause a runtime crash if a user exists in the database but lacks a profile record.",
+        "suggestion": "Use optional chaining (user.profile?.name) and provide a fallback value or handle the missing profile case explicitly."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the non-null assertion on user.profile will cause a runtime crash if the profile is missing and suggests providing a fallback value."
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/users.ts",
+        "line": 30,
+        "severity": "high",
+        "category": "bug",
+        "message": "The code uses the non-null assertion operator (!) on user.profile, which will cause a runtime crash if a user exists in the database but lacks a profile record.",
+        "suggestion": "Use optional chaining (user.profile?.name) and provide a fallback value or handle the missing profile case explicitly."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the non-null assertion on user.profile will cause a runtime crash if the profile is missing and suggests providing a fallback value."
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 38,
+        "severity": "high",
+        "category": "bug",
+        "message": "The code performs an unsafe type assertion 'as Address' and accesses properties without verifying if 'shippingAddress' exists.",
+        "suggestion": "Add a null check for 'order.shippingAddress' and validate that the object contains the required fields before accessing them."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the unsafe type assertion and the lack of a check for the existence of 'shippingAddress' before property access."
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 38,
+        "severity": "high",
+        "category": "bug",
+        "message": "The code performs an unsafe type assertion 'as Address' and accesses properties without verifying if 'shippingAddress' exists.",
+        "suggestion": "Add a null check for 'order.shippingAddress' and validate that the object contains the required fields before accessing them."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the unsafe type assertion and the lack of a check for the existence of 'shippingAddress' before property access."
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 38,
+        "severity": "high",
+        "category": "bug",
+        "message": "The code performs an unsafe type assertion 'as Address' and accesses properties without verifying if 'shippingAddress' exists.",
+        "suggestion": "Add a null check for 'order.shippingAddress' and validate that the object contains the required fields before accessing them."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the unsafe type assertion and the lack of a check for the existence of 'shippingAddress' before property access."
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/cart.ts",
+        "line": 13,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The use of the non-null assertion operator (!) will cause a runtime exception if the SKU is not found in the catalog or is inactive.",
+        "suggestion": "Handle the undefined case by throwing a descriptive error or returning a default value (e.g., 0) if the item is not found."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the non-null assertion operator will cause a runtime exception if the SKU is not found in the catalog."
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/cart.ts",
+        "line": 13,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The use of the non-null assertion operator (!) will cause a runtime exception if the SKU is not found in the catalog or is inactive.",
+        "suggestion": "Handle the undefined case by throwing a descriptive error or returning a default value (e.g., 0) if the item is not found."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the non-null assertion operator will cause a runtime exception if the SKU is not found in the catalog."
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/cart.ts",
+        "line": 13,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The use of the non-null assertion operator (!) will cause a runtime exception if the SKU is not found in the catalog or is inactive.",
+        "suggestion": "Handle the undefined case by throwing a descriptive error or returning a default value (e.g., 0) if the item is not found."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the non-null assertion operator will cause a runtime exception if the SKU is not found in the catalog."
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/middleware/auth.ts",
+        "line": 5,
+        "severity": "high",
+        "category": "bug",
+        "message": "Accessing req.headers.authorization! without checking if it exists will throw a TypeError if the header is missing.",
+        "suggestion": "Check if req.headers.authorization exists before calling replace, or use optional chaining: req.headers.authorization?.replace(...)"
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that accessing the authorization header without a check will cause a TypeError if the header is missing."
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/middleware/auth.ts",
+        "line": 5,
+        "severity": "high",
+        "category": "bug",
+        "message": "Accessing req.headers.authorization! without checking if it exists will throw a TypeError if the header is missing.",
+        "suggestion": "Check if req.headers.authorization exists before calling replace, or use optional chaining: req.headers.authorization?.replace(...)"
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that accessing the authorization header without a check will cause a TypeError if the header is missing."
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/middleware/auth.ts",
+        "line": 5,
+        "severity": "high",
+        "category": "bug",
+        "message": "Accessing req.headers.authorization! without checking if it exists will throw a TypeError if the header is missing.",
+        "suggestion": "Check if req.headers.authorization exists before calling replace, or use optional chaining: req.headers.authorization?.replace(...)"
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that accessing the authorization header without a check will cause a TypeError if the header is missing."
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 45,
+        "severity": "high",
+        "category": "bug",
+        "message": "The pagination logic uses 1-based indexing but calculates the start index as 'page * pageSize', which skips the first page (page 1 starts at index 20 instead of 0).",
+        "suggestion": "Change the start calculation to '(page - 1) * pageSize'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the pagination logic uses 1-based indexing and that the current calculation skips the first page, suggesting the exact fix needed."
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 45,
+        "severity": "high",
+        "category": "bug",
+        "message": "The pagination logic uses 1-based indexing but calculates the start index as 'page * pageSize', which skips the first page (page 1 starts at index 20 instead of 0).",
+        "suggestion": "Change the start calculation to '(page - 1) * pageSize'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the pagination logic uses 1-based indexing and that the current calculation skips the first page, suggesting the exact fix needed."
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 45,
+        "severity": "high",
+        "category": "bug",
+        "message": "The pagination logic uses 1-based indexing but calculates the start index as 'page * pageSize', which skips the first page (page 1 starts at index 20 instead of 0).",
+        "suggestion": "Change the start calculation to '(page - 1) * pageSize'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that the pagination logic uses 1-based indexing and that the current calculation skips the first page, suggesting the exact fix needed."
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/utils.ts",
+        "line": 7,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop condition 'i <= items.length' causes an extra empty array to be pushed to the output when 'items.length' is a multiple of 'size'.",
+        "suggestion": "Change the condition to 'i < items.length'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the loop condition and its effect of creating an extra empty array when the length is a multiple of the size."
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/utils.ts",
+        "line": 7,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop condition 'i <= items.length' causes an extra empty array to be pushed to the output when 'items.length' is a multiple of 'size'.",
+        "suggestion": "Change the condition to 'i < items.length'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the loop condition and its effect of creating an extra empty array when the length is a multiple of the size."
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/utils.ts",
+        "line": 7,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop condition 'i <= items.length' causes an extra empty array to be pushed to the output when 'items.length' is a multiple of 'size'.",
+        "suggestion": "Change the condition to 'i < items.length'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the loop condition and its effect of creating an extra empty array when the length is a multiple of the size."
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 41,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The slice index calculation 'sorted.length - n - 1' is incorrect and will return n+1 elements.",
+        "suggestion": "Change the slice index to 'sorted.length - n'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the slice index and explains that it results in returning n+1 elements."
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 41,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The slice index calculation 'sorted.length - n - 1' is incorrect and will return n+1 elements.",
+        "suggestion": "Change the slice index to 'sorted.length - n'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the slice index and explains that it results in returning n+1 elements."
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 41,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The slice index calculation 'sorted.length - n - 1' is incorrect and will return n+1 elements.",
+        "suggestion": "Change the slice index to 'sorted.length - n'."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the slice index and explains that it results in returning n+1 elements."
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/utils.ts",
+        "line": 8,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop condition 'attempt < attempts' results in one fewer execution than intended. If 'attempts' is 3, the loop runs for attempt 1 and 2, meaning the function is called at most twice.",
+        "suggestion": "Change the loop condition to 'attempt <= attempts' or adjust the logic to ensure the function is called exactly 'attempts' times."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the loop condition and explains that it results in one fewer execution than intended."
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/utils.ts",
+        "line": 8,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop condition 'attempt < attempts' results in one fewer execution than intended. If 'attempts' is 3, the loop runs for attempt 1 and 2, meaning the function is called at most twice.",
+        "suggestion": "Change the loop condition to 'attempt <= attempts' or adjust the logic to ensure the function is called exactly 'attempts' times."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the loop condition and explains that it results in one fewer execution than intended."
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/utils.ts",
+        "line": 8,
+        "severity": "medium",
+        "category": "bug",
+        "message": "The loop condition 'attempt < attempts' results in one fewer execution than intended. If 'attempts' is 3, the loop runs for attempt 1 and 2, meaning the function is called at most twice.",
+        "suggestion": "Change the loop condition to 'attempt <= attempts' or adjust the logic to ensure the function is called exactly 'attempts' times."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the off-by-one error in the loop condition and explains that it results in one fewer execution than intended."
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/inventory.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The update operation is susceptible to a race condition. Between the check in getStock and the update, another process could modify the inventory, leading to incorrect stock levels.",
+        "suggestion": "Perform the update atomically in a single query: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the race condition between the stock check and the update and suggests the specific atomic update fix mentioned in the bug description."
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/inventory.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The update operation is susceptible to a race condition. Between the check in getStock and the update, another process could modify the inventory, leading to incorrect stock levels.",
+        "suggestion": "Perform the update atomically in a single query: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the race condition between the stock check and the update and suggests the specific atomic update fix mentioned in the bug description."
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/inventory.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The update operation is susceptible to a race condition. Between the check in getStock and the update, another process could modify the inventory, leading to incorrect stock levels.",
+        "suggestion": "Perform the update atomically in a single query: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the race condition between the stock check and the update and suggests the specific atomic update fix mentioned in the bug description."
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/rate-limit.ts",
+        "line": 8,
+        "severity": "high",
+        "category": "bug",
+        "message": "The rate limiting logic is susceptible to a race condition. Between the 'get' and 'set' operations, multiple concurrent requests can read the same value and increment it incorrectly, allowing more requests than the defined limit.",
+        "suggestion": "Use a Lua script with redis.eval or the INCR/EXPIRE commands atomically to ensure the increment and expiration are handled as a single operation."
+      },
+      "answer": true,
+      "reason": "The comment accurately identifies the race condition between the get and set operations and suggests using atomic operations like INCR/EXPIRE or a Lua script as a fix."
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/rate-limit.ts",
+        "line": 8,
+        "severity": "high",
+        "category": "bug",
+        "message": "The rate limiting logic is susceptible to a race condition. Between the 'get' and 'set' operations, multiple concurrent requests can read the same value and increment it incorrectly, allowing more requests than the defined limit.",
+        "suggestion": "Use a Lua script with redis.eval or the INCR/EXPIRE commands atomically to ensure the increment and expiration are handled as a single operation."
+      },
+      "answer": true,
+      "reason": "The comment accurately identifies the race condition between the get and set operations and suggests using atomic operations like INCR/EXPIRE or a Lua script as a fix."
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/rate-limit.ts",
+        "line": 8,
+        "severity": "high",
+        "category": "bug",
+        "message": "The rate limiting logic is susceptible to a race condition. Between the 'get' and 'set' operations, multiple concurrent requests can read the same value and increment it incorrectly, allowing more requests than the defined limit.",
+        "suggestion": "Use a Lua script with redis.eval or the INCR/EXPIRE commands atomically to ensure the increment and expiration are handled as a single operation."
+      },
+      "answer": true,
+      "reason": "The comment accurately identifies the race condition between the get and set operations and suggests using atomic operations like INCR/EXPIRE or a Lua script as a fix."
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/webhooks.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The check-then-insert pattern is not atomic. Two concurrent requests for the same event ID can both pass the 'seen' check at line 13 before either has inserted the record at line 23, leading to duplicate processing.",
+        "suggestion": "Wrap the entire function in a database transaction and use 'INSERT ... ON CONFLICT DO NOTHING' or a unique constraint on the 'processed_events.id' column to ensure atomicity."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the non-atomic check-then-insert race condition and suggests the specific fix of using a unique constraint with ON CONFLICT DO NOTHING."
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/webhooks.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The check-then-insert pattern is not atomic. Two concurrent requests for the same event ID can both pass the 'seen' check at line 13 before either has inserted the record at line 23, leading to duplicate processing.",
+        "suggestion": "Wrap the entire function in a database transaction and use 'INSERT ... ON CONFLICT DO NOTHING' or a unique constraint on the 'processed_events.id' column to ensure atomicity."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the non-atomic check-then-insert race condition and suggests the specific fix of using a unique constraint with ON CONFLICT DO NOTHING."
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/webhooks.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The check-then-insert pattern is not atomic. Two concurrent requests for the same event ID can both pass the 'seen' check at line 13 before either has inserted the record at line 23, leading to duplicate processing.",
+        "suggestion": "Wrap the entire function in a database transaction and use 'INSERT ... ON CONFLICT DO NOTHING' or a unique constraint on the 'processed_events.id' column to ensure atomicity."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the non-atomic check-then-insert race condition and suggests the specific fix of using a unique constraint with ON CONFLICT DO NOTHING."
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/wallet.ts",
+        "line": 6,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The balance check and update are not atomic, creating a race condition.",
+        "suggestion": "Use a single SQL UPDATE statement with a WHERE clause: UPDATE wallets SET balance_cents = balance_cents - $1 WHERE user_id = $2 AND balance_cents >= $1. Check the affected row count to verify success."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the non-atomic balance check and update as a race condition and suggests the specific conditional UPDATE fix mentioned in the bug description."
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/wallet.ts",
+        "line": 6,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The balance check and update are not atomic, creating a race condition.",
+        "suggestion": "Use a single SQL UPDATE statement with a WHERE clause: UPDATE wallets SET balance_cents = balance_cents - $1 WHERE user_id = $2 AND balance_cents >= $1. Check the affected row count to verify success."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the non-atomic balance check and update as a race condition and suggests the specific conditional UPDATE fix mentioned in the bug description."
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/wallet.ts",
+        "line": 6,
+        "severity": "critical",
+        "category": "bug",
+        "message": "The balance check and update are not atomic, creating a race condition.",
+        "suggestion": "Use a single SQL UPDATE statement with a WHERE clause: UPDATE wallets SET balance_cents = balance_cents - $1 WHERE user_id = $2 AND balance_cents >= $1. Check the affected row count to verify success."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the non-atomic balance check and update as a race condition and suggests the specific conditional UPDATE fix mentioned in the bug description."
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/payments.ts",
+        "line": 4,
+        "severity": "critical",
+        "category": "security",
+        "message": "Hardcoded production API key detected.",
+        "suggestion": "Remove the hardcoded key and use an environment variable (e.g., process.env.PAYMENTS_API_KEY)."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the hardcoded production API key and suggests moving it to an environment variable."
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/payments.ts",
+        "line": 4,
+        "severity": "critical",
+        "category": "security",
+        "message": "Hardcoded production API key detected.",
+        "suggestion": "Remove the hardcoded key and use an environment variable (e.g., process.env.PAYMENTS_API_KEY)."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the hardcoded production API key and suggests moving it to an environment variable."
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/payments.ts",
+        "line": 4,
+        "severity": "critical",
+        "category": "security",
+        "message": "Hardcoded production API key detected.",
+        "suggestion": "Remove the hardcoded key and use an environment variable (e.g., process.env.PAYMENTS_API_KEY)."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the hardcoded production API key and suggests moving it to an environment variable."
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/config.ts",
+        "line": 11,
+        "severity": "high",
+        "category": "security",
+        "message": "Hardcoding a default JWT secret in the source code is a security risk. If the environment variable is missing in production, the application will use a known, static secret, making it vulnerable to token forgery.",
+        "suggestion": "Ensure the production environment always sets JWT_SECRET and consider throwing an error if it is missing in production environments (e.g., check process.env.NODE_ENV)."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that hardcoding a default JWT secret leads to token forgery if the environment variable is missing and suggests failing fast in production."
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/config.ts",
+        "line": 11,
+        "severity": "high",
+        "category": "security",
+        "message": "Hardcoding a default JWT secret in the source code is a security risk. If the environment variable is missing in production, the application will use a known, static secret, making it vulnerable to token forgery.",
+        "suggestion": "Ensure the production environment always sets JWT_SECRET and consider throwing an error if it is missing in production environments (e.g., check process.env.NODE_ENV)."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that hardcoding a default JWT secret leads to token forgery if the environment variable is missing and suggests failing fast in production."
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/config.ts",
+        "line": 11,
+        "severity": "high",
+        "category": "security",
+        "message": "Hardcoding a default JWT secret in the source code is a security risk. If the environment variable is missing in production, the application will use a known, static secret, making it vulnerable to token forgery.",
+        "suggestion": "Ensure the production environment always sets JWT_SECRET and consider throwing an error if it is missing in production environments (e.g., check process.env.NODE_ENV)."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that hardcoding a default JWT secret leads to token forgery if the environment variable is missing and suggests failing fast in production."
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "scripts/backup.ts",
+        "line": 8,
+        "severity": "critical",
+        "category": "security",
+        "message": "AWS credentials are hardcoded in the source code.",
+        "suggestion": "Use environment variables or IAM instance profiles to manage credentials securely."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that AWS credentials are hardcoded and suggests using environment variables instead."
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "scripts/backup.ts",
+        "line": 8,
+        "severity": "critical",
+        "category": "security",
+        "message": "AWS credentials are hardcoded in the source code.",
+        "suggestion": "Use environment variables or IAM instance profiles to manage credentials securely."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that AWS credentials are hardcoded and suggests using environment variables instead."
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "scripts/backup.ts",
+        "line": 8,
+        "severity": "critical",
+        "category": "security",
+        "message": "AWS credentials are hardcoded in the source code.",
+        "suggestion": "Use environment variables or IAM instance profiles to manage credentials securely."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that AWS credentials are hardcoded and suggests using environment variables instead."
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/middleware/logging.ts",
+        "line": 7,
+        "severity": "high",
+        "category": "security",
+        "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to log files.",
+        "suggestion": "Remove the authorization header from the log output or mask the value."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that logging the 'authorization' header exposes sensitive credentials like Bearer tokens."
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 1,
+      "commentIndex": 1,
+      "comment": {
+        "file": "src/middleware/logging.ts",
+        "line": 7,
+        "severity": "medium",
+        "category": "performance",
+        "message": "JSON.stringify(req.body) can cause significant performance degradation or memory issues if the request body is large or contains circular references.",
+        "suggestion": "Truncate the body string or omit it for non-JSON content types."
+      },
+      "answer": false,
+      "reason": "The comment focuses on performance and memory issues related to JSON.stringify, rather than the security risk of leaking sensitive information like secrets and passwords."
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/middleware/logging.ts",
+        "line": 7,
+        "severity": "high",
+        "category": "security",
+        "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to log files.",
+        "suggestion": "Remove the authorization header from the log output or mask the value."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that logging the 'authorization' header exposes sensitive credentials like Bearer tokens."
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 2,
+      "commentIndex": 1,
+      "comment": {
+        "file": "src/middleware/logging.ts",
+        "line": 7,
+        "severity": "medium",
+        "category": "performance",
+        "message": "JSON.stringify(req.body) can cause significant performance degradation or memory issues if the request body is large or contains circular references.",
+        "suggestion": "Truncate the body string or omit it for non-JSON content types."
+      },
+      "answer": false,
+      "reason": "The comment focuses on performance and memory issues related to JSON.stringify, rather than the security risk of leaking sensitive information like secrets and passwords."
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/middleware/logging.ts",
+        "line": 7,
+        "severity": "high",
+        "category": "security",
+        "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to log files.",
+        "suggestion": "Remove the authorization header from the log output or mask the value."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies that logging the 'authorization' header exposes sensitive credentials like Bearer tokens."
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 3,
+      "commentIndex": 1,
+      "comment": {
+        "file": "src/middleware/logging.ts",
+        "line": 7,
+        "severity": "medium",
+        "category": "performance",
+        "message": "JSON.stringify(req.body) can cause significant performance degradation or memory issues if the request body is large or contains circular references.",
+        "suggestion": "Truncate the body string or omit it for non-JSON content types."
+      },
+      "answer": false,
+      "reason": "The comment focuses on performance and memory issues related to JSON.stringify, rather than the security risk of leaking sensitive information like secrets and passwords."
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/users.ts",
+        "line": 27,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via string interpolation of 'term' and 'limit'.",
+        "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability caused by string interpolation of the 'term' variable and suggests the correct fix using parameterized queries."
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/users.ts",
+        "line": 27,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via string interpolation of 'term' and 'limit'.",
+        "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability caused by string interpolation of the 'term' variable and suggests the correct fix using parameterized queries."
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/users.ts",
+        "line": 27,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via string interpolation of 'term' and 'limit'.",
+        "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability caused by string interpolation of the 'term' variable and suggests the correct fix using parameterized queries."
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 26,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via sortBy and dir parameters.",
+        "suggestion": "Use an allow-list of permitted column names and sort directions instead of direct string interpolation."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability in the sortBy and dir parameters and suggests the specific fix of using an allow-list."
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 26,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via sortBy and dir parameters.",
+        "suggestion": "Use an allow-list of permitted column names and sort directions instead of direct string interpolation."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability in the sortBy and dir parameters and suggests the specific fix of using an allow-list."
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 26,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via sortBy and dir parameters.",
+        "suggestion": "Use an allow-list of permitted column names and sort directions instead of direct string interpolation."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability in the sortBy and dir parameters and suggests the specific fix of using an allow-list."
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 39,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via template literal interpolation of the 'reason' parameter.",
+        "suggestion": "Use parameterized queries for the reason field: UPDATE orders SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending', and pass [orderId, reason] to the query function."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability caused by interpolating the 'reason' parameter and suggests using parameterized queries as the fix."
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 39,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via template literal interpolation of the 'reason' parameter.",
+        "suggestion": "Use parameterized queries for the reason field: UPDATE orders SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending', and pass [orderId, reason] to the query function."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability caused by interpolating the 'reason' parameter and suggests using parameterized queries as the fix."
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/orders.ts",
+        "line": 39,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability via template literal interpolation of the 'reason' parameter.",
+        "suggestion": "Use parameterized queries for the reason field: UPDATE orders SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending', and pass [orderId, reason] to the query function."
+      },
+      "answer": true,
+      "reason": "The comment correctly identifies the SQL injection vulnerability caused by interpolating the 'reason' parameter and suggests using parameterized queries as the fix."
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 1,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/reports.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability due to direct concatenation of 'from' and 'to' parameters.",
+        "suggestion": "Use parameterized queries (prepared statements) provided by your database driver instead of string concatenation."
+      },
+      "answer": true,
+      "reason": "The comment explicitly identifies the SQL injection vulnerability caused by concatenating the 'from' and 'to' parameters and suggests using parameterized queries."
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 2,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/reports.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability due to direct concatenation of 'from' and 'to' parameters.",
+        "suggestion": "Use parameterized queries (prepared statements) provided by your database driver instead of string concatenation."
+      },
+      "answer": true,
+      "reason": "The comment explicitly identifies the SQL injection vulnerability caused by concatenating the 'from' and 'to' parameters and suggests using parameterized queries."
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 3,
+      "commentIndex": 0,
+      "comment": {
+        "file": "src/reports.ts",
+        "line": 12,
+        "severity": "critical",
+        "category": "security",
+        "message": "SQL injection vulnerability due to direct concatenation of 'from' and 'to' parameters.",
+        "suggestion": "Use parameterized queries (prepared statements) provided by your database driver instead of string concatenation."
+      },
+      "answer": true,
+      "reason": "The comment explicitly identifies the SQL injection vulnerability caused by concatenating the 'from' and 'to' parameters and suggests using parameterized queries."
+    }
+  ]
+}

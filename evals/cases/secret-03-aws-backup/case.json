@@ -1,0 +1,11 @@
+{
+  "id": "secret-03-aws-backup",
+  "title": "Nightly database backup script",
+  "kind": "bug",
+  "bug": {
+    "file": "scripts/backup.ts",
+    "line": 8,
+    "category": "leaked-secret",
+    "description": "AWS access key ID and secret access key are hard-coded in the script; use the default credential chain / env vars and rotate the keys."
+  }
+}

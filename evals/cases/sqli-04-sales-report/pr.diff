@@ -1,0 +1,35 @@
+diff --git a/src/reports.ts b/src/reports.ts
+new file mode 100644
+index 0000000..0ceb6e1
+--- /dev/null
++++ b/src/reports.ts
+@@ -0,0 +1,15 @@
++import { query } from "./db";
++
++export interface SalesRow {
++  sku: string;
++  units: number;
++  revenue: number;
++}
++
++export async function salesReport(from: string, to: string): Promise<SalesRow[]> {
++  const sql =
++    "SELECT sku, SUM(quantity) AS units, SUM(quantity * unit_price) AS revenue " +
++    "FROM order_items WHERE created_at BETWEEN '" + from + "' AND '" + to + "' " +
++    "GROUP BY sku ORDER BY units DESC";
++  return query<SalesRow>(sql);
++}
+diff --git a/src/routes/reports.ts b/src/routes/reports.ts
+new file mode 100644
+index 0000000..7a9a67c
+--- /dev/null
++++ b/src/routes/reports.ts
+@@ -0,0 +1,8 @@
++import type { Req, Res } from "../http";
++import { salesReport } from "../reports";
++
++export async function salesReportHandler(req: Req, res: Res) {
++  const { from, to } = req.query;
++  if (!from || !to) return res.status(400).json({ error: "from and to are required" });
++  res.json({ rows: await salesReport(from, to) });
++}

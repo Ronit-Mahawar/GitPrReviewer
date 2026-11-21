@@ -1,0 +1,25 @@
+diff --git a/src/cart.ts b/src/cart.ts
+new file mode 100644
+index 0000000..83bfc99
+--- /dev/null
++++ b/src/cart.ts
+@@ -0,0 +1,19 @@
++export interface CatalogItem {
++  sku: string;
++  price: number;
++  active: boolean;
++}
++
++export interface CartLine {
++  sku: string;
++  quantity: number;
++}
++
++export function priceFor(sku: string, catalog: CatalogItem[]): number {
++  return catalog.find((item) => item.sku === sku && item.active)!.price;
++}
++
++/** Total in cents for the client-submitted cart lines. */
++export function cartTotal(lines: CartLine[], catalog: CatalogItem[]): number {
++  return lines.reduce((sum, line) => sum + priceFor(line.sku, catalog) * line.quantity, 0);
++}

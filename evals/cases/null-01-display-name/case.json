@@ -1,0 +1,11 @@
+{
+  "id": "null-01-display-name",
+  "title": "Add getDisplayName for comment author labels",
+  "kind": "bug",
+  "bug": {
+    "file": "src/users.ts",
+    "line": 30,
+    "category": "null-check",
+    "description": "`user.profile` is null until onboarding completes; `user.profile!.name` throws for those users. Fall back to email."
+  }
+}

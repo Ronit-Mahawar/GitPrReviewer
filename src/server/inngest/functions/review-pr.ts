@@ -1,6 +1,9 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
-import { reviewCode, ReviewOutputValidationError } from "@/server/services/ai";
+import { logger } from "@/server/lib/logger";
+import { ReviewOutputValidationError } from "@/server/review/parse";
+import { reviewPullRequest } from "@/server/review/review-pull-request";
+import { createGeminiLlm } from "@/server/services/ai";
 import {
   fetchPullRequest,
   fetchPullRequestFiles,
@@ -25,9 +28,8 @@ export const reviewPR = inngest.createFunction(
   },
   { event: "review/pr.requested" },
   async ({ event, step }) => {
-    console.log("4. Inngest reviewPR started");
-    console.log("Review ID:", event.data.reviewId);
     const { reviewId, repositoryId, prNumber, userId } = event.data;
+    logger.info("review-pr started", { reviewId });
 
     if (event.data.forceRetryTest && process.env.BENCH_ENABLE_RETRY_TEST === "true") {
       const claim = await db.review.updateMany({
@@ -47,7 +49,6 @@ export const reviewPR = inngest.createFunction(
         data: { status: "PROCESSING" },
       });
     });
-    console.log("5. Status changed to PROCESSING");
 
     const repository = await step.run("get-repository", async () => {
       return db.repository.findUnique({
@@ -103,27 +104,29 @@ export const reviewPR = inngest.createFunction(
     const pr = await step.run("fetch-pr", async () => {
       return fetchPullRequest(accessToken, owner, repo, prNumber);
     });
-    console.log("6. Calling AI review");
 
     const reviewResult = await step.run("generate-review", async () => {
       try {
-        return await reviewCode(
-          pr.title,
-          files.map((f) => ({
-            filename: f.filename,
-            status: f.status,
-            additions: f.additions,
-            deletions: f.deletions,
-            patch: f.patch,
-          })),
+        return await reviewPullRequest(
+          {
+            title: pr.title,
+            files: files.map((f) => ({
+              filename: f.filename,
+              status: f.status,
+              additions: f.additions,
+              deletions: f.deletions,
+              patch: f.patch,
+            })),
+          },
+          { llm: createGeminiLlm() },
         );
       } catch (error) {
         if (error instanceof ReviewOutputValidationError) {
           await db.review.update({
             where: { id: reviewId },
             data: {
-              promptTokens: error.usage.prompt_tokens,
-              completionTokens: error.usage.completion_tokens,
+              promptTokens: error.usage.promptTokens,
+              completionTokens: error.usage.completionTokens,
               zodValid: false,
             },
           });
@@ -131,24 +134,27 @@ export const reviewPR = inngest.createFunction(
         throw error;
       }
     });
-    console.log("7. AI review completed");
 
     await step.run("save-review-result", async () => {
       await db.review.update({
         where: { id: reviewId },
         data: {
           status: "COMPLETED",
-          summary: reviewResult.result.summary,
-          riskScore: reviewResult.result.riskScore,
-          comments: reviewResult.result.comments,
-          promptTokens: reviewResult.usage.prompt_tokens,
-          completionTokens: reviewResult.usage.completion_tokens,
-          zodValid: reviewResult.zodValid,
+          summary: reviewResult.summary,
+          riskScore: reviewResult.riskScore,
+          comments: reviewResult.comments,
+          promptTokens: reviewResult.meta.promptTokens,
+          completionTokens: reviewResult.meta.completionTokens,
+          zodValid: true, // reviewPullRequest throws if the output fails validation
           completedAt: new Date(),
         },
       });
     });
-    console.log("8. Review saved as COMPLETED");
+    logger.info("review-pr completed", {
+      reviewId,
+      comments: reviewResult.comments.length,
+      latencyMs: reviewResult.meta.latencyMs,
+    });
 
     return { success: true, reviewId };
   },

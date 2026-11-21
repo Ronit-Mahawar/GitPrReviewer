@@ -1,0 +1,29 @@
+diff --git a/scripts/backup.ts b/scripts/backup.ts
+new file mode 100644
+index 0000000..a544196
+--- /dev/null
++++ b/scripts/backup.ts
+@@ -0,0 +1,23 @@
++import { execSync } from "node:child_process";
++import { readFileSync } from "node:fs";
++import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
++
++const s3 = new S3Client({
++  region: "us-east-1",
++  credentials: {
++    accessKeyId: "AKIA4Q7XJ2LMN5RT8WZC",
++    secretAccessKey: "q8Zt4Lr1Vx9Nw2Kp7Hs5Jd3Fg6Bm0Yc8Ae1Ui4Ro",
++  },
++});
++
++async function main() {
++  const file = `/tmp/shop-${new Date().toISOString().slice(0, 10)}.sql.gz`;
++  execSync(`pg_dump "$DATABASE_URL" | gzip > ${file}`);
++  await s3.send(new PutObjectCommand({ Bucket: "shop-db-backups", Key: file.split("/").pop(), Body: readFileSync(file) }));
++  console.log(`uploaded ${file}`);
++}
++
++main().catch((err) => {
++  console.error(err);
++  process.exit(1);
++});

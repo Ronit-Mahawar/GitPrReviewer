@@ -1,0 +1,11 @@
+{
+  "id": "sqli-02-order-sort",
+  "title": "Allow sorting order history",
+  "kind": "bug",
+  "bug": {
+    "file": "src/orders.ts",
+    "line": 26,
+    "category": "sql-injection",
+    "description": "`sortBy`/`dir` come from the query string and are interpolated into ORDER BY; must be validated against an allow-list."
+  }
+}

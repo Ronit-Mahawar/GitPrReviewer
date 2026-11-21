@@ -1,0 +1,14 @@
+diff --git a/src/users.ts b/src/users.ts
+index eea55a2..d9bb2a2 100644
+--- a/src/users.ts
++++ b/src/users.ts
+@@ -22,3 +22,9 @@ export async function findUserByEmail(email: string): Promise<User | undefined>
+   const rows = await query<User>("SELECT * FROM users WHERE email = $1", [email]);
+   return rows[0];
+ }
++
++export async function findUsersByIds(ids: string[]): Promise<Map<string, User>> {
++  if (ids.length === 0) return new Map();
++  const rows = await query<User>("SELECT * FROM users WHERE id = ANY($1::uuid[])", [ids]);
++  return new Map(rows.map((u) => [u.id, u]));
++}

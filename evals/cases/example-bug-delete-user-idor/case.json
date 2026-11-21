@@ -1,0 +1,11 @@
+{
+  "id": "example-bug-delete-user-idor",
+  "title": "Let users delete their account",
+  "kind": "bug",
+  "bug": {
+    "file": "src/routes/users.ts",
+    "line": 25,
+    "category": "broken-access-control",
+    "description": "The ownership check compares the requester to req.query.userId, but the account deleted is req.params.id. A member can pass ?userId=<their own id> and delete any other user's account. The check must compare against req.params.id."
+  }
+}

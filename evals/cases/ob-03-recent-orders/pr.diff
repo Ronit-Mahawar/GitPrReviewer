@@ -1,0 +1,15 @@
+diff --git a/src/orders.ts b/src/orders.ts
+index 265b8f0..2411a2f 100644
+--- a/src/orders.ts
++++ b/src/orders.ts
+@@ -33,3 +33,10 @@ export function orderSubtotal(order: Order): number {
+   }
+   return total;
+ }
++
++/** Returns the `n` most recent orders, oldest first. */
++export function mostRecent(orders: Order[], n: number): Order[] {
++  if (n <= 0) return [];
++  const sorted = [...orders].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
++  return sorted.slice(Math.max(0, sorted.length - n - 1));
++}
