@@ -90,5 +90,201 @@
   "bb6b0bfd8787dd74f6ca019fd32dc1c1": {
     "answer": true,
     "reason": "The comment explicitly identifies the SQL injection vulnerability caused by concatenating the 'from' and 'to' parameters and suggests using parameterized queries."
+  },
+  "210ee9094522f8b6184ece14a2e21267": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the authorization check uses the wrong source (req.query.userId) instead of the target user's ID (req.params.id)."
+  },
+  "1ac43a783b9b7e5faa68e8575201e36e": {
+    "answer": true,
+    "reason": "The comment correctly identifies the off-by-one error in the loop condition and suggests the correct fix."
+  },
+  "0172384d4b2eef1f337ff3f70ef36a8e": {
+    "answer": true,
+    "reason": "The comment correctly identifies that using the non-null assertion operator on 'user.profile' will cause a TypeError if the property is null."
+  },
+  "9717d8122012bba2645ada78de8b16a3": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the type assertion hides a missing existence check for 'shippingAddress' and suggests adding a null check to prevent errors when accessing properties like 'line1'."
+  },
+  "56fcce0b4272193e715968330e79f947": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the non-null assertion operator will cause a runtime crash if a SKU is not found in the catalog."
+  },
+  "41ff536e18b44f4af22ac66f87259b9a": {
+    "answer": true,
+    "reason": "The comment correctly identifies that accessing the authorization header without a check will throw a TypeError if the header is missing."
+  },
+  "d9c5df1ee522ca416d73d284b6a78edc": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the pagination logic skips the first page and suggests the exact fix needed to handle 1-based indexing."
+  },
+  "8d6835cd128396e4e40d426e778b50b0": {
+    "answer": true,
+    "reason": "The comment correctly identifies the off-by-one error in the loop condition and explains that it results in an extra empty array."
+  },
+  "bb4686578f4bacac0315c76172938030": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the slice index calculation results in n+1 elements being returned and suggests the correct fix."
+  },
+  "5dfb2cc4eb3970f5da8a1108c891de09": {
+    "answer": true,
+    "reason": "The comment correctly identifies the off-by-one error in the loop condition and explains that it causes the function to execute one fewer time than intended."
+  },
+  "6f6e0dbb9d74381a8b5fe112d0fed03d": {
+    "answer": true,
+    "reason": "The comment correctly identifies the race condition between checking and updating stock that leads to overselling and suggests the specific atomic SQL update fix mentioned in the bug description."
+  },
+  "4853083e1311eb797d7122344091ee4a": {
+    "answer": true,
+    "reason": "The comment correctly identifies the race condition where concurrent requests read the same value and suggests the exact atomic operations (Lua script or INCR + EXPIRE) mentioned in the bug description."
+  },
+  "53d7658b179fd0eef55c3528b4d27521": {
+    "answer": false,
+    "reason": "The comment focuses on atomicity in the context of process crashes and partial updates rather than the race condition caused by concurrent event deliveries."
+  },
+  "635cdcfe122677ac6889a16a68faf371": {
+    "answer": true,
+    "reason": "The comment correctly identifies the race condition caused by non-atomic balance updates and suggests the specific fix of using a conditional SQL UPDATE."
+  },
+  "4ac4cd02dab7699d67a0d23f40c7e685": {
+    "answer": true,
+    "reason": "The comment correctly identifies the hardcoded production API key and suggests moving it to an environment variable."
+  },
+  "cdb287714880392b887be2ec480c8069": {
+    "answer": true,
+    "reason": "The comment correctly identifies that a hardcoded JWT secret allows for token forgery and suggests failing fast if the secret is missing in production."
+  },
+  "5380b627949dce701480b8d83c0b65f5": {
+    "answer": true,
+    "reason": "The comment correctly identifies that AWS credentials are hardcoded in the source code and suggests using environment variables as a fix."
+  },
+  "6bd059a2d1e0efc0a774091a3319efd5": {
+    "answer": true,
+    "reason": "The comment correctly identifies that logging the 'authorization' header exposes sensitive credentials like Bearer tokens."
+  },
+  "91cebe1372c8ae300c089c0280bbbea2": {
+    "answer": false,
+    "reason": "The comment addresses the timing of the log execution and duration calculation rather than the logging of sensitive information like headers or request bodies."
+  },
+  "6718a94e783691de97570279e345815b": {
+    "answer": true,
+    "reason": "The comment correctly identifies the SQL injection vulnerability caused by interpolating the 'term' variable and suggests using parameterized queries as a fix."
+  },
+  "89de716a28064a48c9538cbf55c362f2": {
+    "answer": true,
+    "reason": "The comment explicitly identifies the SQL injection vulnerability in the sortBy and dir parameters and correctly suggests using a whitelist for validation."
+  },
+  "7781df27d60c1a2d06e59d093f32335b": {
+    "answer": true,
+    "reason": "The comment correctly identifies the SQL injection vulnerability caused by the 'reason' parameter and suggests using parameterized queries as the fix."
+  },
+  "22da0774602ea3047785b9ac8bc94a02": {
+    "answer": true,
+    "reason": "The comment correctly identifies the SQL injection vulnerability caused by string concatenation of the 'from' and 'to' parameters and suggests the exact fix using parameterized queries with BETWEEN."
+  },
+  "fd2ee2c88db4038b0bbf5920428464d8": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the parameter order was swapped and that the call sites in src/checkout.ts were not updated to reflect this change."
+  },
+  "e8afda4be70ebe605ac9168b7375d018": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the function is now async and that callers are missing the await, leading to truthy Promise objects instead of boolean values."
+  },
+  "9ab83f74a79f5ccfd093313116e651a4": {
+    "answer": true,
+    "reason": "The comment correctly identifies that changing the return type to dollars breaks callers that expect the value to be in cents."
+  },
+  "782ff20ae55a8f1c74d92d247d7b1111": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the authorization check uses the wrong source (req.query.userId instead of req.params.id) to validate account ownership."
+  },
+  "034a06848cacc62a5e90801fd872b06c": {
+    "answer": true,
+    "reason": "The comment correctly identifies the off-by-one error in the loop condition and the resulting invalid 13th month."
+  },
+  "9620e18a05f73fdeecf17d9ad7900252": {
+    "answer": true,
+    "reason": "The comment correctly identifies that 'user.profile' can be null before onboarding and that accessing its 'name' property will cause a TypeError."
+  },
+  "2adedc7353608e71927b3535ae0e3069": {
+    "answer": true,
+    "reason": "The comment correctly identifies that shippingAddress is undefined for digital-only orders and that the type assertion hides this, leading to a runtime crash."
+  },
+  "9f0c95af9d0161092eef6986d53f249e": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the non-null assertion operator will cause a runtime crash if the SKU is not found in the catalog."
+  },
+  "0d76a6cc15b465b9752076666dde440f": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the non-null assertion operator on req.headers.authorization will cause a runtime crash if the header is missing."
+  },
+  "a79fc460e2a1aa17ad130128591e264c": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the pagination logic is off-by-one because it uses page * pageSize instead of (page - 1) * pageSize for a 1-indexed page."
+  },
+  "81bf6a5c228a86a8a7aa34f84dd99609": {
+    "answer": true,
+    "reason": "The comment correctly identifies the off-by-one error in the loop condition and its effect of creating an extra empty array."
+  },
+  "eb29b7818d91cac9706f767573d557a3": {
+    "answer": true,
+    "reason": "The comment correctly identifies the off-by-one error that results in returning n+1 items and suggests the correct fix."
+  },
+  "01bcd12b212cb8e158d93f08d03b37aa": {
+    "answer": true,
+    "reason": "The comment correctly identifies that the loop condition results in the function running one fewer time than intended."
+  },
+  "e770d7c7fba63ec2367a84f655444b5c": {
+    "answer": true,
+    "reason": "The comment correctly identifies the race condition between checking and updating stock and suggests the specific atomic SQL update fix mentioned in the bug description."
+  },
+  "3b0f444b93ea7a5fad5c976867471f6c": {
+    "answer": true,
+    "reason": "The comment correctly identifies the race condition caused by non-atomic read-and-increment operations and suggests the appropriate fix using atomic operations or a Lua script."
+  },
+  "a7c2ee2ada2e9c24dd039226346b5620": {
+    "answer": false,
+    "reason": "The comment focuses on atomicity in the context of failure recovery and partial state updates rather than the concurrency race condition described in the bug."
+  },
+  "6d4ec14cb68b796797a212e850a121ef": {
+    "answer": true,
+    "reason": "The comment correctly identifies the hardcoded production API key and suggests moving it to an environment variable, which matches the known bug."
+  },
+  "203af7f081327a73acdd67ca6b7d9a2d": {
+    "answer": true,
+    "reason": "The comment correctly identifies that hardcoding a default JWT secret allows attackers to forge authentication tokens when the environment variable is missing."
+  },
+  "401b08e13abf6a9b21a89c069000e3a5": {
+    "answer": true,
+    "reason": "The comment correctly identifies that AWS credentials are hardcoded in the source code and suggests using environment variables as a fix."
+  },
+  "8493aba78645039d1e526786928ca91a": {
+    "answer": true,
+    "reason": "The comment correctly identifies that logging the 'authorization' header exposes sensitive credentials like Bearer tokens."
+  },
+  "42ac8b9954ad03b8e7d4ebe499ef2c87": {
+    "answer": true,
+    "reason": "The comment correctly identifies the SQL injection vulnerability caused by string interpolation and suggests the exact parameterized query fix described in the bug report."
+  },
+  "f9dbf4441ea8f988d7a9726b65430ce6": {
+    "answer": true,
+    "reason": "The comment correctly identifies the SQL injection vulnerability in the sortBy and dir parameters and suggests using an allow-list for validation."
+  },
+  "29524051a8224c3e8012c43a160926ce": {
+    "answer": true,
+    "reason": "The comment correctly identifies the SQL injection vulnerability caused by the interpolation of the 'reason' parameter and suggests using a parameterized query as the fix."
+  },
+  "c2b0f0083882e5ce39292976fcdbc381": {
+    "answer": true,
+    "reason": "The comment correctly identifies the SQL injection vulnerability caused by concatenating the 'from' and 'to' parameters and suggests the exact fix of using parameterized queries with BETWEEN."
+  },
+  "6f1a30831de58db9cf127bd7be4794ca": {
+    "answer": false,
+    "reason": "The comment focuses on performance and caching rather than the missing await or the logical error caused by the function returning a Promise."
+  },
+  "5433026e30f8249450bcc17fc8325753": {
+    "answer": false,
+    "reason": "The comment focuses on floating point precision errors rather than the unit mismatch between dollars and cents that causes the 100x undercharge."
   }
 }

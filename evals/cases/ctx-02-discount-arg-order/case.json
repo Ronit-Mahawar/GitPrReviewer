@@ -1,0 +1,11 @@
+{
+  "id": "ctx-02-discount-arg-order",
+  "title": "Add applyTax and make pricing helpers take (percent, priceCents)",
+  "kind": "context",
+  "bug": {
+    "file": "src/pricing.ts",
+    "line": 2,
+    "category": "argument-order",
+    "description": "applyDiscount's parameters were swapped to (percent, priceCents), but its caller amountToCharge in src/checkout.ts (not changed in this PR) still calls applyDiscount(subtotal, coupon.percent), so the subtotal is used as the percent: it throws a RangeError or charges a wrong amount."
+  }
+}

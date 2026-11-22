@@ -1,20 +1,14 @@
 /**
- * Prompt text and prompt building for the reviewer. Pure: strings in, strings out.
+ * Prompts for the v2 review: one per chunk, plus one small summary call (D7).
+ * The review rules (severity guide, what to comment on, checks) are carried over from v1 unchanged.
  */
-import type { FileChange } from "./schema";
+import type { ReviewComment } from "./schema";
+import type { SkippedFile } from "./filter";
 
-export const SYSTEM_PROMPT = `You are an expert code reviewer. Analyze the provided pull request diff and provide a structured review.
-
-Your review should:
-1. Identify bugs, security issues, and significant performance problems
-2. Provide a brief summary of the changes
-3. Assign a risk score (0-100) based on the complexity and potential issues
-4. Give specific, actionable feedback with line numbers
+export const CHUNK_SYSTEM_PROMPT = `You are an expert code reviewer. You are shown part of a pull request diff. Find bugs, security issues, and significant performance problems in the lines this pull request adds.
 
 Respond with valid JSON matching this schema:
 {
-  "summary": "Brief summary of changes and overall assessment",
-  "riskScore": 0-100,
   "comments": [
     {
       "file": "path/to/file.ts",
@@ -51,49 +45,67 @@ Before reporting, check each claim against the code:
 - Null/undefined: can the value really be missing, given the types and checks above it?
 - Race conditions: is there a read-then-write across an await or separate queries without a lock/transaction/atomic statement?
 
-Line numbers:
-- Each diff line is prefixed with its line number in the new file, e.g. "L42  +  code". Removed lines have no number.
-- Set "line" to the number of the exact line containing the problem. Never cite a removed line or a hunk header.
+How the diff is shown:
+- Every line starts with a marker, its line number in the new file, and "|":
+  "+ 45 | code" is a line added by this pull request
+  "  46 | code" is an unchanged line, shown for context
+  "-    | code" is a removed line; it no longer exists, so it has no number
+- A big file may be split across several requests and labelled "part N of M"; you only see that part.
+
+Where you may comment:
+- Only on added lines (marked "+"). Set "line" to the number shown on that line.
+- Context and removed lines are there to help you understand the change. Comments on them are discarded.
 
 Output rules:
 - Return ONLY valid JSON. No markdown code fences, no text before or after the JSON.
-- Return at most 5 comments, most severe first.
-- Keep the summary, each message and each suggestion under 50 words.`;
+- Return at most 5 comments, most severe first. An empty "comments" array is a correct answer.
+- Keep each message and each suggestion under 50 words.`;
 
-/** Message shown when a PR has nothing reviewable; the model is not called. */
-export const EMPTY_DIFF_SUMMARY = "No code changes to review (binary files or empty diff).";
+/** Extra rules added to the chunk prompt only when the request includes repo context (Phase 4, D8). */
+export const CONTEXT_RULES = `Repository context:
+- This request ends with a "REFERENCE ONLY" section: the full changed file after this pull request, signatures of files it imports, and code elsewhere that calls the functions this pull request changed.
+- Use it to check whether the change fits the rest of the code, for example a function that can now return null while a caller assumes it can't, or a changed parameter that callers still pass the old way.
+- Never comment on code in the REFERENCE ONLY section. Put each comment on the "+" line in the changed code that causes the problem.
+`;
+
+/** The chunk system prompt; with context it gains CONTEXT_RULES (placed just before the output rules). */
+export function chunkSystemPrompt(withContext: boolean): string {
+  return withContext ? CHUNK_SYSTEM_PROMPT.replace("\nOutput rules:", `\n${CONTEXT_RULES}\nOutput rules:`) : CHUNK_SYSTEM_PROMPT;
+}
 
 /**
- * Prefixes each line of a unified-diff patch with its line number in the new file
- * ("L42 +", "L43  ") so the model can cite exact lines; removed lines get "     -".
+ * The chunk's user message. Without context it's the Phase 3 layout exactly; with context the diff goes under
+ * "## CHANGED CODE" and the reference section follows it.
  */
-export function numberPatch(patch: string): string {
-  let newLine = 0;
-  return patch
-    .split("\n")
-    .map((line) => {
-      const hunk = /^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@/.exec(line);
-      if (hunk) {
-        newLine = Number(hunk[1]);
-        return line;
-      }
-      if (line.startsWith("-")) return `      ${line}`;
-      if (line.startsWith("\\")) return line; // "\ No newline at end of file"
-      const label = `L${newLine}`.padEnd(5);
-      newLine++;
-      return `${label} ${line}`;
-    })
-    .join("\n");
+export function buildChunkUserPrompt(title: string, chunkText: string, chunk: { index: number; total: number }, referenceText = ""): string {
+  const position = chunk.total > 1 ? ` (request ${chunk.index + 1} of ${chunk.total} for this pull request)` : "";
+  if (!referenceText) return `Review this pull request${position}:\n\n**Title:** ${title}\n\n**Changes:**\n${chunkText}`;
+  return `Review this pull request${position}:\n\n**Title:** ${title}\n\n## CHANGED CODE (review this; comment only on lines marked "+")\n${chunkText}\n\n${referenceText}`;
 }
 
-/** Joins every file that has a patch into one Markdown diff block per file. */
-export function buildDiffText(files: FileChange[]): string {
-  return files
-    .filter((f) => f.patch)
-    .map((f) => `### ${f.filename} (${f.status})\n\`\`\`diff\n${numberPatch(f.patch!)}\n\`\`\``)
-    .join("\n\n");
+export const SUMMARY_SYSTEM_PROMPT = `You write the summary of an automated pull request review. You get the PR title, the files that were reviewed, the files that were skipped, and the review comments that were found. You do not see the code.
+
+Respond with valid JSON: {"summary": "...", "riskScore": 0-100}
+
+- summary: 2 to 4 sentences. Say what the pull request changes (from the title and file names) and the most important problems found. Mention only problems that are in the comments; never invent new ones. If there are no comments, say no problems were found.
+- riskScore: how risky it is to merge, based on the comments. No comments: under 20. Any critical comment: at least 70. Any high comment: at least 50.
+
+Return ONLY valid JSON. No markdown code fences, no text before or after the JSON.`;
+
+export interface SummaryInput {
+  title: string;
+  reviewedFiles: Array<{ filename: string; status: string }>;
+  skipped: SkippedFile[];
+  comments: ReviewComment[];
+  failedChunks: number;
+  totalChunks: number;
 }
 
-export function buildUserPrompt(title: string, diffText: string): string {
-  return `Review this pull request:\n\n**Title:** ${title}\n\n**Changes:**\n${diffText}`;
+export function buildSummaryUserPrompt(input: SummaryInput): string {
+  const files = input.reviewedFiles.map((f) => `- ${f.filename} (${f.status})`).join("\n") || "- (none)";
+  const skipped = input.skipped.map((s) => `- ${s.file}: ${s.reason}`).join("\n") || "- (none)";
+  const comments =
+    input.comments.map((c) => `- [${c.severity}/${c.category}] ${c.file}:${c.line}: ${c.message}`).join("\n") || "- (none)";
+  const failed = input.failedChunks > 0 ? `\n\n**Note:** ${input.failedChunks} of ${input.totalChunks} parts of the diff could not be reviewed.` : "";
+  return `**Title:** ${input.title}\n\n**Files reviewed:**\n${files}\n\n**Files skipped:**\n${skipped}\n\n**Comments found:**\n${comments}${failed}`;
 }

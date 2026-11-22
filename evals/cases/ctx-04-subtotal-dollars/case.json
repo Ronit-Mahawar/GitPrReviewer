@@ -1,0 +1,11 @@
+{
+  "id": "ctx-04-subtotal-dollars",
+  "title": "Return order subtotals in dollars for the analytics dashboard",
+  "kind": "context",
+  "bug": {
+    "file": "src/orders.ts",
+    "line": 35,
+    "category": "unit-change",
+    "description": "orderSubtotal now returns dollars (total / 100), but its callers still treat it as cents: receiptTotals in src/receipts.ts adds SHIPPING_CENTS to it and amountToCharge in src/checkout.ts charges it as cents, so customers are charged and billed 1/100 of the real amount."
+  }
+}

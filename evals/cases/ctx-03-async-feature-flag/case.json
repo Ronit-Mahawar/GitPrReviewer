@@ -1,0 +1,11 @@
+{
+  "id": "ctx-03-async-feature-flag",
+  "title": "Load feature flags from the database",
+  "kind": "context",
+  "bug": {
+    "file": "src/flags.ts",
+    "line": 4,
+    "category": "missing-await",
+    "description": "isFeatureEnabled is now async and returns a Promise, but src/routes/beta.ts (not changed in this PR) still calls it without await: !isFeatureEnabled(...) is always false because a Promise is truthy, so the beta-only route is open to everyone. Callers must await it."
+  }
+}

@@ -154,17 +154,158 @@ Edge cases covered by the tests: an empty patch, a single giant hunk (skipped, r
    A: A hunk is one contiguous change; cutting it in half would show the model half a function and invite wrong comments. So a big file is split between hunks, and each part is labelled "part 2 of 3" so the model knows it's seeing part of a file. A single hunk bigger than the whole budget (usually a generated or pasted file) is skipped with the reason "hunk too large", and that skip is reported to the user instead of silently dropped.
 
 ## Phase 3: Parallel review, merge, summary
-_(filled by Claude Code)_
+**What was built:** Reviews now use the Phase 2 pipeline. The PR is filtered and chunked, each chunk is reviewed by its own model call (in parallel, each one a separate Inngest step), the comments are checked against the real added lines, de-duplicated and capped, and one small extra call writes the summary and risk score from the comments alone. A bad model reply affects only its own chunk, and what wasn't reviewed is saved in `Review.meta` and shown in the UI.
 
-**Results compared with the baseline:** _(table)_
+**How it works:**
+1. `reviewPullRequest(input, { llm, runStep? }, { chunkTokenBudget, maxComments })` in `src/server/review/review-pull-request.ts`:
+   - `filterFiles()` then `chunkFiles()` (Phase 2) give the chunks and the skipped list;
+   - for every chunk, in parallel: `runStep("review-chunk-<i>", () => reviewChunk(...))`. `reviewChunk()` sends `CHUNK_SYSTEM_PROMPT` (the v1 rules, plus: line numbers come from the `+ 45 | code` prefix, comment only on `+` lines, at most 5 comments) and parses the reply with `ChunkReplySchema`. If the reply isn't valid JSON or doesn't match the schema, it asks **once** more; if that fails too, the chunk is marked failed. A provider error thrown out of the step (after Inngest's retries) is caught and also marks only that chunk failed;
+   - `mergeComments()` (`merge.ts`) drops comments whose line isn't an added line of that file, sorts by severity, removes duplicates (same file and category, lines within 2), and keeps the top `MAX_COMMENTS` (15);
+   - `runStep("summarize", () => summarizeReview(...))` sends only the title, file list, skipped list and merged comments (never the diff) and gets `{ summary, riskScore }`. If that fails, a summary is written in code (`fallbackRiskScore()`);
+   - `coverageNote()` appends "Not reviewed: …" and "N of M parts could not be reviewed" to the summary when needed.
+2. `review-pr.ts` passes `runStep = step.run`, so each chunk is a retryable, memoized Inngest step, and sets `concurrency: { key: "event.data.userId", limit: 3 }` (at most 3 steps per user at once). It reads `CHUNK_TOKEN_BUDGET` and `MAX_COMMENTS` with `parsePositiveInt()` (`config.ts`) and saves `meta` (files reviewed, skipped with reasons, chunks, failed chunks and their errors, dropped-comment counts, tokens, latency) into the new `Review.meta` column. `zodValid` now means "no chunk failed".
+3. `prisma/migrations/20261122120000_add_review_meta/migration.sql` adds `meta JSONB` (generated with `prisma migrate diff`).
+4. `review-result.tsx` shows a **Coverage** line under the summary ("15 files reviewed in 2 parts · 1 skipped", plus the skipped files with reasons, and failed parts in red). Reviews from before v2 have no `meta` and show nothing extra.
+5. Evals: `evals/run.ts` passes the same options as the job, records chunk counts per review, and wraps the model in `withRetries()` (`evals/lib/retry.ts`) so a 429 is retried like Inngest would, instead of being scored as a reviewer failure (D27).
+
+**Files changed:**
+- New: `src/server/review/merge.ts`, `config.ts` (+ tests), `evals/lib/retry.ts` (+ test), `src/components/review-result.test.ts`, `prisma/migrations/20261122120000_add_review_meta/`
+- Rewritten: `src/server/review/review-pull-request.ts`, `prompt.ts` (chunk + summary prompts; v1's `numberPatch` and single prompt removed) and their tests
+- Changed: `schema.ts` (`ChunkReplySchema`, `SummaryReplySchema`), `parse.ts` (`parseReply(schema, …)`), `src/server/inngest/functions/review-pr.ts` (+ test), `prisma/schema.prisma`, `src/components/review-result.tsx`, `evals/run.ts`, `evals/score.ts`, `evals/lib/scoring.ts` (+ test), `.env.example`, `CLAUDE.md`, `DECISIONS.md`
+
+**How to test:**
+```bash
+npm run test                                   # 20 files, 169 tests
+npx prisma migrate deploy                      # adds Review.meta to your database (run once)
+npm run eval -- --label my-run && npm run eval:score
+```
+In the app: open a PR review; under "AI Summary" you should see the Coverage line.
+
+**Results compared with the baseline** (26 cases × 3 runs each, reviewer `gemini-3.1-flash-lite` at temperature 0, judge `gemini-3-flash-preview`; sources: `evals/results/2026-11-21T14-11-55-195Z-v1-baseline.score.md` and `evals/results/2026-11-21T16-48-04-208Z-v2-phase3.score.md`):
+
+| Metric | v1 baseline | v2 (Phase 3) |
+|---|---|---|
+| Catch rate | 100% (66/66) | **95% (63/66)** |
+| … kind `bug` / `large` | 63/63 / 3/3 | 60/63 / 3/3 |
+| … `race-condition` | 12/12 | 9/12 (`race-03` missed in all 3 runs) |
+| Noise comments per PR | 0.23 | 0.27 |
+| False alarms on clean PRs | 0/12 | 0/12 |
+| Failed reviews | 0/78 | 0/78 (and 0 of 81 chunks failed) |
+| Latency avg / median / p95 | 9.27s / 2.94s / 36.62s | 12.89s / 3.14s / 54.65s |
+| Tokens per PR (prompt / completion) | 2,562 / 174 | **1,693** / 186 |
+| Large PR: prompt tokens per review | 40,141 | **9,840** (−75%), 2 chunks, lockfile skipped |
+| Comments dropped for pointing at a non-added line | n/a (not checked in v1) | 0 |
+
+What this shows, honestly:
+- **Catch rate went down by one case, not up.** v2 misses `race-03-webhook-idempotency` in every run (temperature 0 repeats the same answer). Its comment is now about a missing transaction ("partial updates if the process crashes"), a real but different issue, instead of the planted bug (two concurrent deliveries of the same event both passing the "already processed?" check). The judge said NO, and I agree. The data doesn't tell why the model's answer changed (the prompt text around the rules changed: new line format, no summary task); one case flipping isn't proof of a trend, but it is a miss.
+- **The big win is on the large PR:** 75% fewer prompt tokens (the lockfile alone was two thirds of v1's prompt), the buried bug is still caught 3/3, and the review says what it skipped. The large PR also got one more comment that is noise (2 per review vs 1).
+- **Small PRs got slightly more expensive and slower:** each review is now two calls (one chunk + the summary), so a typical small PR uses ~30% more prompt tokens (e.g. 1,330 vs 1,025) and the median latency rose from 2.94s to 3.14s. The p95 rose too, but that number includes 10 rate-limit retries (5–20s waits) during the v2 run and provider slowness that evening, so compare medians.
+- **Robustness can't show up here:** neither version had a failed review on these cases, and v2 dropped 0 comments for invalid lines (the line-number fix from `7adbfbb` already got lines right). The value of chunk-level retries and line checks will show on larger, messier PRs. That needs harder cases.
+- The v2 run was recorded at commit `83ff74f+dirty`, meaning the Phase 3 code before it was committed.
+- Spot-check: I checked the 10 sampled judge decisions by hand and agreed with all 10 (8 YES, 2 NO).
+
+**Interview Q&A:**
+1. **Q: Why one Inngest step per chunk instead of `Promise.all` inside a single step?**
+   A: Inngest remembers each finished step. If chunk 3 of 4 hits a rate limit, only that step is retried; the other three results are reused instead of paid for again. Each chunk also shows up separately in the Inngest dashboard. The steps still run in parallel (I start them all and `await Promise.all`), and a per-user concurrency limit of 3 stops one large PR from flooding Gemini. The review code itself doesn't import Inngest: it calls a `runStep` function that the job sets to `step.run`, and evals leave it out.
+2. **Q: What happens when the model returns broken JSON?**
+   A: v1's whole review failed. Now the parser first tries to recover the JSON object from stray text, then validates it with Zod. If either fails, that chunk is asked once more; if it fails again, only that chunk is marked failed, the rest of the review completes, and the summary and UI say "1 of 3 parts could not be reviewed". `zodValid` on the review is false in that case, so it's also visible in the data.
+3. **Q: Why does the summary call not get the diff?**
+   A: It would be the same large-prompt problem v2 is trying to fix, and it costs a lot of tokens on big PRs. The summary only needs the problems that were found and which files were (and weren't) reviewed, so the risk score is based on actual findings. The cost: it can't describe what the PR does beyond what the file names and comments show.
 
 ## Phase 4: Repo context
-_(filled by Claude Code)_
+**What was built:** Each chunk can now see code from the rest of the repository, not just the diff: the changed file as it is after the PR, the exported signatures of files it imports, and places that call the functions it changed. This goes into the prompt as "reference only", under a token budget, so the model can catch bugs that only show up across files (a caller that now gets `null`, arguments in the wrong order, a missing `await`, dollars vs. cents). Context is best-effort: if anything fails, that piece is skipped and counted, and the review goes on.
 
-**With context vs. without:** _(table)_
+**How it works:**
+1. `buildChunkContext({ files, provider, ref, budget })` in `src/server/review/context.ts` builds the context for one chunk, in priority order (D8):
+   1. the full changed file after the PR if it's under 400 lines, otherwise only the changed declarations ±20 lines;
+   2. exported signatures (no bodies, JSDoc kept) of files it imports with a relative path, one level deep;
+   3. call sites of exported symbols the diff changed: at most 5, 3 lines either side.
+
+   Blocks are added while they fit `CONTEXT_TOKEN_BUDGET` (4,000); one that doesn't fit is dropped and counted, and a smaller later block may still fit. Errors from the provider are caught per block.
+2. `signatures.ts` uses the TypeScript compiler API (`ts.createSourceFile`, parse only) for `exportedDeclarations`, `extractSignatures` and `relativeImports` (D9). `typescript` moved from devDependencies to dependencies, and `next.config.ts` keeps it out of the bundle.
+3. The core only knows the `ContextProvider` interface (`getFile`, `findCallers`, optional `getSignatures`), so it stays pure. `reviewPullRequest()` takes an optional `contextProvider` and `ref`; `reviewChunk()` builds the context inside the chunk's step. With context, the prompt gets a `## REFERENCE ONLY` section and three extra rules; without it, the prompts are exactly the Phase 3 text (D29). Comments on reference code are dropped by `mergeComments()` anyway, since only added lines are valid.
+4. Production provider: `createGitHubContextProvider()` in `src/server/services/github-context-provider.ts` reads the head commit's tree once (every path → blob SHA), fetches blobs by SHA only on a cache miss (D28), and finds callers with GitHub code search, which only covers the default branch (D10). `prismaContextCache` (`context-cache.ts`) stores file contents and signatures in the new `ContextCache` table, keyed by `(repo, blobSha, kind)`; a blob SHA names exact contents, so nothing goes stale (D11). Cache errors only cost a refetch.
+5. `review-pr.ts` builds the provider with the user's GitHub token and passes `ref: pr.head.sha`. `meta.context` records whether context was on, its tokens, blocks used, blocks dropped and errors.
+6. Evals: `evals/lib/apply-patch.ts` rebuilds each case's files after the PR, and `createLocalContextProvider(fixture, overrides)` serves the fixture repo with those files laid on top (D30). `npm run eval -- --no-context` turns context off for the comparison. Four new cases (`ctx-01` … `ctx-04`, kind `context`) plant bugs that can't be seen from the diff alone, with callers added to the fixture repo (`stock.ts`, `pricing.ts`, `checkout.ts`, `flags.ts`, `routes/beta.ts`, `receipts.ts`).
+
+**Files changed:**
+- New: `src/server/review/context.ts`, `signatures.ts` (+ tests), `src/server/services/github-context-provider.ts` (+ test), `context-cache.ts`, `evals/lib/apply-patch.ts` (+ test), `prisma/migrations/20261122130000_add_context_cache/`, `evals/cases/ctx-01` … `ctx-04`, six fixture files listed above
+- Changed: `src/server/review/review-pull-request.ts`, `prompt.ts` (+ tests), `src/server/inngest/functions/review-pr.ts` (+ test), `prisma/schema.prisma`, `evals/run.ts`, `evals/lib/local-context-provider.ts` (+ test), `package.json`, `next.config.ts`, `.env.example`, `CLAUDE.md`, `DECISIONS.md` (D8–D11 accepted, D28–D30 new)
+
+**How to test:**
+```bash
+npm run test
+npx prisma migrate deploy                      # adds the ContextCache table (run once)
+npm run eval -- --runs 3 --label p4-context
+npm run eval -- --runs 3 --label p4-no-context --no-context
+npm run eval:score -- evals/results/<file>.json   # once per run
+```
+In the app: open a PR review; the stored `meta.context` shows tokens and blocks used. A second push to the same PR should hit the cache for unchanged files.
+
+**With context vs. without** (30 cases × 3 runs each, same code, only `--no-context` differs; reviewer `gemini-3.1-flash-lite` at temperature 0, judge `gemini-3-flash-preview`; sources: `evals/results/2026-11-21T18-10-51-971Z-p4-context.score.md` and `evals/results/2026-11-22T13-02-33-642Z-p4-no-context.score.md`):
+
+| Metric | Without context | With context |
+|---|---|---|
+| Catch rate, all | 81% (63/78) | **88% (69/78)** |
+| … kind `context` (4 new cases) | 0% (0/12) | **75% (9/12)** |
+| … `argument-order` / `missing-await` / `unit-change` | 0/3 / 0/3 / 0/3 | 3/3 / 3/3 / 3/3 |
+| … `ctx-01-null-stock` (new `null` return) | 0/3 | 0/3 (no comment at all) |
+| … kind `bug` (the 21 Phase 3 cases) | 95% (60/63) | 90% (57/63), see `race-04` below |
+| … kind `large` | 3/3 | 3/3 |
+| Noise comments per PR | 0.30 | 0.30 |
+| Comments on clean PRs (4 cases × 3 runs) | 0 | 6 (all medium) |
+| False alarms on clean PRs (high/critical) | 0/12 | 0/12 |
+| Failed reviews / failed chunks | 0/90 / 0 of 93 | 0/90 / 0 of 93 |
+| Prompt / completion tokens per PR | 1,634 / 178 | **2,572** (+57%) / 192 |
+| Latency median | 7.04s | 3.01s |
+
+What this shows, honestly:
+- **Context does what it was built for:** three of the four cross-file bugs go from never caught to caught in every run. Without context the model either says nothing or comments on something else (for `ctx-03`, "a DB query on every call"; for `ctx-04`, floating-point precision, not the 100× unit change).
+- **`ctx-01` is missed both ways:** the reviewer posts no comment on the new `return null`, even with the caller that dereferences it in the reference section. One case doesn't say why.
+- **The `race-04` drop is a scoring artifact, not a worse review.** With context, all 3 reviews flag the race correctly ("not atomic … concurrent requests could result in a negative balance"), but on the `UPDATE` line (11), while the planted bug is marked on the `SELECT` (line 6). That's 5 lines away, outside the ±3 window, so it counts as a miss before the judge sees it. I'm reporting the strict number; counted by hand it would be 60/63, the same as without context. Without context, the comment lands on line 6.
+- **Cost:** 57% more prompt tokens per PR, and context makes the model a little chattier on clean PRs: 6 medium comments vs 0 (still no high/critical false alarm). Overall noise per PR is unchanged at 0.30.
+- **Latency can't be compared here.** The two runs were 19 hours apart. The no-context run (smaller prompts, the same prompts as Phase 3, which had a 3.14s median) logged 13 rate-limit retries and was slower throughout, so that difference is provider-side, not context.
+- The no-context run matches Phase 3 on the 21 original bug cases (60/63, `race-03` missed in all runs), as expected since D29 keeps its prompts identical.
+- Spot-check: I checked the sampled judge decisions in both reports by hand and agreed with all of them.
+
+**Interview Q&A:**
+1. **Q: Why not embeddings and a vector database for repo context?**
+   A: Most bugs between files are about contracts: what a function returns, what order its parameters are in, whether it's async. Signatures and call sites carry exactly that in very few tokens, and finding them is deterministic: parse the imports, search for the symbol. Retrieval would need indexing, storage and keeping the index in sync on every push, and it's harder to explain why a given snippet was chosen. The fixed priority order fits a budget and is predictable. The cost is that it only follows one level of relative imports.
+2. **Q: How do you avoid downloading the same files on every push?**
+   A: I read the head commit's tree once, which gives every path's blob SHA in one request. A blob SHA is a hash of the contents, so I cache contents and extracted signatures by `(repo, blobSha)` in Postgres. On a `synchronize` push most files are unchanged, so their SHAs are the same and they come from the cache. The cache never needs invalidating, because a changed file has a new SHA. If the cache fails, the provider just downloads the file.
+3. **Q: What if context makes the model comment on code the PR didn't touch?**
+   A: Two guards. The prompt marks it as reference only and says never to comment on it. And independently of what the model does, `mergeComments()` keeps only comments on lines the PR added, so a comment on reference code is dropped in code. The real risk is different: more text can make the model more talkative on the changed lines too, which is why the comparison measures noise and clean-PR false alarms, not just catch rate.
 
 ## Phase 5: Final state
-_(architecture summary, final results, known limitations)_
+**What was done:** No code changes. `README.md` was rewritten (what it does, a Mermaid diagram of the flow, how large PRs and repo context are handled, the results table across all four measured versions, how to run the app and the evals, limitations). This guide and `DECISIONS.md` got a final pass: statuses that still said "comes in Phase 3" were updated, and the scoring-window issue found in Phase 4 was recorded under D2.
+
+**Architecture in one paragraph:** A PR webhook (HMAC-verified, duplicate deliveries ignored) creates a `Review` and sends an Inngest event. The job fetches the PR files and calls `reviewPullRequest()`, a pure function that filters files (skipped ones listed with a reason), annotates each patch with line numbers from code, packs files into chunks under a token budget and reviews each chunk in its own Inngest step, in parallel, with repo context from GitHub at the head commit (cached by blob SHA). Comments are kept only on real added lines, de-duplicated, sorted and capped; one more call writes the summary and risk score from the comments. A failure stays inside its chunk, and everything not reviewed is recorded in `Review.meta` and shown in the UI.
+
+**Final results** (sources in `evals/results/`; full tables in the Phase 1, 3 and 4 sections above):
+
+| | v1 | v2 Phase 3 | v2 no context | v2 with context |
+|---|---|---|---|---|
+| Catch rate | 100% (66/66) | 95% (63/66) | 81% (63/78) | **88% (69/78)** |
+| Cross-file bugs | – | – | 0/12 | **9/12** |
+| Large PR prompt tokens | 40,141 | **9,840** | – | – |
+| Noise per PR | 0.23 | 0.27 | 0.30 | 0.30 |
+| High/critical false alarms on clean PRs | 0/12 | 0/12 | 0/12 | 0/12 |
+| Failed reviews | 0/78 | 0/78 | 0/90 | 0/90 |
+| Prompt tokens per PR | 2,562 | 1,693 | 1,634 | 2,572 |
+
+The first two columns ran 26 cases, the last two 30 (the 4 context cases were added in Phase 4), so compare catch rates within a pair.
+
+**Known limitations:** listed in `README.md`. The main ones: a small eval set with one reviewer model, a judge checked only by sample, TypeScript-only signatures with one level of relative imports, code search limited to the default branch, `race-03` missed by every v2 run, `ctx-01` (new `null` return) missed with and without context, and deploy files that still reference pnpm and `OPENAI_API_KEY`.
+
+**How to test:** `npm run lint`, `npx tsc --noEmit`, `npm run test` (24 files, 219 tests). Render `README.md` on GitHub to check the Mermaid diagram.
+
+**Interview Q&A:**
+1. **Q: Your catch rate went from 100% in v1 to 88%. Didn't v2 make it worse?**
+   A: Those are different test sets. v1's 100% is on 26 single-bug PRs; the 88% includes 4 cross-file bugs added in Phase 4, which a diff-only reviewer can't see (0/12 without context). On the original cases v2 misses one race condition in every run, which I report as a real miss. The wins are elsewhere: 75% fewer tokens on a large PR with the bug still caught, failures contained to one chunk, coverage reported, and 9 of 12 cross-file bugs caught. The honest summary: on easy PRs v1 was already good, and v2 is about large PRs, robustness and context.
+2. **Q: How do you know your eval numbers mean anything?**
+   A: Partly they don't, and I say so: 30 cases, one model, so one case flipping moves the rate by about 4 points. What makes them usable: every bug has a known file and line, a comment must be near it *and* a judge must agree on the content, I hand-check a sample of judge decisions every run, judge failures abort the scoring instead of counting as misses, and the with/without-context comparison changes exactly one flag with identical prompts otherwise. I also found and documented a scoring artifact (a correct comment 5 lines from the marked line) instead of tuning it away after seeing the result.
+3. **Q: What would you do next?**
+   A: Fix the deploy files, then grow the eval set with real PRs from open-source repos, since the hand-written cases are too easy to show differences. Then look at the two consistent misses (`race-03`, `ctx-01`), resolve path-alias imports for context, and measure whether a stronger reviewer model is worth its cost on the context cases. I'd also judge comments by the code range they mention rather than a fixed ±3-line window.
 
 ---
 

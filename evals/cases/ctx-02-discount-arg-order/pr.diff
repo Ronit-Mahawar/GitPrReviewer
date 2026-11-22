@@ -1,0 +1,17 @@
+diff --git a/src/pricing.ts b/src/pricing.ts
+index 2c771ac..3567745 100644
+--- a/src/pricing.ts
++++ b/src/pricing.ts
+@@ -1,5 +1,11 @@
+ /** Price after a percentage discount, in integer cents. percent is 0–100. */
+-export function applyDiscount(priceCents: number, percent: number): number {
++export function applyDiscount(percent: number, priceCents: number): number {
+   if (percent < 0 || percent > 100) throw new RangeError("percent must be between 0 and 100");
+   return Math.round(priceCents * (1 - percent / 100));
+ }
++
++/** Price including a percentage tax, in integer cents. percent is 0–100. */
++export function applyTax(percent: number, priceCents: number): number {
++  if (percent < 0 || percent > 100) throw new RangeError("percent must be between 0 and 100");
++  return Math.round(priceCents * (1 + percent / 100));
++}

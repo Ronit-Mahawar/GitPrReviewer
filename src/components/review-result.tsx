@@ -43,7 +43,51 @@ interface ReviewResultProps {
     comments: ReviewComment[] | unknown;
     error: string | null;
     createdAt: Date;
+    /** v2 coverage info; null for reviews made before it existed. */
+    meta?: unknown;
   };
+}
+
+interface Coverage {
+  filesReviewed: number;
+  filesSkipped: Array<{ file: string; reason: string }>;
+  chunks: number;
+  failedChunks: number;
+}
+
+/** Reads the coverage fields from the stored meta JSON, or null if they aren't there. */
+export function readCoverage(meta: unknown): Coverage | null {
+  if (!meta || typeof meta !== "object") return null;
+  const m = meta as Partial<Coverage>;
+  if (typeof m.filesReviewed !== "number" || typeof m.chunks !== "number" || typeof m.failedChunks !== "number") return null;
+  return { filesReviewed: m.filesReviewed, chunks: m.chunks, failedChunks: m.failedChunks, filesSkipped: Array.isArray(m.filesSkipped) ? m.filesSkipped : [] };
+}
+
+/** "Coverage: 15 files reviewed in 2 parts · 1 skipped · 0 failed", with the skipped files listed. */
+export function CoverageLine({ meta }: { meta: unknown }) {
+  const coverage = readCoverage(meta);
+  if (!coverage) return null;
+  const { filesReviewed, filesSkipped, chunks, failedChunks } = coverage;
+  return (
+    <div className="text-xs text-muted-foreground space-y-1">
+      <p>
+        <span className="font-medium">Coverage:</span> {filesReviewed} file{filesReviewed === 1 ? "" : "s"} reviewed
+        {chunks > 1 ? ` in ${chunks} parts` : ""} · {filesSkipped.length} skipped
+        {failedChunks > 0 && (
+          <span className="text-destructive"> · {failedChunks} of {chunks} part{chunks === 1 ? "" : "s"} failed</span>
+        )}
+      </p>
+      {filesSkipped.length > 0 && (
+        <ul className="list-disc pl-5">
+          {filesSkipped.map((s, i) => (
+            <li key={`${s.file}-${i}`}>
+              <code>{s.file}</code>: {s.reason}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 export function ReviewResult({ review }: ReviewResultProps) {
@@ -237,12 +281,14 @@ export function ReviewResult({ review }: ReviewResultProps) {
                 <h3 className="text-sm font-medium text-muted-foreground mb-2">
                   AI Summary
                 </h3>
-                <p className="text-sm leading-relaxed text-foreground/90">
+                <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-line">
                   {review.summary}
                 </p>
               </div>
             </>
           )}
+
+          <CoverageLine meta={review.meta} />
         </CardContent>
       </Card>
 

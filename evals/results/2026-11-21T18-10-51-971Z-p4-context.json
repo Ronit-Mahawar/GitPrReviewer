@@ -1,0 +1,2427 @@
+{
+  "label": "p4-context",
+  "startedAt": "2026-11-21T18:10:51.971Z",
+  "model": "gemini-3.1-flash-lite",
+  "temperature": 0,
+  "runs": 3,
+  "gitCommit": "83ff74f+dirty",
+  "options": {
+    "chunkTokenBudget": 7000,
+    "maxComments": 15,
+    "contextTokenBudget": 4000
+  },
+  "context": true,
+  "caseIds": [
+    "clean-01-find-users-by-ids",
+    "clean-02-format-cents",
+    "clean-03-atomic-reserve",
+    "ctx-01-null-stock",
+    "ctx-02-discount-arg-order",
+    "ctx-03-async-feature-flag",
+    "ctx-04-subtotal-dollars",
+    "example-bug-delete-user-idor",
+    "example-clean-page-param",
+    "example-large-reports",
+    "null-01-display-name",
+    "null-02-shipping-label",
+    "null-03-price-lookup",
+    "null-04-auth-header",
+    "ob-01-pagination",
+    "ob-02-chunk",
+    "ob-03-recent-orders",
+    "ob-04-retry",
+    "race-01-reserve-stock",
+    "race-02-rate-limit",
+    "race-03-webhook-idempotency",
+    "race-04-wallet-debit",
+    "secret-01-payments-key",
+    "secret-02-jwt-fallback",
+    "secret-03-aws-backup",
+    "secret-04-request-logging",
+    "sqli-01-user-search",
+    "sqli-02-order-sort",
+    "sqli-03-cancel-reason",
+    "sqli-04-sales-report"
+  ],
+  "records": [
+    {
+      "caseId": "clean-01-find-users-by-ids",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 13896,
+      "promptTokens": 1848,
+      "completionTokens": 61,
+      "summary": "This pull request introduces a batch-loading mechanism for users by ID within the src/users.ts file. No problems were found during the automated review of these changes.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 629,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "clean-01-find-users-by-ids",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 1969,
+      "promptTokens": 1848,
+      "completionTokens": 61,
+      "summary": "This pull request introduces a batch-loading mechanism for users by ID within the src/users.ts file. No problems were found during the automated review of these changes.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 629,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "clean-01-find-users-by-ids",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1861,
+      "promptTokens": 1848,
+      "completionTokens": 61,
+      "summary": "This pull request introduces a batch-loading mechanism for users by ID within the src/users.ts file. No problems were found during the automated review of these changes.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 629,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "clean-02-format-cents",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2426,
+      "promptTokens": 2766,
+      "completionTokens": 160,
+      "summary": "This pull request introduces a new money formatting helper utility along with its corresponding test suite. A potential memory leak was identified in the implementation due to an unbounded global Map used for caching locale and currency combinations.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/money.ts",
+          "line": 1,
+          "severity": "medium",
+          "category": "performance",
+          "message": "The global Map grows indefinitely if many different locale/currency combinations are used, potentially leading to a memory leak.",
+          "suggestion": "Use an LRU cache or limit the size of the Map."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1142,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "clean-02-format-cents",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2397,
+      "promptTokens": 2766,
+      "completionTokens": 160,
+      "summary": "This pull request introduces a new money formatting helper utility along with its corresponding test suite. A potential memory leak was identified in the implementation due to an unbounded global Map used for caching locale and currency combinations.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/money.ts",
+          "line": 1,
+          "severity": "medium",
+          "category": "performance",
+          "message": "The global Map grows indefinitely if many different locale/currency combinations are used, potentially leading to a memory leak.",
+          "suggestion": "Use an LRU cache or limit the size of the Map."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1142,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "clean-02-format-cents",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 3010,
+      "promptTokens": 2766,
+      "completionTokens": 160,
+      "summary": "This pull request introduces a new money formatting helper utility along with its corresponding test suite. A potential memory leak was identified in the implementation due to an unbounded global Map used for caching locale and currency combinations.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/money.ts",
+          "line": 1,
+          "severity": "medium",
+          "category": "performance",
+          "message": "The global Map grows indefinitely if many different locale/currency combinations are used, potentially leading to a memory leak.",
+          "suggestion": "Use an LRU cache or limit the size of the Map."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1142,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "clean-03-atomic-reserve",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 10048,
+      "promptTokens": 1795,
+      "completionTokens": 59,
+      "summary": "This pull request implements atomic inventory reservation logic within the checkout process by modifying src/inventory.ts. No problems were found during the automated review of these changes.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 536,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "clean-03-atomic-reserve",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2919,
+      "promptTokens": 1795,
+      "completionTokens": 59,
+      "summary": "This pull request implements atomic inventory reservation logic within the checkout process by modifying src/inventory.ts. No problems were found during the automated review of these changes.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 536,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "clean-03-atomic-reserve",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2765,
+      "promptTokens": 1795,
+      "completionTokens": 59,
+      "summary": "This pull request implements atomic inventory reservation logic within the checkout process by modifying src/inventory.ts. No problems were found during the automated review of these changes.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 536,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ctx-01-null-stock",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1942,
+      "promptTokens": 1719,
+      "completionTokens": 62,
+      "summary": "This pull request updates the getStock function in src/inventory.ts to distinguish between unknown SKUs and sold-out items. No problems were found during the automated review.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 520,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ctx-01-null-stock",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 1637,
+      "promptTokens": 1719,
+      "completionTokens": 62,
+      "summary": "This pull request updates the getStock function in src/inventory.ts to distinguish between unknown SKUs and sold-out items. No problems were found during the automated review.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 520,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ctx-01-null-stock",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2139,
+      "promptTokens": 1719,
+      "completionTokens": 62,
+      "summary": "This pull request updates the getStock function in src/inventory.ts to distinguish between unknown SKUs and sold-out items. No problems were found during the automated review.",
+      "riskScore": 10,
+      "comments": [],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 520,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ctx-02-discount-arg-order",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1797,
+      "promptTokens": 1853,
+      "completionTokens": 189,
+      "summary": "This pull request introduces an applyTax function and refactors pricing helpers to standardize parameter ordering. A high-severity bug was identified where the parameter order for applyDiscount was swapped without updating existing call sites in src/checkout.ts, which will cause runtime errors.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/pricing.ts",
+          "line": 2,
+          "severity": "high",
+          "category": "bug",
+          "message": "The parameter order for applyDiscount was swapped, but existing call sites in src/checkout.ts were not updated to match the new signature.",
+          "suggestion": "Update src/checkout.ts to call applyDiscount(coupon.percent, subtotal) or revert the parameter order change."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 493,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ctx-02-discount-arg-order",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2635,
+      "promptTokens": 1853,
+      "completionTokens": 189,
+      "summary": "This pull request introduces an applyTax function and refactors pricing helpers to standardize parameter ordering. A high-severity bug was identified where the parameter order for applyDiscount was swapped without updating existing call sites in src/checkout.ts, which will cause runtime errors.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/pricing.ts",
+          "line": 2,
+          "severity": "high",
+          "category": "bug",
+          "message": "The parameter order for applyDiscount was swapped, but existing call sites in src/checkout.ts were not updated to match the new signature.",
+          "suggestion": "Update src/checkout.ts to call applyDiscount(coupon.percent, subtotal) or revert the parameter order change."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 493,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ctx-02-discount-arg-order",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1867,
+      "promptTokens": 1853,
+      "completionTokens": 189,
+      "summary": "This pull request introduces an applyTax function and refactors pricing helpers to standardize parameter ordering. A high-severity bug was identified where the parameter order for applyDiscount was swapped without updating existing call sites in src/checkout.ts, which will cause runtime errors.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/pricing.ts",
+          "line": 2,
+          "severity": "high",
+          "category": "bug",
+          "message": "The parameter order for applyDiscount was swapped, but existing call sites in src/checkout.ts were not updated to match the new signature.",
+          "suggestion": "Update src/checkout.ts to call applyDiscount(coupon.percent, subtotal) or revert the parameter order change."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 493,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ctx-03-async-feature-flag",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2658,
+      "promptTokens": 1841,
+      "completionTokens": 185,
+      "summary": "This pull request updates the feature flag loading mechanism to fetch data from the database. A high-priority issue was identified where the function is now asynchronous, but existing callers fail to await the result, leading to incorrect boolean evaluation.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/flags.ts",
+          "line": 4,
+          "severity": "high",
+          "category": "performance",
+          "message": "The function is now async, but callers like src/routes/beta.ts:8 do not await it, causing the check to always evaluate to a Promise object (truthy) instead of the actual boolean value.",
+          "suggestion": "Update all call sites to await isFeatureEnabled(name)."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 599,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ctx-03-async-feature-flag",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 51842,
+      "promptTokens": 1841,
+      "completionTokens": 185,
+      "summary": "This pull request updates the feature flag loading mechanism to fetch data from the database. A high-priority issue was identified where the function is now asynchronous, but existing callers fail to await the result, leading to incorrect boolean evaluation.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/flags.ts",
+          "line": 4,
+          "severity": "high",
+          "category": "performance",
+          "message": "The function is now async, but callers like src/routes/beta.ts:8 do not await it, causing the check to always evaluate to a Promise object (truthy) instead of the actual boolean value.",
+          "suggestion": "Update all call sites to await isFeatureEnabled(name)."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 599,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ctx-03-async-feature-flag",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2265,
+      "promptTokens": 1841,
+      "completionTokens": 185,
+      "summary": "This pull request updates the feature flag loading mechanism to fetch data from the database. A high-priority issue was identified where the function is now asynchronous, but existing callers fail to await the result, leading to incorrect boolean evaluation.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/flags.ts",
+          "line": 4,
+          "severity": "high",
+          "category": "performance",
+          "message": "The function is now async, but callers like src/routes/beta.ts:8 do not await it, causing the check to always evaluate to a Promise object (truthy) instead of the actual boolean value.",
+          "suggestion": "Update all call sites to await isFeatureEnabled(name)."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 599,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ctx-04-subtotal-dollars",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3079,
+      "promptTokens": 2186,
+      "completionTokens": 162,
+      "summary": "This pull request updates the analytics dashboard to return order subtotals in dollars instead of cents. A high-severity bug was identified because this change breaks existing callers that expect integer cent values.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 35,
+          "severity": "high",
+          "category": "bug",
+          "message": "Changing the return type to dollars breaks existing callers that expect integer cents.",
+          "suggestion": "Keep the function returning cents and create a new function for dollars, or update all call sites to handle floating-point dollars."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 973,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ctx-04-subtotal-dollars",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2557,
+      "promptTokens": 2186,
+      "completionTokens": 162,
+      "summary": "This pull request updates the analytics dashboard to return order subtotals in dollars instead of cents. A high-severity bug was identified because this change breaks existing callers that expect integer cent values.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 35,
+          "severity": "high",
+          "category": "bug",
+          "message": "Changing the return type to dollars breaks existing callers that expect integer cents.",
+          "suggestion": "Keep the function returning cents and create a new function for dollars, or update all call sites to handle floating-point dollars."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 973,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ctx-04-subtotal-dollars",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2519,
+      "promptTokens": 2186,
+      "completionTokens": 162,
+      "summary": "This pull request updates the analytics dashboard to return order subtotals in dollars instead of cents. A high-severity bug was identified because this change breaks existing callers that expect integer cent values.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 35,
+          "severity": "high",
+          "category": "bug",
+          "message": "Changing the return type to dollars breaks existing callers that expect integer cents.",
+          "suggestion": "Keep the function returning cents and create a new function for dollars, or update all call sites to handle floating-point dollars."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 973,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 16416,
+      "promptTokens": 3046,
+      "completionTokens": 187,
+      "summary": "This pull request introduces functionality for users to delete their accounts by modifying the user routes and logic. A critical authorization bug was identified where the system incorrectly validates the user ID from the query parameters instead of the route parameters, potentially allowing unauthorized account deletions.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/routes/users.ts",
+          "line": 25,
+          "severity": "high",
+          "category": "bug",
+          "message": "The authorization check uses 'req.query.userId' instead of 'req.params.id', which will fail to correctly validate that a user is deleting their own account.",
+          "suggestion": "Change 'req.query.userId' to 'req.params.id'."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1458,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2000,
+      "promptTokens": 3046,
+      "completionTokens": 187,
+      "summary": "This pull request introduces functionality for users to delete their accounts by modifying the user routes and logic. A critical authorization bug was identified where the system incorrectly validates the user ID from the query parameters instead of the route parameters, potentially allowing unauthorized account deletions.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/routes/users.ts",
+          "line": 25,
+          "severity": "high",
+          "category": "bug",
+          "message": "The authorization check uses 'req.query.userId' instead of 'req.params.id', which will fail to correctly validate that a user is deleting their own account.",
+          "suggestion": "Change 'req.query.userId' to 'req.params.id'."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1458,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "example-bug-delete-user-idor",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 7393,
+      "promptTokens": 3046,
+      "completionTokens": 187,
+      "summary": "This pull request introduces functionality for users to delete their accounts by modifying the user routes and logic. A critical authorization bug was identified where the system incorrectly validates the user ID from the query parameters instead of the route parameters, potentially allowing unauthorized account deletions.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/routes/users.ts",
+          "line": 25,
+          "severity": "high",
+          "category": "bug",
+          "message": "The authorization check uses 'req.query.userId' instead of 'req.params.id', which will fail to correctly validate that a user is deleting their own account.",
+          "suggestion": "Change 'req.query.userId' to 'req.params.id'."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1458,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "example-clean-page-param",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3509,
+      "promptTokens": 1825,
+      "completionTokens": 176,
+      "summary": "This pull request introduces new helper functions for clamping values and handling page parameters in src/utils.ts. A potential bug was identified regarding the use of Number.parseInt, which may incorrectly parse strings containing trailing non-numeric characters.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 16,
+          "severity": "medium",
+          "category": "bug",
+          "message": "Number.parseInt parses strings like '12abc' as 12, which may lead to unexpected behavior when parsing query parameters.",
+          "suggestion": "Use Number() or a stricter validation check to ensure the entire string is a valid integer."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 390,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "example-clean-page-param",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 12418,
+      "promptTokens": 1825,
+      "completionTokens": 176,
+      "summary": "This pull request introduces new helper functions for clamping values and handling page parameters in src/utils.ts. A potential bug was identified regarding the use of Number.parseInt, which may incorrectly parse strings containing trailing non-numeric characters.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 16,
+          "severity": "medium",
+          "category": "bug",
+          "message": "Number.parseInt parses strings like '12abc' as 12, which may lead to unexpected behavior when parsing query parameters.",
+          "suggestion": "Use Number() or a stricter validation check to ensure the entire string is a valid integer."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 390,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "example-clean-page-param",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 3951,
+      "promptTokens": 1825,
+      "completionTokens": 176,
+      "summary": "This pull request introduces new helper functions for clamping values and handling page parameters in src/utils.ts. A potential bug was identified regarding the use of Number.parseInt, which may incorrectly parse strings containing trailing non-numeric characters.",
+      "riskScore": 40,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 16,
+          "severity": "medium",
+          "category": "bug",
+          "message": "Number.parseInt parses strings like '12abc' as 12, which may lead to unexpected behavior when parsing query parameters.",
+          "suggestion": "Use Number() or a stricter validation check to ensure the entire string is a valid integer."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 390,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 7219,
+      "promptTokens": 16300,
+      "completionTokens": 294,
+      "summary": "This pull request introduces a new admin reporting module with various analytical reports and API routes. The review identified high-risk bugs regarding an incorrect loop condition in the revenue report and a lack of input validation for the year query parameter in the reporting routes.\n\nNot reviewed: 1 file(s) or part(s): package-lock.json (lockfile).",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/reports/revenue-by-month.ts",
+          "line": 23,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition 'month <= 13' is incorrect and will include an invalid month '13' in the report.",
+          "suggestion": "Change the loop condition to 'month <= 12'."
+        },
+        {
+          "file": "src/routes/reports.ts",
+          "line": 35,
+          "severity": "high",
+          "category": "bug",
+          "message": "The 'year' query parameter is passed as a number without validation, which can result in NaN if the parameter is missing or invalid.",
+          "suggestion": "Validate that req.query.year is a valid number before passing it to revenueByMonthReport."
+        }
+      ],
+      "chunks": 2,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 1,
+      "contextTokens": 7748,
+      "contextBlocks": 24
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 3369,
+      "promptTokens": 16300,
+      "completionTokens": 294,
+      "summary": "This pull request introduces a new admin reporting module with various analytical reports and API routes. The review identified high-risk bugs regarding an incorrect loop condition in the revenue report and a lack of input validation for the year query parameter in the reporting routes.\n\nNot reviewed: 1 file(s) or part(s): package-lock.json (lockfile).",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/reports/revenue-by-month.ts",
+          "line": 23,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition 'month <= 13' is incorrect and will include an invalid month '13' in the report.",
+          "suggestion": "Change the loop condition to 'month <= 12'."
+        },
+        {
+          "file": "src/routes/reports.ts",
+          "line": 35,
+          "severity": "high",
+          "category": "bug",
+          "message": "The 'year' query parameter is passed as a number without validation, which can result in NaN if the parameter is missing or invalid.",
+          "suggestion": "Validate that req.query.year is a valid number before passing it to revenueByMonthReport."
+        }
+      ],
+      "chunks": 2,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 1,
+      "contextTokens": 7748,
+      "contextBlocks": 24
+    },
+    {
+      "caseId": "example-large-reports",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 4216,
+      "promptTokens": 16300,
+      "completionTokens": 294,
+      "summary": "This pull request introduces a new admin reporting module with various analytical reports and API routes. The review identified high-risk bugs regarding an incorrect loop condition in the revenue report and a lack of input validation for the year query parameter in the reporting routes.\n\nNot reviewed: 1 file(s) or part(s): package-lock.json (lockfile).",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/reports/revenue-by-month.ts",
+          "line": 23,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition 'month <= 13' is incorrect and will include an invalid month '13' in the report.",
+          "suggestion": "Change the loop condition to 'month <= 12'."
+        },
+        {
+          "file": "src/routes/reports.ts",
+          "line": 35,
+          "severity": "high",
+          "category": "bug",
+          "message": "The 'year' query parameter is passed as a number without validation, which can result in NaN if the parameter is missing or invalid.",
+          "suggestion": "Validate that req.query.year is a valid number before passing it to revenueByMonthReport."
+        }
+      ],
+      "chunks": 2,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 1,
+      "contextTokens": 7748,
+      "contextBlocks": 24
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2379,
+      "promptTokens": 1936,
+      "completionTokens": 180,
+      "summary": "This pull request introduces a getDisplayName method to handle comment author labels in src/users.ts. A high-severity bug was identified where accessing the user profile without a null check could cause a TypeError for users who have not completed onboarding.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 30,
+          "severity": "high",
+          "category": "bug",
+          "message": "Accessing 'user.profile!.name' will throw a TypeError if the user has not completed onboarding (where profile is null).",
+          "suggestion": "Add a check for 'user.profile' or provide a fallback value if the profile is null."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 680,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 52599,
+      "promptTokens": 1936,
+      "completionTokens": 180,
+      "summary": "This pull request introduces a getDisplayName method to handle comment author labels in src/users.ts. A high-severity bug was identified where accessing the user profile without a null check could cause a TypeError for users who have not completed onboarding.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 30,
+          "severity": "high",
+          "category": "bug",
+          "message": "Accessing 'user.profile!.name' will throw a TypeError if the user has not completed onboarding (where profile is null).",
+          "suggestion": "Add a check for 'user.profile' or provide a fallback value if the profile is null."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 680,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "null-01-display-name",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2710,
+      "promptTokens": 1936,
+      "completionTokens": 180,
+      "summary": "This pull request introduces a getDisplayName method to handle comment author labels in src/users.ts. A high-severity bug was identified where accessing the user profile without a null check could cause a TypeError for users who have not completed onboarding.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 30,
+          "severity": "high",
+          "category": "bug",
+          "message": "Accessing 'user.profile!.name' will throw a TypeError if the user has not completed onboarding (where profile is null).",
+          "suggestion": "Add a check for 'user.profile' or provide a fallback value if the profile is null."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 680,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3093,
+      "promptTokens": 2032,
+      "completionTokens": 185,
+      "summary": "This pull request introduces functionality to generate shipping labels for paid orders by modifying the order processing logic. A critical bug was identified in the shipping address handling, where a missing check for undefined values could lead to runtime crashes for digital-only orders.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 38,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The code performs a type assertion on shippingAddress without checking if it exists, which will cause a runtime crash for digital-only orders where shippingAddress is undefined.",
+          "suggestion": "Add a check to ensure shippingAddress exists before accessing its properties, or handle the undefined case explicitly."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 779,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2798,
+      "promptTokens": 2032,
+      "completionTokens": 185,
+      "summary": "This pull request introduces functionality to generate shipping labels for paid orders by modifying the order processing logic. A critical bug was identified in the shipping address handling, where a missing check for undefined values could lead to runtime crashes for digital-only orders.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 38,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The code performs a type assertion on shippingAddress without checking if it exists, which will cause a runtime crash for digital-only orders where shippingAddress is undefined.",
+          "suggestion": "Add a check to ensure shippingAddress exists before accessing its properties, or handle the undefined case explicitly."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 779,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "null-02-shipping-label",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2449,
+      "promptTokens": 2032,
+      "completionTokens": 185,
+      "summary": "This pull request introduces functionality to generate shipping labels for paid orders by modifying the order processing logic. A critical bug was identified in the shipping address handling, where a missing check for undefined values could lead to runtime crashes for digital-only orders.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 38,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The code performs a type assertion on shippingAddress without checking if it exists, which will cause a runtime crash for digital-only orders where shippingAddress is undefined.",
+          "suggestion": "Add a check to ensure shippingAddress exists before accessing its properties, or handle the undefined case explicitly."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 779,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3072,
+      "promptTokens": 1700,
+      "completionTokens": 176,
+      "summary": "This pull request introduces cart total computation logic in src/cart.ts. A critical bug was identified where the use of a non-null assertion operator could lead to a runtime crash if a SKU is missing or inactive.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/cart.ts",
+          "line": 13,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The non-null assertion operator (!) will cause a runtime crash if the SKU is not found in the catalog or is inactive.",
+          "suggestion": "Handle the case where the item is not found, for example by returning 0 or throwing a descriptive error."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 325,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2505,
+      "promptTokens": 1700,
+      "completionTokens": 176,
+      "summary": "This pull request introduces cart total computation logic in src/cart.ts. A critical bug was identified where the use of a non-null assertion operator could lead to a runtime crash if a SKU is missing or inactive.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/cart.ts",
+          "line": 13,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The non-null assertion operator (!) will cause a runtime crash if the SKU is not found in the catalog or is inactive.",
+          "suggestion": "Handle the case where the item is not found, for example by returning 0 or throwing a descriptive error."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 325,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "null-03-price-lookup",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 4274,
+      "promptTokens": 1700,
+      "completionTokens": 176,
+      "summary": "This pull request introduces cart total computation logic in src/cart.ts. A critical bug was identified where the use of a non-null assertion operator could lead to a runtime crash if a SKU is missing or inactive.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/cart.ts",
+          "line": 13,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The non-null assertion operator (!) will cause a runtime crash if the SKU is not found in the catalog or is inactive.",
+          "suggestion": "Handle the case where the item is not found, for example by returning 0 or throwing a descriptive error."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 325,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 4794,
+      "promptTokens": 1713,
+      "completionTokens": 180,
+      "summary": "This pull request introduces a new requireAuth middleware to handle authentication logic. A critical bug was identified where the use of a non-null assertion operator on the Authorization header could lead to a runtime crash if the header is missing.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/middleware/auth.ts",
+          "line": 5,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The code uses the non-null assertion operator (!) on req.headers.authorization, which will cause a runtime crash if the Authorization header is missing.",
+          "suggestion": "Check if req.headers.authorization exists before accessing it, or handle the undefined case gracefully."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 486,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 47630,
+      "promptTokens": 1713,
+      "completionTokens": 180,
+      "summary": "This pull request introduces a new requireAuth middleware to handle authentication logic. A critical bug was identified where the use of a non-null assertion operator on the Authorization header could lead to a runtime crash if the header is missing.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/middleware/auth.ts",
+          "line": 5,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The code uses the non-null assertion operator (!) on req.headers.authorization, which will cause a runtime crash if the Authorization header is missing.",
+          "suggestion": "Check if req.headers.authorization exists before accessing it, or handle the undefined case gracefully."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 486,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "null-04-auth-header",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2014,
+      "promptTokens": 1713,
+      "completionTokens": 180,
+      "summary": "This pull request introduces a new requireAuth middleware to handle authentication logic. A critical bug was identified where the use of a non-null assertion operator on the Authorization header could lead to a runtime crash if the header is missing.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/middleware/auth.ts",
+          "line": 5,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The code uses the non-null assertion operator (!) on req.headers.authorization, which will cause a runtime crash if the Authorization header is missing.",
+          "suggestion": "Check if req.headers.authorization exists before accessing it, or handle the undefined case gracefully."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 486,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 1978,
+      "promptTokens": 2158,
+      "completionTokens": 210,
+      "summary": "This pull request introduces a pagination helper for the order history module in src/orders.ts. A high-severity bug was identified in the pagination logic where the start index calculation is incorrect due to a 1-indexed page mismatch. This issue must be resolved to ensure users can correctly navigate their order history.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 45,
+          "severity": "high",
+          "category": "bug",
+          "message": "The pagination logic incorrectly calculates the start index. Since the page is 1-indexed, page 1 should start at index 0, but the current formula (page * pageSize) results in index 20 for page 1.",
+          "suggestion": "Change the start calculation to: (page - 1) * pageSize"
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 809,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2032,
+      "promptTokens": 2158,
+      "completionTokens": 210,
+      "summary": "This pull request introduces a pagination helper for the order history module in src/orders.ts. A high-severity bug was identified in the pagination logic where the start index calculation is incorrect due to a 1-indexed page mismatch. This issue must be resolved to ensure users can correctly navigate their order history.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 45,
+          "severity": "high",
+          "category": "bug",
+          "message": "The pagination logic incorrectly calculates the start index. Since the page is 1-indexed, page 1 should start at index 0, but the current formula (page * pageSize) results in index 20 for page 1.",
+          "suggestion": "Change the start calculation to: (page - 1) * pageSize"
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 809,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ob-01-pagination",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2154,
+      "promptTokens": 2158,
+      "completionTokens": 210,
+      "summary": "This pull request introduces a pagination helper for the order history module in src/orders.ts. A high-severity bug was identified in the pagination logic where the start index calculation is incorrect due to a 1-indexed page mismatch. This issue must be resolved to ensure users can correctly navigate their order history.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 45,
+          "severity": "high",
+          "category": "bug",
+          "message": "The pagination logic incorrectly calculates the start index. Since the page is 1-indexed, page 1 should start at index 0, but the current formula (page * pageSize) results in index 20 for page 1.",
+          "suggestion": "Change the start calculation to: (page - 1) * pageSize"
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 809,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3312,
+      "promptTokens": 2353,
+      "completionTokens": 193,
+      "summary": "This pull request implements batch notification processing in groups of 100 by modifying utility functions and adding a new notification module. A high-severity bug was identified in the loop condition within src/utils.ts, which could lead to infinite loops or incorrect array processing. This issue must be resolved before merging to ensure the stability of the batching logic.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition 'i <= items.length' causes an infinite loop or an extra empty array at the end of the result.",
+          "suggestion": "Change the loop condition to 'i < items.length'."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 810,
+      "contextBlocks": 4
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2045,
+      "promptTokens": 2353,
+      "completionTokens": 193,
+      "summary": "This pull request implements batch notification processing in groups of 100 by modifying utility functions and adding a new notification module. A high-severity bug was identified in the loop condition within src/utils.ts, which could lead to infinite loops or incorrect array processing. This issue must be resolved before merging to ensure the stability of the batching logic.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition 'i <= items.length' causes an infinite loop or an extra empty array at the end of the result.",
+          "suggestion": "Change the loop condition to 'i < items.length'."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 810,
+      "contextBlocks": 4
+    },
+    {
+      "caseId": "ob-02-chunk",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 1957,
+      "promptTokens": 2353,
+      "completionTokens": 193,
+      "summary": "This pull request implements batch notification processing in groups of 100 by modifying utility functions and adding a new notification module. A high-severity bug was identified in the loop condition within src/utils.ts, which could lead to infinite loops or incorrect array processing. This issue must be resolved before merging to ensure the stability of the batching logic.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition 'i <= items.length' causes an infinite loop or an extra empty array at the end of the result.",
+          "suggestion": "Change the loop condition to 'i < items.length'."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 810,
+      "contextBlocks": 4
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 13841,
+      "promptTokens": 1984,
+      "completionTokens": 168,
+      "summary": "This pull request updates the dashboard to display the N most recent orders by modifying the logic in src/orders.ts. A high-priority bug was identified where the slice index calculation is incorrect, causing the function to return one extra item beyond the requested count.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 41,
+          "severity": "high",
+          "category": "bug",
+          "message": "The slice index calculation is incorrect, resulting in returning n+1 items instead of n.",
+          "suggestion": "Change the slice index to `sorted.length - n`."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 746,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 4124,
+      "promptTokens": 1984,
+      "completionTokens": 168,
+      "summary": "This pull request updates the dashboard to display the N most recent orders by modifying the logic in src/orders.ts. A high-priority bug was identified where the slice index calculation is incorrect, causing the function to return one extra item beyond the requested count.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 41,
+          "severity": "high",
+          "category": "bug",
+          "message": "The slice index calculation is incorrect, resulting in returning n+1 items instead of n.",
+          "suggestion": "Change the slice index to `sorted.length - n`."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 746,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ob-03-recent-orders",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2466,
+      "promptTokens": 1984,
+      "completionTokens": 168,
+      "summary": "This pull request updates the dashboard to display the N most recent orders by modifying the logic in src/orders.ts. A high-priority bug was identified where the slice index calculation is incorrect, causing the function to return one extra item beyond the requested count.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 41,
+          "severity": "high",
+          "category": "bug",
+          "message": "The slice index calculation is incorrect, resulting in returning n+1 items instead of n.",
+          "suggestion": "Change the slice index to `sorted.length - n`."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 746,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 53900,
+      "promptTokens": 1694,
+      "completionTokens": 176,
+      "summary": "This pull request introduces a retry-with-backoff helper utility to improve the reliability of upstream service calls. A high-severity bug was identified in the loop logic, which causes the function to execute fewer retries than intended.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition `attempt < attempts` causes the function to execute `fn` at most `attempts - 1` times, failing to meet the requested number of attempts.",
+          "suggestion": "Change the loop condition to `attempt <= attempts`."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 313,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2880,
+      "promptTokens": 1694,
+      "completionTokens": 176,
+      "summary": "This pull request introduces a retry-with-backoff helper utility to improve the reliability of upstream service calls. A high-severity bug was identified in the loop logic, which causes the function to execute fewer retries than intended.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition `attempt < attempts` causes the function to execute `fn` at most `attempts - 1` times, failing to meet the requested number of attempts.",
+          "suggestion": "Change the loop condition to `attempt <= attempts`."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 313,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "ob-04-retry",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2767,
+      "promptTokens": 1694,
+      "completionTokens": 176,
+      "summary": "This pull request introduces a retry-with-backoff helper utility to improve the reliability of upstream service calls. A high-severity bug was identified in the loop logic, which causes the function to execute fewer retries than intended.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/utils.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The loop condition `attempt < attempts` causes the function to execute `fn` at most `attempts - 1` times, failing to meet the requested number of attempts.",
+          "suggestion": "Change the loop condition to `attempt <= attempts`."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 313,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2540,
+      "promptTokens": 1749,
+      "completionTokens": 206,
+      "summary": "This pull request implements inventory reservation logic during the checkout process in src/inventory.ts. A critical race condition was identified where the stock check and update operations are not atomic, which could lead to overselling inventory.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/inventory.ts",
+          "line": 12,
+          "severity": "high",
+          "category": "bug",
+          "message": "This function has a race condition. Between checking stock (line 10) and updating it (line 12), another request could modify the inventory, leading to overselling.",
+          "suggestion": "Perform the check and update in a single atomic SQL statement: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 480,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2401,
+      "promptTokens": 1749,
+      "completionTokens": 206,
+      "summary": "This pull request implements inventory reservation logic during the checkout process in src/inventory.ts. A critical race condition was identified where the stock check and update operations are not atomic, which could lead to overselling inventory.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/inventory.ts",
+          "line": 12,
+          "severity": "high",
+          "category": "bug",
+          "message": "This function has a race condition. Between checking stock (line 10) and updating it (line 12), another request could modify the inventory, leading to overselling.",
+          "suggestion": "Perform the check and update in a single atomic SQL statement: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 480,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "race-01-reserve-stock",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2591,
+      "promptTokens": 1749,
+      "completionTokens": 206,
+      "summary": "This pull request implements inventory reservation logic during the checkout process in src/inventory.ts. A critical race condition was identified where the stock check and update operations are not atomic, which could lead to overselling inventory.",
+      "riskScore": 65,
+      "comments": [
+        {
+          "file": "src/inventory.ts",
+          "line": 12,
+          "severity": "high",
+          "category": "bug",
+          "message": "This function has a race condition. Between checking stock (line 10) and updating it (line 12), another request could modify the inventory, leading to overselling.",
+          "suggestion": "Perform the check and update in a single atomic SQL statement: UPDATE inventory SET quantity = quantity - $1 WHERE sku = $2 AND quantity >= $1. Check the affected row count to determine success."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 480,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2466,
+      "promptTokens": 2702,
+      "completionTokens": 194,
+      "summary": "This pull request introduces per-user rate limiting on the login endpoint by adding new rate-limiting logic and updating the login route. A high-severity race condition was identified in the rate-limiting implementation that could allow users to bypass the intended limits during concurrent requests.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/rate-limit.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The rate limit implementation has a race condition. Multiple concurrent requests can read the same value before any of them increment it, allowing the limit to be exceeded.",
+          "suggestion": "Use an atomic operation like redis.incr() or a Lua script to increment and set the expiration in a single step."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1334,
+      "contextBlocks": 8
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 3081,
+      "promptTokens": 2702,
+      "completionTokens": 194,
+      "summary": "This pull request introduces per-user rate limiting on the login endpoint by adding new rate-limiting logic and updating the login route. A high-severity race condition was identified in the rate-limiting implementation that could allow users to bypass the intended limits during concurrent requests.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/rate-limit.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The rate limit implementation has a race condition. Multiple concurrent requests can read the same value before any of them increment it, allowing the limit to be exceeded.",
+          "suggestion": "Use an atomic operation like redis.incr() or a Lua script to increment and set the expiration in a single step."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1334,
+      "contextBlocks": 8
+    },
+    {
+      "caseId": "race-02-rate-limit",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 3738,
+      "promptTokens": 2702,
+      "completionTokens": 194,
+      "summary": "This pull request introduces per-user rate limiting on the login endpoint by adding new rate-limiting logic and updating the login route. A high-severity race condition was identified in the rate-limiting implementation that could allow users to bypass the intended limits during concurrent requests.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/rate-limit.ts",
+          "line": 8,
+          "severity": "high",
+          "category": "bug",
+          "message": "The rate limit implementation has a race condition. Multiple concurrent requests can read the same value before any of them increment it, allowing the limit to be exceeded.",
+          "suggestion": "Use an atomic operation like redis.incr() or a Lua script to increment and set the expiration in a single step."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1334,
+      "contextBlocks": 8
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 35560,
+      "promptTokens": 2121,
+      "completionTokens": 305,
+      "summary": "This pull request introduces idempotency to payment webhooks by adding logic in src/webhooks.ts. A high-severity issue was identified regarding the lack of database transactions, which could lead to inconsistent state if operations fail mid-execution.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/webhooks.ts",
+          "line": 11,
+          "severity": "high",
+          "category": "bug",
+          "message": "The function performs multiple database operations without a transaction, leading to potential partial state updates if a failure occurs between lines 19, 20, and 23.",
+          "suggestion": "Wrap the operations in a database transaction using `withTransaction` to ensure atomicity."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 694,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 7074,
+      "promptTokens": 2121,
+      "completionTokens": 305,
+      "summary": "This pull request introduces idempotency to payment webhooks by adding logic in src/webhooks.ts. A high-severity issue was identified regarding the lack of database transactions, which could lead to inconsistent state if operations fail mid-execution.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/webhooks.ts",
+          "line": 11,
+          "severity": "high",
+          "category": "bug",
+          "message": "The function performs multiple database operations without a transaction, leading to potential partial state updates if a failure occurs between lines 19, 20, and 23.",
+          "suggestion": "Wrap the operations in a database transaction using `withTransaction` to ensure atomicity."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 694,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "race-03-webhook-idempotency",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 8285,
+      "promptTokens": 2121,
+      "completionTokens": 305,
+      "summary": "This pull request introduces idempotency to payment webhooks by adding logic in src/webhooks.ts. A high-severity issue was identified regarding the lack of database transactions, which could lead to inconsistent state if operations fail mid-execution.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/webhooks.ts",
+          "line": 11,
+          "severity": "high",
+          "category": "bug",
+          "message": "The function performs multiple database operations without a transaction, leading to potential partial state updates if a failure occurs between lines 19, 20, and 23.",
+          "suggestion": "Wrap the operations in a database transaction using `withTransaction` to ensure atomicity."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 694,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2630,
+      "promptTokens": 1858,
+      "completionTokens": 181,
+      "summary": "This pull request introduces wallet balance functionality to support order payments. A critical race condition was identified in the debit operation, which could lead to negative balances or double-spending due to a lack of atomicity.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/wallet.ts",
+          "line": 11,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The wallet debit operation is not atomic, leading to race conditions where multiple concurrent requests could result in a negative balance or double-spending.",
+          "suggestion": "Wrap the SELECT and UPDATE operations in a database transaction using `withTransaction` and use `SELECT ... FOR UPDATE` to lock the row."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 532,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 7852,
+      "promptTokens": 1858,
+      "completionTokens": 181,
+      "summary": "This pull request introduces wallet balance functionality to support order payments. A critical race condition was identified in the debit operation, which could lead to negative balances or double-spending due to a lack of atomicity.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/wallet.ts",
+          "line": 11,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The wallet debit operation is not atomic, leading to race conditions where multiple concurrent requests could result in a negative balance or double-spending.",
+          "suggestion": "Wrap the SELECT and UPDATE operations in a database transaction using `withTransaction` and use `SELECT ... FOR UPDATE` to lock the row."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 532,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "race-04-wallet-debit",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 3650,
+      "promptTokens": 1858,
+      "completionTokens": 181,
+      "summary": "This pull request introduces wallet balance functionality to support order payments. A critical race condition was identified in the debit operation, which could lead to negative balances or double-spending due to a lack of atomicity.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/wallet.ts",
+          "line": 11,
+          "severity": "critical",
+          "category": "bug",
+          "message": "The wallet debit operation is not atomic, leading to race conditions where multiple concurrent requests could result in a negative balance or double-spending.",
+          "suggestion": "Wrap the SELECT and UPDATE operations in a database transaction using `withTransaction` and use `SELECT ... FOR UPDATE` to lock the row."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 532,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2939,
+      "promptTokens": 2306,
+      "completionTokens": 383,
+      "summary": "This pull request integrates a new payment provider client by adding two new files. The review identified a critical security risk involving a hardcoded production API key and a high-risk bug regarding potential duplicate transactions during retry logic. Additionally, a medium-severity issue was found where the response status is not validated before processing.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/payments.ts",
+          "line": 4,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded production API key detected.",
+          "suggestion": "Use an environment variable (e.g., process.env.PAYMENTS_API_KEY) to store the secret."
+        },
+        {
+          "file": "src/payments-http.ts",
+          "line": 3,
+          "severity": "high",
+          "category": "bug",
+          "message": "Retrying a POST request on a 500 error can lead to duplicate transactions if the server processed the request but failed to send the response.",
+          "suggestion": "Only retry idempotent requests (GET, PUT, DELETE) or implement idempotency keys in the request headers."
+        },
+        {
+          "file": "src/payments.ts",
+          "line": 18,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The response is not checked for success (e.g., res.ok) before calling res.json().",
+          "suggestion": "Check res.ok and throw an error if the request failed before attempting to parse the JSON body."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 712,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2760,
+      "promptTokens": 2306,
+      "completionTokens": 383,
+      "summary": "This pull request integrates a new payment provider client by adding two new files. The review identified a critical security risk involving a hardcoded production API key and a high-risk bug regarding potential duplicate transactions during retry logic. Additionally, a medium-severity issue was found where the response status is not validated before processing.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/payments.ts",
+          "line": 4,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded production API key detected.",
+          "suggestion": "Use an environment variable (e.g., process.env.PAYMENTS_API_KEY) to store the secret."
+        },
+        {
+          "file": "src/payments-http.ts",
+          "line": 3,
+          "severity": "high",
+          "category": "bug",
+          "message": "Retrying a POST request on a 500 error can lead to duplicate transactions if the server processed the request but failed to send the response.",
+          "suggestion": "Only retry idempotent requests (GET, PUT, DELETE) or implement idempotency keys in the request headers."
+        },
+        {
+          "file": "src/payments.ts",
+          "line": 18,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The response is not checked for success (e.g., res.ok) before calling res.json().",
+          "suggestion": "Check res.ok and throw an error if the request failed before attempting to parse the JSON body."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 712,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "secret-01-payments-key",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 164069,
+      "promptTokens": 2306,
+      "completionTokens": 383,
+      "summary": "This pull request integrates a new payment provider client by adding two new files. The review identified a critical security risk involving a hardcoded production API key and a high-risk bug regarding potential duplicate transactions during retry logic. Additionally, a medium-severity issue was found where the response status is not validated before processing.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/payments.ts",
+          "line": 4,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded production API key detected.",
+          "suggestion": "Use an environment variable (e.g., process.env.PAYMENTS_API_KEY) to store the secret."
+        },
+        {
+          "file": "src/payments-http.ts",
+          "line": 3,
+          "severity": "high",
+          "category": "bug",
+          "message": "Retrying a POST request on a 500 error can lead to duplicate transactions if the server processed the request but failed to send the response.",
+          "suggestion": "Only retry idempotent requests (GET, PUT, DELETE) or implement idempotency keys in the request headers."
+        },
+        {
+          "file": "src/payments.ts",
+          "line": 18,
+          "severity": "medium",
+          "category": "bug",
+          "message": "The response is not checked for success (e.g., res.ok) before calling res.json().",
+          "suggestion": "Check res.ok and throw an error if the request failed before attempting to parse the JSON body."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 712,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2673,
+      "promptTokens": 2034,
+      "completionTokens": 190,
+      "summary": "This pull request modifies src/config.ts to allow local development without a .env file. However, a critical security vulnerability was identified regarding the hardcoding of a default JWT secret, which could allow unauthorized token forgery. This issue must be addressed before merging to ensure environment security.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/config.ts",
+          "line": 11,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoding a default JWT secret in source code allows attackers to forge authentication tokens in any environment where the environment variable is not explicitly set.",
+          "suggestion": "Remove the default value and use the 'required' helper to ensure a secure secret is provided via environment variables."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 714,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 3380,
+      "promptTokens": 2034,
+      "completionTokens": 190,
+      "summary": "This pull request modifies src/config.ts to allow local development without a .env file. However, a critical security vulnerability was identified regarding the hardcoding of a default JWT secret, which could allow unauthorized token forgery. This issue must be addressed before merging to ensure environment security.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/config.ts",
+          "line": 11,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoding a default JWT secret in source code allows attackers to forge authentication tokens in any environment where the environment variable is not explicitly set.",
+          "suggestion": "Remove the default value and use the 'required' helper to ensure a secure secret is provided via environment variables."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 714,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "secret-02-jwt-fallback",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 4914,
+      "promptTokens": 2034,
+      "completionTokens": 190,
+      "summary": "This pull request modifies src/config.ts to allow local development without a .env file. However, a critical security vulnerability was identified regarding the hardcoding of a default JWT secret, which could allow unauthorized token forgery. This issue must be addressed before merging to ensure environment security.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/config.ts",
+          "line": 11,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoding a default JWT secret in source code allows attackers to forge authentication tokens in any environment where the environment variable is not explicitly set.",
+          "suggestion": "Remove the default value and use the 'required' helper to ensure a secure secret is provided via environment variables."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 714,
+      "contextBlocks": 2
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3690,
+      "promptTokens": 1972,
+      "completionTokens": 223,
+      "summary": "This pull request introduces a new nightly database backup script. The review identified critical security risks, specifically hardcoded AWS credentials and a command injection vulnerability related to the database URL.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "scripts/backup.ts",
+          "line": 8,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded AWS credentials are exposed in the source code.",
+          "suggestion": "Use environment variables or IAM roles to manage credentials securely."
+        },
+        {
+          "file": "scripts/backup.ts",
+          "line": 15,
+          "severity": "high",
+          "category": "security",
+          "message": "Command injection vulnerability via $DATABASE_URL.",
+          "suggestion": "Use execFileSync with an array of arguments instead of a shell string, or sanitize the input."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 412,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 6190,
+      "promptTokens": 1972,
+      "completionTokens": 223,
+      "summary": "This pull request introduces a new nightly database backup script. The review identified critical security risks, specifically hardcoded AWS credentials and a command injection vulnerability related to the database URL.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "scripts/backup.ts",
+          "line": 8,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded AWS credentials are exposed in the source code.",
+          "suggestion": "Use environment variables or IAM roles to manage credentials securely."
+        },
+        {
+          "file": "scripts/backup.ts",
+          "line": 15,
+          "severity": "high",
+          "category": "security",
+          "message": "Command injection vulnerability via $DATABASE_URL.",
+          "suggestion": "Use execFileSync with an array of arguments instead of a shell string, or sanitize the input."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 412,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "secret-03-aws-backup",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 4198,
+      "promptTokens": 1972,
+      "completionTokens": 223,
+      "summary": "This pull request introduces a new nightly database backup script. The review identified critical security risks, specifically hardcoded AWS credentials and a command injection vulnerability related to the database URL.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "scripts/backup.ts",
+          "line": 8,
+          "severity": "critical",
+          "category": "security",
+          "message": "Hardcoded AWS credentials are exposed in the source code.",
+          "suggestion": "Use environment variables or IAM roles to manage credentials securely."
+        },
+        {
+          "file": "scripts/backup.ts",
+          "line": 15,
+          "severity": "high",
+          "category": "security",
+          "message": "Command injection vulnerability via $DATABASE_URL.",
+          "suggestion": "Use execFileSync with an array of arguments instead of a shell string, or sanitize the input."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 412,
+      "contextBlocks": 1
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3738,
+      "promptTokens": 1785,
+      "completionTokens": 181,
+      "summary": "This pull request introduces a new request logging middleware in src/middleware/logging.ts. A high-severity security issue was identified regarding the logging of the 'authorization' header, which could expose sensitive credentials in plain text. It is recommended to sanitize or exclude this header before merging.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "security",
+          "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to logs.",
+          "suggestion": "Remove the authorization header from the log message or mask the value."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 535,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 36997,
+      "promptTokens": 1785,
+      "completionTokens": 181,
+      "summary": "This pull request introduces a new request logging middleware in src/middleware/logging.ts. A high-severity security issue was identified regarding the logging of the 'authorization' header, which could expose sensitive credentials in plain text. It is recommended to sanitize or exclude this header before merging.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "security",
+          "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to logs.",
+          "suggestion": "Remove the authorization header from the log message or mask the value."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 535,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "secret-04-request-logging",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 2497,
+      "promptTokens": 1785,
+      "completionTokens": 181,
+      "summary": "This pull request introduces a new request logging middleware in src/middleware/logging.ts. A high-severity security issue was identified regarding the logging of the 'authorization' header, which could expose sensitive credentials in plain text. It is recommended to sanitize or exclude this header before merging.",
+      "riskScore": 60,
+      "comments": [
+        {
+          "file": "src/middleware/logging.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "security",
+          "message": "Logging the 'authorization' header exposes sensitive credentials (e.g., Bearer tokens) in plain text to logs.",
+          "suggestion": "Remove the authorization header from the log message or mask the value."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 535,
+      "contextBlocks": 3
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2695,
+      "promptTokens": 2372,
+      "completionTokens": 183,
+      "summary": "This pull request introduces functionality to search for users by email in the admin module. A critical security vulnerability was identified in src/users.ts, where user-provided input is directly interpolated into a SQL query, creating a risk of SQL injection.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 27,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability due to string interpolation of user-provided input.",
+          "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1073,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2388,
+      "promptTokens": 2372,
+      "completionTokens": 183,
+      "summary": "This pull request introduces functionality to search for users by email in the admin module. A critical security vulnerability was identified in src/users.ts, where user-provided input is directly interpolated into a SQL query, creating a risk of SQL injection.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 27,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability due to string interpolation of user-provided input.",
+          "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1073,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-01-user-search",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 5700,
+      "promptTokens": 2372,
+      "completionTokens": 183,
+      "summary": "This pull request introduces functionality to search for users by email in the admin module. A critical security vulnerability was identified in src/users.ts, where user-provided input is directly interpolated into a SQL query, creating a risk of SQL injection.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/users.ts",
+          "line": 27,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability due to string interpolation of user-provided input.",
+          "suggestion": "Use parameterized queries: query<User>('SELECT * FROM users WHERE email ILIKE $1 ORDER BY email LIMIT $2', [`%${term}%`, limit])"
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1073,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 2602,
+      "promptTokens": 2627,
+      "completionTokens": 208,
+      "summary": "This pull request introduces functionality to allow sorting of order history by adding new route and service logic. A critical SQL injection vulnerability was identified in src/orders.ts due to unsanitized input parameters being concatenated directly into a database query.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 26,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The `sortBy` and `dir` parameters are concatenated directly into the SQL query string without validation or sanitization, allowing an attacker to execute arbitrary SQL commands.",
+          "suggestion": "Use an allowlist of permitted column names and sort directions (e.g., ['created_at', 'status'] and ['ASC', 'DESC']) to validate the inputs before building the query."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1274,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 3847,
+      "promptTokens": 2627,
+      "completionTokens": 208,
+      "summary": "This pull request introduces functionality to allow sorting of order history by adding new route and service logic. A critical SQL injection vulnerability was identified in src/orders.ts due to unsanitized input parameters being concatenated directly into a database query.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 26,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The `sortBy` and `dir` parameters are concatenated directly into the SQL query string without validation or sanitization, allowing an attacker to execute arbitrary SQL commands.",
+          "suggestion": "Use an allowlist of permitted column names and sort directions (e.g., ['created_at', 'status'] and ['ASC', 'DESC']) to validate the inputs before building the query."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1274,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-02-order-sort",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 19223,
+      "promptTokens": 2627,
+      "completionTokens": 208,
+      "summary": "This pull request introduces functionality to allow sorting of order history by adding new route and service logic. A critical SQL injection vulnerability was identified in src/orders.ts due to unsanitized input parameters being concatenated directly into a database query.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 26,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The `sortBy` and `dir` parameters are concatenated directly into the SQL query string without validation or sanitization, allowing an attacker to execute arbitrary SQL commands.",
+          "suggestion": "Use an allowlist of permitted column names and sort directions (e.g., ['created_at', 'status'] and ['ASC', 'DESC']) to validate the inputs before building the query."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1274,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 4998,
+      "promptTokens": 2588,
+      "completionTokens": 294,
+      "summary": "This pull request introduces functionality to record a reason when an order is cancelled by modifying the orders service and adding a new route. The review identified a critical SQL injection vulnerability in the order processing logic and a high-severity security issue regarding missing authorization checks for order cancellations.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 39,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The 'reason' parameter is directly interpolated into the SQL string.",
+          "suggestion": "Use a parameterized query: SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending' and pass [orderId, reason] as parameters."
+        },
+        {
+          "file": "src/routes/orders.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "bug",
+          "message": "Missing authorization check. The handler does not verify if the order belongs to the authenticated user before allowing cancellation.",
+          "suggestion": "Fetch the order by ID and verify that its 'userId' matches 'req.userId' before calling cancelOrder."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1227,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 2643,
+      "promptTokens": 2588,
+      "completionTokens": 294,
+      "summary": "This pull request introduces functionality to record a reason when an order is cancelled by modifying the orders service and adding a new route. The review identified a critical SQL injection vulnerability in the order processing logic and a high-severity security issue regarding missing authorization checks for order cancellations.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 39,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The 'reason' parameter is directly interpolated into the SQL string.",
+          "suggestion": "Use a parameterized query: SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending' and pass [orderId, reason] as parameters."
+        },
+        {
+          "file": "src/routes/orders.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "bug",
+          "message": "Missing authorization check. The handler does not verify if the order belongs to the authenticated user before allowing cancellation.",
+          "suggestion": "Fetch the order by ID and verify that its 'userId' matches 'req.userId' before calling cancelOrder."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1227,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-03-cancel-reason",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 9943,
+      "promptTokens": 2588,
+      "completionTokens": 294,
+      "summary": "This pull request introduces functionality to record a reason when an order is cancelled by modifying the orders service and adding a new route. The review identified a critical SQL injection vulnerability in the order processing logic and a high-severity security issue regarding missing authorization checks for order cancellations.",
+      "riskScore": 90,
+      "comments": [
+        {
+          "file": "src/orders.ts",
+          "line": 39,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The 'reason' parameter is directly interpolated into the SQL string.",
+          "suggestion": "Use a parameterized query: SET status = 'cancelled', cancel_reason = $2 WHERE id = $1 AND status = 'pending' and pass [orderId, reason] as parameters."
+        },
+        {
+          "file": "src/routes/orders.ts",
+          "line": 7,
+          "severity": "high",
+          "category": "bug",
+          "message": "Missing authorization check. The handler does not verify if the order belongs to the authenticated user before allowing cancellation.",
+          "suggestion": "Fetch the order by ID and verify that its 'userId' matches 'req.userId' before calling cancelOrder."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 1227,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 1,
+      "ok": true,
+      "latencyMs": 3808,
+      "promptTokens": 2287,
+      "completionTokens": 195,
+      "summary": "This pull request introduces new functionality for generating sales reports by SKU within a specified date range. A critical security vulnerability was identified in src/reports.ts, where user-provided parameters are concatenated directly into a SQL query, creating a risk of SQL injection.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/reports.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The 'from' and 'to' parameters are concatenated directly into the SQL query string.",
+          "suggestion": "Use parameterized queries by passing the values as the second argument to the query function: query('SELECT ... WHERE created_at BETWEEN $1 AND $2', [from, to])."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 902,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 2,
+      "ok": true,
+      "latencyMs": 6393,
+      "promptTokens": 2287,
+      "completionTokens": 195,
+      "summary": "This pull request introduces new functionality for generating sales reports by SKU within a specified date range. A critical security vulnerability was identified in src/reports.ts, where user-provided parameters are concatenated directly into a SQL query, creating a risk of SQL injection.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/reports.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The 'from' and 'to' parameters are concatenated directly into the SQL query string.",
+          "suggestion": "Use parameterized queries by passing the values as the second argument to the query function: query('SELECT ... WHERE created_at BETWEEN $1 AND $2', [from, to])."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 902,
+      "contextBlocks": 5
+    },
+    {
+      "caseId": "sqli-04-sales-report",
+      "run": 3,
+      "ok": true,
+      "latencyMs": 31881,
+      "promptTokens": 2287,
+      "completionTokens": 195,
+      "summary": "This pull request introduces new functionality for generating sales reports by SKU within a specified date range. A critical security vulnerability was identified in src/reports.ts, where user-provided parameters are concatenated directly into a SQL query, creating a risk of SQL injection.",
+      "riskScore": 85,
+      "comments": [
+        {
+          "file": "src/reports.ts",
+          "line": 12,
+          "severity": "critical",
+          "category": "security",
+          "message": "SQL injection vulnerability. The 'from' and 'to' parameters are concatenated directly into the SQL query string.",
+          "suggestion": "Use parameterized queries by passing the values as the second argument to the query function: query('SELECT ... WHERE created_at BETWEEN $1 AND $2', [from, to])."
+        }
+      ],
+      "chunks": 1,
+      "failedChunks": 0,
+      "droppedInvalidLine": 0,
+      "filesSkipped": 0,
+      "contextTokens": 902,
+      "contextBlocks": 5
+    }
+  ]
+}

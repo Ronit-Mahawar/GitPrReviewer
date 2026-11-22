@@ -127,6 +127,8 @@ model Review {
   promptTokens Int?
   completionTokens Int?
   zodValid     Boolean?
+  /// v2 review coverage: files reviewed/skipped (with reasons), chunks, failed chunks, tokens, latency
+  meta         Json?
   webhookMs    Int?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -144,4 +146,17 @@ enum ReviewStatus {
   PROCESSING
   COMPLETED
   FAILED
+}
+
+/// v2 Phase 4: repo context cache. A blob SHA identifies exact file contents, so entries never go stale (D11).
+/// kind = "file" (decoded contents) or "signatures" (extracted exported signatures).
+model ContextCache {
+  repo      String
+  blobSha   String
+  kind      String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@id([repo, blobSha, kind])
+  @@index([createdAt])
 }

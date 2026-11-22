@@ -22,6 +22,14 @@ export interface RunRecord {
   summary?: string;
   riskScore?: number;
   comments: ReviewComment[];
+  /** v2 runs only (from review.meta). */
+  chunks?: number;
+  failedChunks?: number;
+  droppedInvalidLine?: number;
+  filesSkipped?: number;
+  /** Phase 4 runs only. */
+  contextTokens?: number;
+  contextBlocks?: number;
 }
 
 export interface RunFile {
@@ -31,6 +39,10 @@ export interface RunFile {
   temperature: number;
   runs: number;
   gitCommit: string | null;
+  /** v2 runs only: chunk budget and comment limit used. */
+  options?: { chunkTokenBudget: number; maxComments: number; contextTokenBudget?: number };
+  /** Phase 4 runs: whether repo context was on. */
+  context?: boolean;
   caseIds: string[];
   records: RunRecord[];
 }
@@ -119,6 +131,8 @@ export interface Metrics {
   cleanFalseAlarms: { reviewsWithHighOrCritical: number; cleanReviews: number };
   latencyMs: { avg: number; median: number; p95: number };
   tokensPerPr: { prompt: number; completion: number };
+  /** Totals over reviews that report chunks (v2 runs); null for v1 runs. */
+  chunks: { total: number; failed: number; droppedInvalidLine: number } | null;
   perCase: Array<{ id: string; kind: string; category: string | null; caught: number; runs: number; avgComments: number; avgNoise: number }>;
 }
 
@@ -166,6 +180,13 @@ export function computeMetrics(file: RunFile, cases: ScoredCase[], matched: Map<
       prompt: mean(tokenRecords.map((r) => r.promptTokens ?? 0)),
       completion: mean(tokenRecords.map((r) => r.completionTokens ?? 0)),
     },
+    chunks: okRecords.some((r) => r.chunks !== undefined)
+      ? {
+          total: okRecords.reduce((s, r) => s + (r.chunks ?? 0), 0),
+          failed: okRecords.reduce((s, r) => s + (r.failedChunks ?? 0), 0),
+          droppedInvalidLine: okRecords.reduce((s, r) => s + (r.droppedInvalidLine ?? 0), 0),
+        }
+      : null,
     perCase: file.caseIds.map((id) => {
       const c = caseById.get(id)!;
       const records = file.records.filter((r) => r.caseId === id);
@@ -219,7 +240,8 @@ export function renderMarkdown(file: RunFile, judgeModel: string, metrics: Metri
   const lines: string[] = [];
   lines.push(`# Eval: ${file.label}`);
   lines.push("");
-  lines.push(`${file.startedAt} · commit \`${file.gitCommit ?? "unknown"}\` · reviewer \`${file.model}\` (temperature ${file.temperature}) · judge \`${judgeModel}\` · ${file.caseIds.length} cases × ${file.runs} runs`);
+  const contextNote = file.context === undefined ? "" : ` · repo context ${file.context ? "on" : "off"}`;
+  lines.push(`${file.startedAt} · commit \`${file.gitCommit ?? "unknown"}\` · reviewer \`${file.model}\` (temperature ${file.temperature}) · judge \`${judgeModel}\` · ${file.caseIds.length} cases × ${file.runs} runs${contextNote}`);
   lines.push("");
   lines.push("| Metric | Value |");
   lines.push("|---|---|");
@@ -230,6 +252,10 @@ export function renderMarkdown(file: RunFile, judgeModel: string, metrics: Metri
   lines.push(`| Failed reviews | ${m.failedReviews}/${m.reviews} |`);
   lines.push(`| Latency avg / median / p95 | ${fmt(m.latencyMs.avg / 1000, 2)}s / ${fmt(m.latencyMs.median / 1000, 2)}s / ${fmt(m.latencyMs.p95 / 1000, 2)}s |`);
   lines.push(`| Tokens per PR (prompt / completion) | ${fmt(m.tokensPerPr.prompt, 0)} / ${fmt(m.tokensPerPr.completion, 0)} |`);
+  if (m.chunks) {
+    lines.push(`| Chunks reviewed / failed | ${m.chunks.total} / ${m.chunks.failed} |`);
+    lines.push(`| Comments dropped (not on an added line) | ${m.chunks.droppedInvalidLine} |`);
+  }
   lines.push("");
   lines.push("## Catch rate by category");
   lines.push("");

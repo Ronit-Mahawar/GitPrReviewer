@@ -1,7 +1,7 @@
 /**
  * Turns the model's text reply into a validated ReviewResult, or throws.
  */
-import { ReviewResultSchema, type ReviewResult } from "./schema";
+import type { z } from "zod";
 
 export interface TokenUsage {
   promptTokens: number | null;
@@ -44,15 +44,15 @@ export function parseJsonObject(content: string): unknown {
   }
 }
 
-/** JSON-parses and Zod-validates the reply. Throws ReviewOutputValidationError on either failure. */
-export function parseReview(content: string, usage: TokenUsage): ReviewResult {
+/** JSON-parses the reply and validates it against `schema`. Throws ReviewOutputValidationError on either failure. */
+export function parseReply<T>(schema: z.ZodType<T>, content: string, usage: TokenUsage): T {
   let parsed: unknown;
   try {
     parsed = parseJsonObject(content);
   } catch (error) {
     throw new ReviewOutputValidationError(content, usage, error);
   }
-  const validation = ReviewResultSchema.safeParse(parsed);
+  const validation = schema.safeParse(parsed);
   if (!validation.success) throw new ReviewOutputValidationError(content, usage, validation.error);
   return validation.data;
 }

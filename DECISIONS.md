@@ -26,10 +26,11 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Revisit when:** The spot-check disagrees with the judge on more than 10% of decisions.
 **Notes (Phase 1):**
 - "Noise" means every comment that matches no planted bug. That includes real issues the reviewer found that we didn't plant, so noise is an upper bound on junk, not a count of wrong comments. The older `evals/planted-bugs/` harness split these by hand (valid / useless / false); that is too slow to repeat for every change, so the automated number is used for before/after comparisons and the hand labels stay as a one-off quality check.
+- **Found in Phase 4: the ±3-line window can reject a correct comment.** In the with-context run, all 3 reviews of `race-04-wallet-debit` describe the race correctly but put the comment on the `UPDATE` (line 11), while the bug is marked on the `SELECT` (line 6). They count as misses before the judge sees them. I kept the strict result rather than changing the scorer after seeing it. Revisit: let a case mark a line *range* for the bug, or widen the window for multi-line bugs, and re-score all runs with the same rule.
 - A judge call that fails (after one retry) stops the scoring. Counting it as NO would quietly lower the catch rate. This happened on the first smoke run: every call returned 404 and the catch rate showed 0%.
 
 ## D3. Split the diff into chunks by token budget
-**Status:** Accepted for the chunking itself (Phase 2: `chunkFiles()` in `src/server/review/chunk.ts`). Not yet used for reviews; that's Phase 3.
+**Status:** Accepted (Phase 2: `chunkFiles()` in `src/server/review/chunk.ts`; used for every review since Phase 3). Measured (Phase 3): the large eval PR went from 40,141 to 9,840 prompt tokens per review (2 chunks, lockfile skipped), and its buried bug was still caught 3/3. No cross-chunk miss has shown up in the evals yet, but the large-PR cases are few.
 **Problem:** One prompt per PR loses quality on big PRs and makes a single failure fatal.
 **Options:**
 - A. One prompt for the whole PR (v1): simplest; Gemini's context is large enough. But quality drops for content buried in a long prompt, and the 5-comment limit is shared across the whole PR.
@@ -40,7 +41,7 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Revisit when:** The eval shows cross-chunk misses; then try grouping files by directory or by import relationships.
 
 ## D4. Line numbers are computed in code, not guessed by the model
-**Status:** Accepted for annotation (Phase 2: `annotatePatch()` returns the `+ 45 | code` text and `validLines`). Dropping comments on invalid lines comes in Phase 3 (`merge.ts`).
+**Status:** Accepted (Phase 2: `annotatePatch()` returns the `+ 45 | code` text and `validLines`; Phase 3: `mergeComments()` drops comments on lines that aren't valid added lines). Measured: 0 comments dropped for an invalid line in all v2 runs (the v1 line-numbering fix already got lines right on these small cases).
 **Options:**
 - A. Let the model work out line numbers from `@@` headers (v1)
 - B. **Parse the hunks, put the new-file line number in front of every line, and drop comments on lines that aren't valid added lines** ✅
@@ -50,7 +51,7 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Note (Phase 0):** Half of this is already in the v1 baseline (D18): `numberPatch()` prefixes lines as `L42 +code`. Still to do in Phase 2: the `+ 45 | code` format in `annotate.ts`, the valid-line set, and dropping comments on invalid lines.
 
 ## D5. One Inngest step per chunk, run in parallel
-**Status:** Proposed
+**Status:** Accepted (Phase 3). `review-chunk-<i>` steps via the `runStep` hook (D25), plus `concurrency: { key: "event.data.userId", limit: 3 }`. Inngest's concurrency limit counts steps executing at once, per key value, so one user's big PR runs at most 3 model calls at a time.
 **Options:**
 - A. `Promise.all` inside one `step.run`: simple, but one failure retries every chunk
 - B. **One `step.run` per chunk, run in parallel, plus a concurrency limit keyed by user** ✅
@@ -60,13 +61,13 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Revisit when:** PRs regularly produce 20+ chunks; then consider option C.
 
 ## D6. Never let one chunk fail the whole review
-**Status:** Proposed
+**Status:** Accepted (Phase 3). `reviewChunk()` asks once more after an invalid reply, then marks the chunk failed; a provider error that survives Inngest's step retries is caught around the step and also marks only that chunk failed. `zodValid` is now "no chunk failed".
 **Choice:** Wrap the JSON parse in try/catch, retry once on invalid JSON, and if that fails, mark only that chunk as failed. The review completes, and coverage is shown in `meta` and the UI.
 **Why:** A partial review that says it's partial is more useful than a FAILED status. v1 failed completely on one cut-off response.
 **Tradeoff:** Users might miss the coverage warning. Mitigated by showing it in the UI, not just storing it.
 
 ## D7. Summary pass gets comments only, not the diff
-**Status:** Proposed
+**Status:** Accepted (Phase 3). `summarizeReview()` + `SUMMARY_SYSTEM_PROMPT`. If the call fails, a summary and risk score are built in code (`fallbackRiskScore()`), and `meta.summaryFallback` is set.
 **Options:**
 - A. Combine chunk summaries in code
 - B. Send the whole diff again for the summary: expensive, and the same large-prompt problem as v1
@@ -75,7 +76,7 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Tradeoff:** The summary can't describe what the PR does beyond what the comments and file names show. Fix if needed: add each chunk's one-line summary.
 
 ## D8. Repo context, in priority order, under a budget
-**Status:** Proposed
+**Status:** Accepted (Phase 4). `buildChunkContext()` in `src/server/review/context.ts`, run inside each chunk's step. "Full changed file" means the file **after** the PR (at the head commit). Blocks are added in priority order while they fit `CONTEXT_TOKEN_BUDGET`; a block that doesn't fit is dropped, and a smaller lower-priority block may still fit after it. Only relative imports are followed; path aliases such as `@/` are not resolved yet.
 **Options:**
 - A. Diff only (v1)
 - B. Full contents of every related file: too many tokens, and it buries the changes
@@ -86,7 +87,8 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Revisit when:** The eval shows context-bug misses that need deeper call chains.
 
 ## D9. Extracting signatures: TypeScript compiler API
-**Status:** Proposed
+**Status:** Accepted (Phase 4). `src/server/review/signatures.ts` (`ts.createSourceFile`, parse only, no type checking). JSDoc is kept with each signature, because it often carries the contract ("null until onboarding").
+**Note (Phase 4):** `typescript` was a *devDependency*, not a dependency as this entry assumed. Since the review now imports it at runtime, it moved to `dependencies` (same package and version, nothing new installed; `@prisma/client` already listed it as a peer). `next.config.ts` marks it as a server-external package, so Next loads it from `node_modules` instead of bundling the ~9 MB compiler (checked: the build links it as an external).
 **Options:**
 - A. Regex: fast to write, breaks on multi-line signatures and generics
 - B. tree-sitter: works for many languages, but a new native dependency
@@ -95,7 +97,7 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Tradeoff:** Only TS and JS. Other languages get no signature context.
 
 ## D10. Finding callers: GitHub code search vs. a shallow clone
-**Status:** Proposed. Confirm during Phase 4.
+**Status:** Accepted (Phase 4): option A, code search. Checked on the private test repo: works with the existing `repo` OAuth scope, rate limit 10 requests/minute. As expected, a function added in the PR itself has no callers on the default branch. A search failure (e.g. rate limit) only drops that call-site block; it never fails the chunk.
 **Options:**
 - A. **GitHub code search API**: no disk or git needed in the container. But it only searches the default branch, has its own strict rate limit, and doesn't search very large files.
 - B. Shallow clone (`git clone --depth 1` at the head SHA) + grep: exact and searches the PR's branch. But it needs git in the Docker image, disk space, and takes several seconds per review.
@@ -103,7 +105,7 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Tradeoff:** Default-branch search misses callers added in the PR itself (they're in the diff anyway) and can show outdated call sites.
 
 ## D11. Caching by blob SHA
-**Status:** Proposed
+**Status:** Accepted (Phase 4). Prisma model `ContextCache` with primary key `(repo, blobSha, kind)`, where `kind` is `"file"` or `"signatures"` (so both can be cached for one blob). Migration `20261122130000_add_context_cache`. The cache is passed into the GitHub provider, and cache errors only cost a refetch.
 **Choice:** Cache file contents and extracted signatures in Postgres, keyed by `(repo, blobSha)`.
 **Why:** A blob SHA identifies the exact contents, so the cache never goes stale and needs no invalidation. On `synchronize` events most files haven't changed, so they come from the cache. We already use Postgres, so there's no Redis to run.
 **Tradeoff:** The table grows over time. Add a cleanup job (delete entries older than 30 days) if it matters.
@@ -130,7 +132,7 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 **Note:** The resume must say Gemini, not GPT-4o-mini. The code uses Gemini.
 
 ## D14. Comment limits: 5 per chunk, 15 total, highest severity first
-**Status:** Proposed
+**Status:** Accepted (Phase 3). 5 per chunk in the prompt; `mergeComments()` drops comments not on an added line, removes duplicates (same file and category, lines within 2; the most severe copy is kept), sorts by severity and keeps `MAX_COMMENTS` (default 15).
 **Why:** Too many comments and nobody reads them. Ranking by severity keeps the important ones.
 **Tradeoff:** On a very large PR, low-severity issues get dropped. That's on purpose.
 **Revisit when:** The eval shows real bugs being cut by the limit.
@@ -234,6 +236,48 @@ Status: **Proposed** (agreed in planning, not built yet) → **Accepted** (built
 - Folder names are matched exactly, so `src/build.ts` and `docs/distribution.md` are kept, but a hand-written folder that happens to be called `build/` or `vendor/` is skipped.
 - Removed files are skipped, so a deletion that breaks callers isn't reviewed here; Phase 4's call sites partly cover that.
 **Revisit when:** Users see real code listed under "skipped", or generated files keep getting reviewed; then add a repo config (e.g. a `.prreviewignore` list).
+
+## D25. Inngest steps through a `runStep` hook, not inside the core
+**Status:** Accepted (Phase 3)
+**Problem:** D5 wants each chunk to be an Inngest step, but D15 says the core must not import Inngest, and evals must run the same code without Inngest.
+**Options:**
+- A. Put the chunk loop in `review-pr.ts` and call the pieces (`filterFiles`, `chunkFiles`, `reviewChunk`, …) from there: evals would need a copy of that loop
+- B. **`reviewPullRequest(input, { llm, runStep? })`: the core calls `runStep("review-chunk-<i>", fn)`; the job passes `step.run`, evals and tests pass nothing (it just calls `fn`)** ✅
+**Why B:** One code path for production and evals, and the core stays pure: `runStep` is just a function parameter, like `llm`. The planning work (filter, chunk) is deterministic, so Inngest re-running the function body between steps recomputes exactly the same chunks.
+**Tradeoff:** Step results must be plain JSON (Inngest stores them), so chunk results use arrays, not `Set`s. Time measured with `Date.now()` around the whole function is meaningless under Inngest replays, hence D26.
+**Revisit when:** The pipeline needs steps with different retry or timeout settings; then the hook would need options.
+
+## D26. `meta.latencyMs` = slowest chunk + summary
+**Status:** Accepted (Phase 3)
+**Problem:** Under Inngest, the function body re-runs after every step, so a timer around `reviewPullRequest` measures one replay, not the review.
+**Choice:** Each step measures its own model time; `meta.latencyMs` is the slowest chunk plus the summary call, which is the model time on the critical path when chunks run in parallel. End-to-end time (webhook to saved review) is still `completedAt - receivedAt` in the DB. The eval runner reports wall time around `reviewPullRequest()` separately.
+**Tradeoff:** It leaves out queueing and the 3-steps-per-user concurrency limit, so on a PR with more than 3 chunks the real wait is longer.
+
+## D27. Evals retry provider errors, like Inngest does
+**Status:** Accepted (Phase 3)
+**Problem:** In production a 429/503 from Gemini fails the step and Inngest retries it (`retries: 2`). In evals nothing retried, so a rate limit would be scored as a failed chunk, a reviewer failure that has nothing to do with review quality. v2 makes more calls (chunks + summary), so it hits rate limits more often than v1.
+**Choice:** `withRetries(llm)` (`evals/lib/retry.ts`) retries a thrown provider error after 5s and 20s, then gives up, which is the same number of attempts as Inngest. Invalid output is not retried here; that's D6's job inside the core.
+**Tradeoff:** Retries make eval latency numbers include backoff waits when they happen; they're logged during the run.
+
+## D28. GitHub provider: one tree call, then blobs by SHA
+**Status:** Accepted (Phase 4)
+**Problem:** The cache is keyed by blob SHA, but the contents API returns the SHA only *after* downloading the file, so it can't be checked first. Resolving an import (`./db` → `src/db.ts`? `src/db/index.ts`?) would also cost a request per candidate path.
+**Options:** A. Contents API per file / B. **Read the head commit's tree once (`git/trees/<sha>?recursive=1`, every path → blob SHA), then fetch `git/blobs/<sha>` only on a cache miss** ✅
+**Why B:** One request answers "does this path exist?" for every import candidate, and every file read can check the cache before downloading anything. On a `synchronize` push, unchanged files are cache hits.
+**Tradeoff:** For very large repos GitHub truncates the recursive tree (over 100,000 entries); files missing from a truncated tree are treated as absent, so they get no context. Files over 512 KB are skipped as context.
+**Revisit when:** Reviews on large monorepos show missing context; then fall back to the contents API for paths not in a truncated tree.
+
+## D29. Context changes the prompt only when there is context
+**Status:** Accepted (Phase 4)
+**Choice:** With context, the diff goes under `## CHANGED CODE` and a `## REFERENCE ONLY` section follows, and the system prompt gains three "Repository context" rules (use it to check callers and contracts; never comment on it). Without context, both prompts are exactly the Phase 3 text.
+**Why:** The `--no-context` eval then measures Phase 3 exactly, so "with vs. without context" isolates the effect of context instead of mixing in prompt wording changes. Comments on reference code are dropped anyway by `mergeComments()` (D4), because only added lines are valid.
+**Tradeoff:** Two prompt variants to maintain.
+
+## D30. Evals read context from "the repo after the PR"
+**Status:** Accepted (Phase 4)
+**Problem:** The fixture repo is the code *before* each PR, but production context is read at the PR's head commit.
+**Choice:** For each case, `applyPatch()` (`evals/lib/apply-patch.ts`) rebuilds its changed files from the fixture plus `pr.diff`, and `createLocalContextProvider(fixture, overrides)` lays them over the fixture (deleted files hidden). Checked: `applyPatch()` reproduces all 50 changed files of the 26 cases exactly as on their real git branches.
+**Tradeoff:** Local `findCallers` searches the post-PR files, so it *can* find callers added in the same PR, which GitHub code search (default branch only) can't. Evals may therefore show slightly more call sites than production would.
 
 ---
 

@@ -1,0 +1,11 @@
+{
+  "id": "ctx-01-null-stock",
+  "title": "Tell unknown SKUs apart from sold-out ones in getStock",
+  "kind": "context",
+  "bug": {
+    "file": "src/inventory.ts",
+    "line": 6,
+    "category": "null-check",
+    "description": "getStock now returns null for an unknown SKU, but its caller src/routes/stock.ts (not changed in this PR) still treats the result as a number and calls available.toLocaleString(), which throws a TypeError for unknown SKUs. Callers must handle null."
+  }
+}

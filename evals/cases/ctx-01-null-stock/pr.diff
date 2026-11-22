@@ -1,0 +1,14 @@
+diff --git a/src/inventory.ts b/src/inventory.ts
+index 64c54b7..cf6a998 100644
+--- a/src/inventory.ts
++++ b/src/inventory.ts
+@@ -1,6 +1,7 @@
+ import { query } from "./db";
+ 
+-export async function getStock(sku: string): Promise<number> {
++/** Units in stock for `sku`, or null if the SKU doesn't exist, so callers can tell "unknown" from "sold out". */
++export async function getStock(sku: string): Promise<number | null> {
+   const rows = await query<{ quantity: number }>("SELECT quantity FROM inventory WHERE sku = $1", [sku]);
+-  return rows[0]?.quantity ?? 0;
++  return rows.length > 0 ? rows[0].quantity : null;
+ }

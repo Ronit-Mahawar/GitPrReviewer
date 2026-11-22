@@ -1,0 +1,16 @@
+diff --git a/src/flags.ts b/src/flags.ts
+index 1420bdb..7e8a00e 100644
+--- a/src/flags.ts
++++ b/src/flags.ts
+@@ -1,6 +1,7 @@
+-const ENABLED_FLAGS = new Set((process.env.FEATURE_FLAGS ?? "").split(",").filter(Boolean));
++import { query } from "./db";
+ 
+-/** True if the named feature flag is on. */
+-export function isFeatureEnabled(name: string): boolean {
+-  return ENABLED_FLAGS.has(name);
++/** True if the named feature flag is on. Flags live in the database so they can change without a deploy. */
++export async function isFeatureEnabled(name: string): Promise<boolean> {
++  const rows = await query<{ enabled: boolean }>("SELECT enabled FROM feature_flags WHERE name = $1", [name]);
++  return rows[0]?.enabled ?? false;
+ }

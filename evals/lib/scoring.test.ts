@@ -111,11 +111,18 @@ describe("computeMetrics", () => {
     expect(m.latencyMs.median).toBe(1000);
     expect(m.latencyMs.p95).toBe(3000);
     expect(m.tokensPerPr).toEqual({ prompt: 100, completion: 10 });
+    expect(m.chunks).toBeNull(); // v1-style records have no chunk info
   });
 
   it("reports per-case rows in run order", () => {
     expect(m.perCase.map((c) => [c.id, c.caught, c.runs])).toEqual([["b1", 1, 2], ["big", 0, 2], ["c1", 0, 2]]);
     expect(m.perCase[2]!.category).toBeNull();
+  });
+
+  it("totals chunk info for v2 runs", () => {
+    const v2 = { ...file, records: [rec("b1", 1, { chunks: 2, failedChunks: 1, droppedInvalidLine: 3 }), rec("c1", 1, { chunks: 1, failedChunks: 0, droppedInvalidLine: 0 })] };
+    expect(computeMetrics(v2, cases, new Map()).chunks).toEqual({ total: 3, failed: 1, droppedInvalidLine: 3 });
+    expect(renderMarkdown(v2, "j", computeMetrics(v2, cases, new Map()), [])).toContain("| Chunks reviewed / failed | 3 / 1 |");
   });
 
   it("throws on a result for an unknown case", () => {

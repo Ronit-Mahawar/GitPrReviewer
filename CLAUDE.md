@@ -20,13 +20,13 @@ AI-powered GitHub PR reviewer. A user connects a repo, a webhook fires on PR `op
 
 ## Where things are
 - `src/app/api/webhooks/github/route.ts`: webhook. Verifies the HMAC signature and ignores duplicate deliveries via the unique `WebhookDelivery.deliveryId`. **Don't change this logic.**
-- `src/server/inngest/functions/review-pr.ts`: the review job (steps: status, repo, token, files, PR, review, save)
+- `src/server/inngest/functions/review-pr.ts`: the review job (steps: status, repo, token, files, PR, `review-chunk-<i>` per chunk in parallel, `summarize`, save). Concurrency: 3 steps per user
 - `src/server/services/github.ts`: GitHub REST helpers (paginated PR files)
 - `src/server/services/ai.ts`: the only provider code: `createGeminiLlm()` returns the `llm` function (OpenAI SDK → Gemini), model from `REVIEW_MODEL`
-- `src/server/review/`: **(v2)** pure pipeline modules. Phase 0: `review-pull-request.ts` (core `reviewPullRequest`), `prompt.ts`, `parse.ts`, `schema.ts` (Zod `ReviewResultSchema`, `ReviewCommentSchema`). Later: filter, annotate, tokens, chunk, merge, context
+- `src/server/review/`: **(v2)** pure pipeline modules. `review-pull-request.ts` (core: `reviewPullRequest` → `reviewChunk` per chunk → `mergeComments` → `summarizeReview`; optional `runStep` hook for Inngest), `filter.ts`, `annotate.ts`, `tokens.ts`, `chunk.ts`, `merge.ts`, `prompt.ts` (chunk + summary prompts), `parse.ts`, `schema.ts`, `config.ts`, `context.ts` + `signatures.ts` (Phase 4 repo context). The GitHub-backed `ContextProvider` and its blob-SHA cache are in `src/server/services/github-context-provider.ts` and `context-cache.ts`
 - `src/server/lib/logger.ts`: tiny logger; debug output only at `LOG_LEVEL=debug`
 - `src/components/review-result.tsx`, `diff-viewer.tsx`: review UI
-- `prisma/schema.prisma`: `Review.comments` is `Json`
+- `prisma/schema.prisma`: `Review.comments` and `Review.meta` (v2 coverage: files reviewed/skipped, chunks, failed chunks, tokens, latency) are `Json`
 - `evals/`: **(v2)** fixture repo, cases, runner, scorer, results
 
 ## Rules

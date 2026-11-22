@@ -19,6 +19,12 @@ export const ReviewResultSchema = z.object({
   comments: z.array(ReviewCommentSchema),
 });
 
+/** What each chunk call returns (v2): comments only; the summary comes from a separate call. */
+export const ChunkReplySchema = z.object({ comments: z.array(ReviewCommentSchema) });
+
+/** What the summary call returns (v2). */
+export const SummaryReplySchema = ReviewResultSchema.pick({ summary: true, riskScore: true });
+
 export type ReviewComment = z.infer<typeof ReviewCommentSchema>;
 export type ReviewResult = z.infer<typeof ReviewResultSchema>;
 

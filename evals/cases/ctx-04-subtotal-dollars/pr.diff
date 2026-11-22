@@ -1,0 +1,17 @@
+diff --git a/src/orders.ts b/src/orders.ts
+index 265b8f0..80da678 100644
+--- a/src/orders.ts
++++ b/src/orders.ts
+@@ -26,10 +26,11 @@ export async function listOrdersForUser(userId: string): Promise<Order[]> {
+   return query<Order>("SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC", [userId]);
+ }
+ 
++/** Order subtotal in dollars. unitPrice is stored in cents. */
+ export function orderSubtotal(order: Order): number {
+   let total = 0;
+   for (let i = 0; i < order.items.length; i++) {
+     total += order.items[i].unitPrice * order.items[i].quantity;
+   }
+-  return total;
++  return total / 100;
+ }

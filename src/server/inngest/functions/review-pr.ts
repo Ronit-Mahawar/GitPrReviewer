@@ -1,9 +1,11 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
 import { logger } from "@/server/lib/logger";
-import { ReviewOutputValidationError } from "@/server/review/parse";
-import { reviewPullRequest } from "@/server/review/review-pull-request";
+import { parsePositiveInt } from "@/server/review/config";
+import { reviewPullRequest, type RunStep } from "@/server/review/review-pull-request";
 import { createGeminiLlm } from "@/server/services/ai";
+import { prismaContextCache } from "@/server/services/context-cache";
+import { createGitHubContextProvider, createGitHubFetchJson } from "@/server/services/github-context-provider";
 import {
   fetchPullRequest,
   fetchPullRequestFiles,
@@ -25,6 +27,8 @@ export const reviewPR = inngest.createFunction(
   {
     id: "review-pr",
     retries: 2,
+    // At most 3 steps (e.g. chunk reviews) run at once per user, so one big PR can't flood Gemini's rate limit (D5).
+    concurrency: { key: "event.data.userId", limit: 3 },
   },
   { event: "review/pr.requested" },
   async ({ event, step }) => {
@@ -105,35 +109,31 @@ export const reviewPR = inngest.createFunction(
       return fetchPullRequest(accessToken, owner, repo, prNumber);
     });
 
-    const reviewResult = await step.run("generate-review", async () => {
-      try {
-        return await reviewPullRequest(
-          {
-            title: pr.title,
-            files: files.map((f) => ({
-              filename: f.filename,
-              status: f.status,
-              additions: f.additions,
-              deletions: f.deletions,
-              patch: f.patch,
-            })),
-          },
-          { llm: createGeminiLlm() },
-        );
-      } catch (error) {
-        if (error instanceof ReviewOutputValidationError) {
-          await db.review.update({
-            where: { id: reviewId },
-            data: {
-              promptTokens: error.usage.promptTokens,
-              completionTokens: error.usage.completionTokens,
-              zodValid: false,
-            },
-          });
-        }
-        throw error;
-      }
-    });
+    // Each chunk runs as its own step ("review-chunk-<i>"), in parallel; the summary is a "summarize" step.
+    // Inngest retries a failed step and remembers finished ones, so a retry never re-reviews a finished chunk.
+    const runStep: RunStep = (name, fn) => step.run(name, fn) as Promise<Awaited<ReturnType<typeof fn>>>;
+    // Repo context (Phase 4): files at the PR's head commit, cached by blob SHA in Postgres.
+    const contextProvider = createGitHubContextProvider({ owner, repo, fetchJson: createGitHubFetchJson(accessToken), cache: prismaContextCache });
+    const reviewResult = await reviewPullRequest(
+      {
+        title: pr.title,
+        contextProvider,
+        ref: pr.head.sha,
+        files: files.map((f) => ({
+          filename: f.filename,
+          status: f.status,
+          additions: f.additions,
+          deletions: f.deletions,
+          patch: f.patch,
+        })),
+      },
+      { llm: createGeminiLlm(), runStep },
+      {
+        chunkTokenBudget: parsePositiveInt(process.env.CHUNK_TOKEN_BUDGET, 7000),
+        maxComments: parsePositiveInt(process.env.MAX_COMMENTS, 15),
+        contextTokenBudget: parsePositiveInt(process.env.CONTEXT_TOKEN_BUDGET, 4000),
+      },
+    );
 
     await step.run("save-review-result", async () => {
       await db.review.update({
@@ -145,7 +145,8 @@ export const reviewPR = inngest.createFunction(
           comments: reviewResult.comments,
           promptTokens: reviewResult.meta.promptTokens,
           completionTokens: reviewResult.meta.completionTokens,
-          zodValid: true, // reviewPullRequest throws if the output fails validation
+          zodValid: reviewResult.meta.failedChunks === 0, // false if any chunk's output stayed invalid after a retry
+          meta: JSON.parse(JSON.stringify(reviewResult.meta)), // plain JSON for the Json column
           completedAt: new Date(),
         },
       });
@@ -153,6 +154,8 @@ export const reviewPR = inngest.createFunction(
     logger.info("review-pr completed", {
       reviewId,
       comments: reviewResult.comments.length,
+      chunks: reviewResult.meta.chunks,
+      failedChunks: reviewResult.meta.failedChunks,
       latencyMs: reviewResult.meta.latencyMs,
     });
 

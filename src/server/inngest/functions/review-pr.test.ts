@@ -10,8 +10,8 @@ vi.mock("@/server/db", () => ({ db: { review: { update: mock.reviewUpdate, updat
 vi.mock("@/server/services/github", () => ({ getGitHubAccessToken: mock.getToken, fetchPullRequestFiles: mock.fetchFiles, fetchPullRequest: mock.fetchPr }));
 vi.mock("@/server/review/review-pull-request", () => ({ reviewPullRequest: mock.reviewPullRequest }));
 vi.mock("@/server/services/ai", () => ({ createGeminiLlm: vi.fn(() => vi.fn()) }));
+vi.mock("@/server/services/context-cache", () => ({ prismaContextCache: { get: vi.fn(), set: vi.fn() } }));
 
-import { ReviewOutputValidationError } from "@/server/review/parse";
 import { reviewPR } from "./review-pr";
 
 const event = { data: { reviewId: "review-1", repositoryId: "repo-1", prNumber: 3, userId: "user-1" } };
@@ -25,7 +25,7 @@ describe("reviewPR failure state", () => {
     mock.repositoryFindUnique.mockResolvedValue({ id: "repo-1", fullName: "owner/repo" });
     mock.getToken.mockResolvedValue("mock-token");
     mock.fetchFiles.mockResolvedValue([{ filename: "src/a.ts", status: "modified", additions: 1, deletions: 0, patch: "+const a = 1;" }]);
-    mock.fetchPr.mockResolvedValue({ title: "Test" });
+    mock.fetchPr.mockResolvedValue({ title: "Test", head: { sha: "head-sha" } });
   });
 
   it("retries LLM errors and ends the stored review in a terminal state", async () => {
@@ -36,12 +36,37 @@ describe("reviewPR failure state", () => {
     expect(mock.reviewUpdate).not.toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ status: "COMPLETED" }) }));
   });
 
-  it("saves token usage and zodValid=false when the model output is invalid", async () => {
-    mock.reviewPullRequest.mockRejectedValue(new ReviewOutputValidationError("not-json", { promptTokens: 30, completionTokens: 7 }, new Error("bad")));
-    await expect(mock.handler({ event, step })).rejects.toBeInstanceOf(ReviewOutputValidationError);
+  const meta = (over: Record<string, unknown> = {}) => ({
+    model: "m", filesReviewed: 1, filesSkipped: [], chunks: 2, failedChunks: 0, chunkErrors: [],
+    comments: { fromModel: 0, droppedInvalidLine: 0, droppedDuplicate: 0, droppedOverLimit: 0 },
+    summaryFallback: false, context: { enabled: true, tokens: 0, blocks: 0, dropped: 0, errors: 0 },
+    promptTokens: 10, completionTokens: 5, latencyMs: 1, ...over,
+  });
+
+  it("passes step.run and the env settings to the review core", async () => {
+    process.env.CHUNK_TOKEN_BUDGET = "5000";
+    delete process.env.MAX_COMMENTS;
+    mock.reviewPullRequest.mockResolvedValue({ summary: "ok", riskScore: 1, comments: [], meta: meta() });
+    const runs: string[] = [];
+    const trackingStep = { run: (name: string, fn: () => unknown) => { runs.push(name); return fn(); } };
+    await mock.handler({ event, step: trackingStep });
+
+    const [input, deps, options] = mock.reviewPullRequest.mock.calls[0]!;
+    expect(input).toMatchObject({ title: "Test", ref: "head-sha", files: [{ filename: "src/a.ts", patch: "+const a = 1;" }] });
+    expect(typeof input.contextProvider.getFile).toBe("function");
+    expect(options).toEqual({ chunkTokenBudget: 5000, maxComments: 15, contextTokenBudget: 4000 });
+    await deps.runStep("review-chunk-0", async () => "done");
+    expect(runs).toContain("review-chunk-0");
+    delete process.env.CHUNK_TOKEN_BUDGET;
+  });
+
+  it("saves meta, and zodValid=false when a chunk failed", async () => {
+    const m = meta({ failedChunks: 1, chunkErrors: [{ chunk: 1, error: "not json" }] });
+    mock.reviewPullRequest.mockResolvedValue({ summary: "partial", riskScore: 40, comments: [], meta: m });
+    await expect(mock.handler({ event, step })).resolves.toMatchObject({ success: true });
     expect(mock.reviewUpdate).toHaveBeenCalledWith({
       where: { id: "review-1" },
-      data: { promptTokens: 30, completionTokens: 7, zodValid: false },
+      data: expect.objectContaining({ status: "COMPLETED", zodValid: false, meta: m, promptTokens: 10, completionTokens: 5 }),
     });
   });
 
@@ -52,8 +77,7 @@ describe("reviewPR failure state", () => {
       .mockResolvedValueOnce({ count: 0 })
       .mockResolvedValueOnce({ count: 1 });
     mock.reviewPullRequest.mockResolvedValue({
-      summary: "Reviewed", riskScore: 0, comments: [],
-      meta: { model: "m", promptTokens: 10, completionTokens: 5, latencyMs: 1, finishReason: "stop" },
+      summary: "Reviewed", riskScore: 0, comments: [], meta: meta(),
     });
     const retryEvent = { data: { ...event.data, forceRetryTest: true } };
 

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { parseJsonObject, parseReview, ReviewOutputValidationError } from "./parse";
+import { parseJsonObject, parseReply, ReviewOutputValidationError } from "./parse";
+import { ChunkReplySchema, ReviewResultSchema } from "./schema";
+
+const parseReview = (content: string, usage: { promptTokens: number; completionTokens: number }) => parseReply(ReviewResultSchema, content, usage);
 
 const valid = { summary: "Reviewed", riskScore: 12, comments: [] };
 const usage = { promptTokens: 10, completionTokens: 5 };
@@ -25,7 +28,11 @@ describe("parseJsonObject", () => {
   });
 });
 
-describe("parseReview", () => {
+describe("parseReply", () => {
+  it("validates against whichever schema it is given", () => {
+    expect(parseReply(ChunkReplySchema, '{"comments":[]}', usage)).toEqual({ comments: [] });
+    expect(() => parseReply(ChunkReplySchema, '{"summary":"x"}', usage)).toThrow(ReviewOutputValidationError);
+  });
   it("returns the validated review", () => {
     expect(parseReview(JSON.stringify(valid), usage)).toEqual(valid);
   });

@@ -31,7 +31,8 @@ const JUDGE_TIMEOUT_MS = 60_000; // a hung call fails fast and goes through the 
 
 function newestRun(): string {
   const dir = join(EVALS_DIR, "results");
-  const runs = readdirSync(dir).filter((f) => f.endsWith(".json") && !f.endsWith(".score.json")).sort();
+  // Run files start with their timestamp ("2026-11-21T…-label.json"); this skips .score.json and judge-cache.json.
+  const runs = readdirSync(dir).filter((f) => /^\d{4}-\d{2}-\d{2}T.*\.json$/.test(f) && !f.endsWith(".score.json")).sort();
   if (runs.length === 0) throw new Error("No runs in evals/results. Run `npm run eval` first.");
   return join(dir, runs[runs.length - 1]!);
 }

@@ -20,10 +20,13 @@ evals/
 ```bash
 npm run eval -- --label my-change            # 3 runs per case, temperature 0
 npm run eval -- --runs 1 --only sqli-,ob-01  # quick subset (id prefixes)
+npm run eval -- --no-context --label diff-only  # same, without repo context (Phase 3 prompts)
 npm run eval:score                           # scores the newest run (or pass a results/*.json path)
 ```
 
 Needs `GEMINI_API_KEY` in `.env`. Optional: `REVIEW_MODEL` (reviewer), `JUDGE_MODEL` (default `gemini-3-flash-preview`), `JUDGE_API_KEY` (a key from another Google project, so the judge has its own quota; the free tier allows 20 requests per model per day per project).
+
+With context on (the default), the runner rebuilds each case's changed files as they are after the PR (`applyPatch()`), lays them over `fixture-repo/`, and passes that as the context provider, so the reviewer sees the same full files, signatures and call sites it would get from GitHub at the PR's head commit.
 
 The runner calls `reviewPullRequest()` directly, the same function the Inngest job uses. There's no GitHub, Inngest or DB involved. `pr.diff` is parsed into the same per-file `{ filename, status, additions, deletions, patch }` list that GitHub's "list PR files" API returns.
 
@@ -62,8 +65,9 @@ A bug is **caught** in a review if at least one comment passes both checks. A fa
    - `id`: lowercase letters, digits and dashes; must equal the folder name.
    - `kind`: `bug` (one planted bug), `clean` (no bug, no `bug` field), `context` (a bug you can only see with other files of the repo, e.g. a caller that doesn't handle a new `null` return), or `large` (a big PR; `bug` optional).
    - `bug.line`: the line number **in the new file**, and it must be an added (`+`) line. The loader checks this.
-   - `bug.category`: free text, used to group results (existing ones: `off-by-one`, `sql-injection`, `null-check`, `race-condition`, `leaked-secret`, `broken-access-control`).
+   - `bug.category`: free text, used to group results (existing ones: `off-by-one`, `sql-injection`, `null-check`, `race-condition`, `leaked-secret`, `broken-access-control`, and for `context` cases `argument-order`, `missing-await`, `unit-change`).
+   - For a `context` case, the broken code must be in a file the PR doesn't change, and it must use the changed function **by name** (that's how call sites are found). Put the caller in `fixture-repo/` as a **new** file; see the `ctx-*` cases and their callers (`src/routes/stock.ts`, `src/checkout.ts`, `src/routes/beta.ts`, `src/receipts.ts`).
    - `bug.description`: the judge compares comments against this, so describe the bug itself, not just the fix.
 4. Check it loads: `npm run test` (the `loadCases` test validates every case), then try it with `npm run eval -- --runs 1 --only <id>`.
 
-Don't edit existing files in `fixture-repo/`. That would shift line numbers under the existing diffs. If you must, regenerate the affected `pr.diff` files.
+Adding new files to `fixture-repo/` is safe. Don't edit existing files in it. That would shift line numbers under the existing diffs. If you must, regenerate the affected `pr.diff` files.

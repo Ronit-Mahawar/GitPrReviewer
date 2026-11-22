@@ -1,48 +1,63 @@
 import { describe, expect, it } from "vitest";
-import { buildDiffText, buildUserPrompt, numberPatch } from "./prompt";
+import { buildChunkUserPrompt, buildSummaryUserPrompt, CHUNK_SYSTEM_PROMPT, chunkSystemPrompt, SUMMARY_SYSTEM_PROMPT } from "./prompt";
 
-describe("numberPatch", () => {
-  it("labels added and context lines with new-file numbers and skips removed lines", () => {
-    const patch = ["@@ -10,3 +10,3 @@ fn", " a", "-b", "+B", " c", "@@ -40,1 +40,2 @@", " x", "+y"].join("\n");
-    expect(numberPatch(patch).split("\n")).toEqual([
-      "@@ -10,3 +10,3 @@ fn",
-      "L10    a",
-      "      -b",
-      "L11   +B",
-      "L12    c",
-      "@@ -40,1 +40,2 @@",
-      "L40    x",
-      "L41   +y",
-    ]);
+describe("CHUNK_SYSTEM_PROMPT", () => {
+  it("explains the annotated format and limits comments to added lines", () => {
+    expect(CHUNK_SYSTEM_PROMPT).toContain('"+ 45 | code" is a line added by this pull request');
+    expect(CHUNK_SYSTEM_PROMPT).toContain('Only on added lines (marked "+")');
+    expect(CHUNK_SYSTEM_PROMPT).toContain("at most 5 comments");
   });
-
-  it("handles a new file (hunk without counts) and the no-newline marker", () => {
-    const patch = ["@@ -0,0 +1 @@", "+only", "\\ No newline at end of file"].join("\n");
-    expect(numberPatch(patch).split("\n")).toEqual(["@@ -0,0 +1 @@", "L1    +only", "\\ No newline at end of file"]);
+  it("keeps the v1 review rules", () => {
+    expect(CHUNK_SYSTEM_PROMPT).toContain("Severity guide:");
+    expect(CHUNK_SYSTEM_PROMPT).toContain("Do NOT comment on:");
+    expect(CHUNK_SYSTEM_PROMPT).toContain("Before reporting, check each claim against the code:");
   });
-
-  it("gives no sensible output for an empty patch, which is why buildDiffText filters those out first", () => {
-    // v1 quirk kept as-is in Phase 0; Phase 2's annotate.ts handles empty patches properly.
-    expect(numberPatch("")).toBe("L0    ");
+  it("asks for comments only, not a summary", () => {
+    expect(CHUNK_SYSTEM_PROMPT).not.toContain('"summary"');
+    expect(SUMMARY_SYSTEM_PROMPT).toContain('{"summary": "...", "riskScore": 0-100}');
   });
 });
 
-describe("buildDiffText", () => {
-  it("skips files without a patch and formats one block per file", () => {
-    const text = buildDiffText([
-      { filename: "a.ts", status: "modified", additions: 1, deletions: 0, patch: "@@ -1 +1 @@\n+x" },
-      { filename: "logo.png", status: "added", additions: 0, deletions: 0 },
-    ]);
-    expect(text).toBe("### a.ts (modified)\n```diff\n@@ -1 +1 @@\nL1    +x\n```");
-  });
-
-  it("returns an empty string when no file has a patch", () => {
-    expect(buildDiffText([{ filename: "logo.png", status: "added", additions: 0, deletions: 0 }])).toBe("");
+describe("buildChunkUserPrompt", () => {
+  it("only says which request this is when there are several", () => {
+    expect(buildChunkUserPrompt("Fix bug", "DIFF", { index: 0, total: 1 })).toBe("Review this pull request:\n\n**Title:** Fix bug\n\n**Changes:**\nDIFF");
+    expect(buildChunkUserPrompt("Fix bug", "DIFF", { index: 1, total: 3 })).toContain("(request 2 of 3 for this pull request)");
   });
 });
 
-describe("buildUserPrompt", () => {
-  it("puts the title and diff in the v1 layout", () => {
-    expect(buildUserPrompt("Fix bug", "DIFF")).toBe("Review this pull request:\n\n**Title:** Fix bug\n\n**Changes:**\nDIFF");
+describe("context prompts", () => {
+  it("adds the context rules only when there is context, before the output rules", () => {
+    expect(chunkSystemPrompt(false)).toBe(CHUNK_SYSTEM_PROMPT);
+    const withContext = chunkSystemPrompt(true);
+    expect(withContext).toContain("Never comment on code in the REFERENCE ONLY section.");
+    expect(withContext.indexOf("Repository context:")).toBeLessThan(withContext.indexOf("Output rules:"));
+  });
+
+  it("puts the diff under CHANGED CODE and the reference section after it", () => {
+    const text = buildChunkUserPrompt("Fix bug", "DIFF", { index: 0, total: 1 }, "## REFERENCE ONLY ...\nREF");
+    expect(text).toBe('Review this pull request:\n\n**Title:** Fix bug\n\n## CHANGED CODE (review this; comment only on lines marked "+")\nDIFF\n\n## REFERENCE ONLY ...\nREF');
+  });
+});
+
+describe("buildSummaryUserPrompt", () => {
+  const base = { title: "Add reports", reviewedFiles: [{ filename: "a.ts", status: "added" }], skipped: [], comments: [], failedChunks: 0, totalChunks: 1 };
+
+  it("lists files, skipped files and comments, without any diff", () => {
+    const text = buildSummaryUserPrompt({
+      ...base,
+      skipped: [{ file: "package-lock.json", reason: "lockfile" }],
+      comments: [{ file: "a.ts", line: 3, severity: "high", category: "bug", message: "Loop runs 13 times." }],
+    });
+    expect(text).toContain("**Title:** Add reports");
+    expect(text).toContain("- a.ts (added)");
+    expect(text).toContain("- package-lock.json: lockfile");
+    expect(text).toContain("- [high/bug] a.ts:3: Loop runs 13 times.");
+    expect(text).not.toContain("```");
+  });
+
+  it("writes (none) for empty lists and mentions failed parts", () => {
+    const text = buildSummaryUserPrompt({ ...base, reviewedFiles: [], failedChunks: 1, totalChunks: 2 });
+    expect(text.match(/- \(none\)/g)).toHaveLength(3);
+    expect(text).toContain("1 of 2 parts of the diff could not be reviewed");
   });
 });
