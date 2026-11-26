@@ -12,7 +12,7 @@ vi.mock("@/server/review/review-pull-request", () => ({ reviewPullRequest: mock.
 vi.mock("@/server/services/ai", () => ({ createGeminiLlm: vi.fn(() => vi.fn()) }));
 vi.mock("@/server/services/context-cache", () => ({ prismaContextCache: { get: vi.fn(), set: vi.fn() } }));
 
-import { reviewPR } from "./review-pr";
+import { markReviewFailed, reviewPR, shortErrorMessage } from "./review-pr";
 
 const event = { data: { reviewId: "review-1", repositoryId: "repo-1", prNumber: 3, userId: "user-1" } };
 const step = { run: (_name: string, fn: () => unknown) => fn() };
@@ -89,5 +89,38 @@ describe("reviewPR failure state", () => {
       where: { id: "review-1" },
       data: expect.objectContaining({ status: "COMPLETED", zodValid: true, promptTokens: 10, completionTokens: 5 }),
     }));
+  });
+});
+
+describe("markReviewFailed (onFailure)", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("is registered as the job's onFailure handler and reads the original event's reviewId", async () => {
+    const opts = (reviewPR as unknown as { opts: { onFailure: (ctx: unknown) => Promise<void> } }).opts;
+    await opts.onFailure({ event: { data: { event: { data: { reviewId: "review-9" } } } }, error: new Error("boom") });
+    expect(mock.reviewUpdateMany).toHaveBeenCalledWith({
+      where: { id: "review-9", status: { not: "COMPLETED" } },
+      data: { status: "FAILED", error: "boom" },
+    });
+  });
+
+  it("never overwrites a review that already completed", async () => {
+    await markReviewFailed("review-1", new Error("late failure"));
+    expect(mock.reviewUpdateMany.mock.calls[0]![0].where.status).toEqual({ not: "COMPLETED" });
+  });
+});
+
+describe("shortErrorMessage", () => {
+  it("keeps only the reason line of a multi-line Prisma error, not the query dump", () => {
+    const prisma = new Error("\nInvalid `prisma.review.update()` invocation:\n{\n  data: { summary: \"long review text\" }\n}\n\nUnknown argument `promptTokens`. Available options are marked with ?.");
+    expect(shortErrorMessage(prisma)).toBe("Unknown argument `promptTokens`. Available options are marked with ?.");
+  });
+
+  it("handles non-Error values, empty messages and very long lines", () => {
+    expect(shortErrorMessage("plain")).toBe("plain");
+    expect(shortErrorMessage(new Error(""))).toBe("Unknown error");
+    const long = shortErrorMessage(new Error("x".repeat(500)));
+    expect(long).toHaveLength(300);
+    expect(long.endsWith("...")).toBe(true);
   });
 });

@@ -23,12 +23,36 @@ export type ReviewPREvent = {
   };
 };
 
+/**
+ * A short, user-facing version of an error: its last non-empty line, at most 300 characters.
+ * Prisma validation errors dump the whole query (including the review text) before the reason on the last line.
+ */
+export function shortErrorMessage(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  const lines = message.split("\n").map((line) => line.trim()).filter(Boolean);
+  const last = lines[lines.length - 1] ?? "Unknown error";
+  return last.length > 300 ? `${last.slice(0, 297)}...` : last;
+}
+
+/** Runs once the job has used all its retries, so the review ends FAILED instead of staying PROCESSING. */
+export async function markReviewFailed(reviewId: string, error: unknown): Promise<void> {
+  const message = shortErrorMessage(error);
+  logger.warn("review-pr failed after retries", { reviewId, error: message });
+  await db.review.updateMany({
+    where: { id: reviewId, status: { not: "COMPLETED" } },
+    data: { status: "FAILED", error: message },
+  });
+}
+
 export const reviewPR = inngest.createFunction(
   {
     id: "review-pr",
     retries: 2,
     // At most 3 steps (e.g. chunk reviews) run at once per user, so one big PR can't flood Gemini's rate limit (D5).
     concurrency: { key: "event.data.userId", limit: 3 },
+    onFailure: async ({ event, error }) => {
+      await markReviewFailed(event.data.event.data.reviewId, error);
+    },
   },
   { event: "review/pr.requested" },
   async ({ event, step }) => {
